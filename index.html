@@ -36,7 +36,7 @@
     <section id="wb-lng" class="col-xs-7 col-md-8 text-right">
       <h2 class="wb-inv">Language selection</h2>
       <ul class="list-inline mrgn-bttm-0">
-        <li><a href="#" lang="fr" onclick="toggleLanguage('fr');return false;">Français</a></li>
+        <li><a href="#" lang="fr" aria-current="page" onclick="toggleLanguage('fr');return false;">Français</a></li>
         <li><a href="#" lang="en" onclick="toggleLanguage('en');return false;">English</a></li>
       </ul>
     </section>
@@ -182,7 +182,7 @@
         <label><input type="checkbox" value="J"> J – Organizational Restructuring</label><br>
         <label><input type="checkbox" value="K"> K – Policy Development & Implementation</label><br>
       </form>
-      <button class="btn btn-primary" onclick="collectCategories()">Continue</button>
+      <button class="btn btn-primary" type="button" onclick="collectCategories()">Continue</button>
     </div>
     <!-- FR form -->
     <div data-lang="fr" class="hidden" aria-hidden="true">
@@ -198,7 +198,7 @@
         <label><input type="checkbox" value="J"> J – Restructuration organisationnelle</label><br>
         <label><input type="checkbox" value="K"> K – Élaboration et mise en œuvre des politiques</label><br>
       </form>
-      <button class="btn btn-primary" onclick="collectCategories()">Continuer</button>
+      <button class="btn btn-primary" type="button" onclick="collectCategories()">Continuer</button>
     </div>
      <p id="statusMsg" class="wb-inv"></p>
   </div>
@@ -904,11 +904,13 @@
   <div class="panel-body">
     <p data-lang="en">After completing the questions, click below to generate a category summary.</p>
     <p data-lang="fr" class="hidden">Après avoir répondu aux questions, cliquez ci-dessous pour générer un résumé par catégorie.</p>
-    <button class="btn btn-primary" onclick="generateSummary()">Generate Summary</button>
-    <button class="btn btn-secondary" onclick="window.print()">Print / Save as PDF</button>
+    <button class="btn btn-primary" type="button" onclick="generateSummary()">Generate Summary</button>
+    <button class="btn btn-secondary" type="button" onclick="window.print()">Print / Save as PDF</button>
 
     <div id="summaryTableContainer" class="hidden" style="margin-top: 2rem;">
       <table class="table table-striped">
+        <caption data-lang="en">Risk Profile Summary Table</caption>
+        <caption data-lang="fr" class="hidden" aria-hidden="true">Tableau récapitulatif du profil de risque</caption>
         <thead>
           <tr>
             <th data-lang="en">Category</th>
@@ -1121,30 +1123,6 @@ function buildResponsesHTML(lang) {
 
 // ===== UI and Bilingual Logic =====
 
-function toggleLanguage(lang) {
-  currentLang = lang;
-  document.querySelectorAll("[data-lang]").forEach(el => {
-    const hide = el.getAttribute("data-lang") !== lang;
-    el.classList.toggle("hidden", hide);
-    el.setAttribute("aria-hidden", hide);
-  });
-
-  // Update the Generate Summary button bilingualy
-  const genButton = document.querySelector('button[onclick="generateSummary()"]');
-  if (genButton) {
-    genButton.textContent = (lang === "en") ? "Generate Summary" : "Générer le résumé";
-  }
-  // (Print button toggle intentionally left unchanged per your instruction.)
-
-  // Keep answers in sync across languages
-  syncResponses();
-
-  // If the summary table is showing, regenerate it to update the language
-  const summaryVisible = !document.getElementById('summaryTableContainer').classList.contains('hidden');
-  if (summaryVisible) {
-    generateSummary();
-  }
-}
 
 function expandAllQuestions() {
   document.querySelectorAll(
@@ -1169,7 +1147,62 @@ function collectCategories() {
 
 // ===== On Page Load =====
 
-document.addEventListener("DOMContentLoaded", () => toggleLanguage("en"));
+
+document.addEventListener("DOMContentLoaded", () => {
+  // Detect browser-preferred language, default to English
+  const browserLang =
+    (navigator.languages && navigator.languages.length)
+      ? navigator.languages[0]
+      : navigator.language || navigator.userLanguage || "en";
+  if (browserLang.toLowerCase().startsWith("fr")) {
+    toggleLanguage("fr");
+  } else {
+    toggleLanguage("en");
+  }
+});
+
+// ===== UI and Bilingual Logic =====
+
+function toggleLanguage(lang) {
+  currentLang = lang;
+
+  // Set <html lang="..."> for accessibility and compliance
+  document.documentElement.setAttribute("lang", lang);
+
+  document.querySelectorAll("[data-lang]").forEach(el => {
+    const hide = el.getAttribute("data-lang") !== lang;
+    el.classList.toggle("hidden", hide);
+    el.setAttribute("aria-hidden", hide);
+  });
+
+  // Update the Generate Summary button bilingualy
+  const genButton = document.querySelector('button[onclick="generateSummary()"]');
+  if (genButton) {
+    genButton.textContent = (lang === "en") ? "Generate Summary" : "Générer le résumé";
+  }
+  // (Print button toggle intentionally left unchanged per your instruction.)
+
+  // Keep answers in sync across languages
+  syncResponses();
+
+  // If the summary table is showing, regenerate it to update the language
+  const summaryVisible = !document.getElementById('summaryTableContainer').classList.contains('hidden');
+  if (summaryVisible) {
+    generateSummary();
+  }
+
+  // === [ARIA PATCH START] ===
+  // Mark active language for screen readers
+  document.querySelectorAll('#wb-lng a').forEach(link => {
+    if (link.getAttribute('lang') === lang) {
+      link.setAttribute('aria-current', 'page');
+    } else {
+      link.removeAttribute('aria-current');
+    }
+  });
+  // === [ARIA PATCH END] ===
+}
+
 
 </script>
 
