@@ -476,6 +476,7 @@ const categories = {
 };
 
 function generateSummary() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
   const lang = window.currentLang || "en";
   const summaryBody = document.getElementById('summaryTableBody');
   summaryBody.innerHTML = "";
