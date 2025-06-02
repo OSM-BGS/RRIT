@@ -4,20 +4,35 @@
   <meta charset="utf-8">
   <title>RRIT – Rapid Risk Identification Tool</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/RRIT/GCWeb/css/theme.min.css">
+  <!-- GCWeb / WET-BOEW 16.5.0 -->
+
+  <link  rel="stylesheet" href="/RRIT/GCWeb/css/theme.min.css">
   <link rel="stylesheet" href="/RRIT/wet-boew/css/wet-boew.min.css">
   <link rel="stylesheet" href="/RRIT/css/form.css">
+   
 </head>
 <body vocab="http://schema.org/" typeof="WebPage">
 
+
+<!-- ===== Header -->
 <header id="wb-bnr" class="container" role="banner">
   <div class="row">
-    <div class="brand col-xs-5 col-md-4">
-      <div class="rrit-logo" style="display:inline-block; margin-left:1rem;">
-        <img src="/RRIT/assets/svg/tbs-logo-en.svg" alt="Treasury Board of Canada Secretariat" data-lang="en">
-        <img src="/RRIT/assets/svg/tbs-logo-fr.svg" alt="Secrétariat du Conseil du Trèsor du Canada" data-lang="fr" class="hidden" aria-hidden="true">
-      </div>
-    </div>
+   <div class="brand col-xs-5 col-md-4">
+   <div class="rrit-logo" style="display:inline-block; margin-left:1rem;">
+    <img
+      src="/RRIT/assets/svg/tbs-logo-en.svg"
+      alt="Treasury Board of Canada Secretariat"
+      data-lang="en"
+    >
+    <img
+      src="/RRIT/assets/svg/tbs-logo-fr.svg"
+      alt="Secrétariat du Conseil du Trèsor du Canada"
+      data-lang="fr"
+      class="hidden"
+      aria-hidden="true"
+    >
+  </div>
+</div>
     <section id="wb-lng" class="col-xs-7 col-md-8 text-right">
       <h2 class="wb-inv">Language selection</h2>
       <ul class="list-inline mrgn-bttm-0">
@@ -28,22 +43,31 @@
   </div>
 </header>
 
+<!-- ===== Main -->
 <div class="container"><div class="row">
 <main id="wb-cont" role="main" class="col-xs-12">
 
-<!-- ===== RRIT INTRO ===== -->
+
+
+<!-- INTRO -->
+<!------- RRIT INTRO – clean version (no citations) ----->
 <section id="rrit-intro" class="panel panel-default">
   <header class="panel-heading">
     <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR Initiatives</h1>
     <h1 class="panel-title hidden" data-lang="fr">Outil d'identification rapide des risques (OIRR) pour les initiatives RH</h1>
   </header>
+
   <div class="panel-body">
+
+    <!-- ============ English ============ -->
     <div data-lang="en">
       <p><strong>The RRIT is a first-pass screen to spot risks in proposed HR investments, initiatives, projects and digital solutions.</strong> It helps ensure your proposal aligns with regulatory, operational and strategic goals while mitigating potential issues early.</p>
+
       <details class="wb-accordion">
         <summary><strong>Purpose – Early-warning system</strong></summary>
         <p>The tool systematically flags risks in areas such as regulatory compliance, workforce planning and technology adoption <em>before</em> you commit significant resources. Use it alongside your existing enterprise risk-management (ERM) processes for identification, assessment, response, communication and monitoring.</p>
       </details>
+
       <details class="wb-accordion">
         <summary><strong>Usage – Four simple steps</strong></summary>
         <ol class="lst-num">
@@ -53,6 +77,7 @@
           <li><strong>Decide</strong> next steps or mitigations.</li>
         </ol>
       </details>
+
       <details class="wb-accordion">
         <summary><strong>Implications of each response</strong></summary>
         <ul>
@@ -62,30 +87,35 @@
           <li><strong>N/A</strong> – not relevant to this initiative.</li>
         </ul>
       </details>
-      <details class="wb-accordion">
-        <summary><strong>Structure – 11 HR-specific categories</strong></summary>
-        <p>Categories A and B are mandatory; select any of C–K that apply.</p>
-        <ul class="lst-spcd">
-          <li><strong>A. Regulatory Compliance</strong> – Ensures HR initiatives comply with Canadian labour laws, privacy regulations (e.g. PIPEDA) and other relevant guidelines. <em>(mandatory)</em></li>
-          <li><strong>B. Data Security &amp; Privacy</strong> – Protects sensitive employee information against unauthorized access, reinforcing trust through robust data-security measures. <em>(mandatory)</em></li>
-          <li><strong>C. HR Technology / Integration</strong> – Assesses new HR technologies for integration challenges, compatibility and alignment with your digital strategy.</li>
-          <li><strong>D. User Adoption &amp; Training</strong> – Focuses on user-friendliness and training effectiveness to promote smooth transitions and broad adoption.</li>
-          <li><strong>E. Cost-Benefit Analysis</strong> – Evaluates financial implications and ROI, ensuring initiatives are cost-effective and sustainable.</li>
-          <li><strong>F. Vendor Reliability &amp; Support</strong> – Examines vendor reputation, stability and support quality for long-term service effectiveness.</li>
-          <li><strong>G. Workforce Planning &amp; Development</strong> – Aligns workforce capabilities with future needs, supporting talent-management strategies.</li>
-          <li><strong>H. Employee Engagement &amp; Culture Change</strong> – Reviews initiatives aimed at enhancing workplace culture and employee well-being.</li>
-          <li><strong>I. Diversity &amp; Inclusion Programs</strong> – Assesses the effectiveness of diversity and inclusivity strategies.</li>
-          <li><strong>J. Organizational Restructuring</strong> – Evaluates the impact of organizational changes on strategic alignment and communication.</li>
-          <li><strong>K. Policy Development &amp; Implementation</strong> – Ensures new HR policies align with goals and compliance requirements.</li>
-        </ul>
-      </details>
+
+<details class="wb-accordion">
+  <summary><strong>Structure – 11 HR-specific categories</strong></summary>
+  <p>Categories A and B are mandatory; select any of C–K that apply.</p>
+  <ul class="lst-spcd">
+    <li><strong>A. Regulatory Compliance</strong> – Ensures HR initiatives comply with Canadian labour laws, privacy regulations (e.g. PIPEDA) and other relevant guidelines. <em>(mandatory)</em></li>
+    <li><strong>B. Data Security &amp; Privacy</strong> – Protects sensitive employee information against unauthorized access, reinforcing trust through robust data-security measures. <em>(mandatory)</em></li>
+    <li><strong>C. HR Technology / Integration</strong> – Assesses new HR technologies for integration challenges, compatibility and alignment with your digital strategy.</li>
+    <li><strong>D. User Adoption &amp; Training</strong> – Focuses on user-friendliness and training effectiveness to promote smooth transitions and broad adoption.</li>
+    <li><strong>E. Cost-Benefit Analysis</strong> – Evaluates financial implications and ROI, ensuring initiatives are cost-effective and sustainable.</li>
+    <li><strong>F. Vendor Reliability &amp; Support</strong> – Examines vendor reputation, stability and support quality for long-term service effectiveness.</li>
+    <li><strong>G. Workforce Planning &amp; Development</strong> – Aligns workforce capabilities with future needs, supporting talent-management strategies.</li>
+    <li><strong>H. Employee Engagement &amp; Culture Change</strong> – Reviews initiatives aimed at enhancing workplace culture and employee well-being.</li>
+    <li><strong>I. Diversity &amp; Inclusion Programs</strong> – Assesses the effectiveness of diversity and inclusivity strategies.</li>
+    <li><strong>J. Organizational Restructuring</strong> – Evaluates the impact of organizational changes on strategic alignment and communication.</li>
+    <li><strong>K. Policy Development &amp; Implementation</strong> – Ensures new HR policies align with goals and compliance requirements.</li>
+  </ul>
+</details>
     </div>
+
+    <!-- ============ Français ============ -->
     <div data-lang="fr" class="hidden" aria-hidden="true">
       <p><strong>L’OIRR est un outil de présélection pour détecter les risques associés aux investissements, initiatives, projets et solutions numériques en RH.</strong> Il vise à assurer l’alignement de votre proposition avec les objectifs réglementaires, opérationnels et stratégiques, tout en atténuant les risques potentiels dès le départ.</p>
+
       <details class="wb-accordion">
         <summary><strong>Objectif – Système d’alerte précoce</strong></summary>
         <p>L’outil signale systématiquement les risques (conformité, planification de la main-d’œuvre, adoption technologique, etc.) <em>avant</em> l’engagement de ressources importantes. Il complète vos processus existants de gestion des risques (IGR) pour l’identification, l’évaluation, la réponse, la communication et le suivi.</p>
       </details>
+
       <details class="wb-accordion">
         <summary><strong>Utilisation – Quatre étapes</strong></summary>
         <ol class="lst-num">
@@ -95,6 +125,7 @@
           <li><strong>Décider</strong> des mesures ou projets subséquents.</li>
         </ol>
       </details>
+
       <details class="wb-accordion">
         <summary><strong>Implications de chaque réponse</strong></summary>
         <ul>
@@ -104,34 +135,40 @@
           <li><strong>N/A</strong> – hors du champ de l’initiative.</li>
         </ul>
       </details>
-      <details class="wb-accordion">
-        <summary><strong>Structure – 11 catégories RH</strong></summary>
-        <p>Les catégories A et B sont obligatoires ; sélectionnez, parmi C à K, celles qui s’appliquent.</p>
-        <ul class="lst-spcd">
-          <li><strong>A. Conformité réglementaire</strong> – Assure que les initiatives RH respectent les lois du travail canadiennes, les règlements de confidentialité (ex. LPRPDE) et autres lignes directrices pertinentes. <em>(obligatoire)</em></li>
-          <li><strong>B. Sécurité des données &amp; confidentialité</strong> – Protège les renseignements sensibles des employés contre l’accès non autorisé au moyen de mesures robustes. <em>(obligatoire)</em></li>
-          <li><strong>C. Technologie RH / Intégration</strong> – Évalue les nouvelles technologies RH pour les défis d’intégration, la compatibilité et l’alignement avec la stratégie numérique.</li>
-          <li><strong>D. Adoption et formation des utilisateurs</strong> – Se concentre sur la convivialité et l’efficacité des programmes de formation pour favoriser l’adoption.</li>
-          <li><strong>E. Analyse coûts-avantages</strong> – Analyse les implications financières et le ROI pour garantir la rentabilité et la durabilité.</li>
-          <li><strong>F. Fiabilité &amp; soutien du fournisseur</strong> – Examine la réputation, la stabilité et la qualité du support du fournisseur pour un service durable.</li>
-          <li><strong>G. Planification &amp; développement de la main-d’œuvre</strong> – Aligne les capacités de la main-d’œuvre sur les besoins futurs et appuie la gestion des talents.</li>
-          <li><strong>H. Mobilisation des employés &amp; changement de culture</strong> – Évalue les initiatives visant à améliorer la culture du lieu de travail et le bien-être.</li>
-          <li><strong>I. Programmes de diversité &amp; d’inclusion</strong> – Évalue l’efficacité des stratégies visant la diversité et l’inclusivité.</li>
-          <li><strong>J. Restructuration organisationnelle</strong> – Évalue l’impact des changements organisationnels sur l’alignement stratégique et la communication.</li>
-          <li><strong>K. Élaboration &amp; mise en œuvre des politiques</strong> – Garantit que les politiques RH sont alignées sur les objectifs et la conformité.</li>
-        </ul>
-      </details>
+
+    <details class="wb-accordion">
+  <summary><strong>Structure – 11 catégories RH</strong></summary>
+  <p>Les catégories A et B sont obligatoires ; sélectionnez, parmi C à K, celles qui s’appliquent.</p>
+  <ul class="lst-spcd">
+    <li><strong>A. Conformité réglementaire</strong> – Assure que les initiatives RH respectent les lois du travail canadiennes, les règlements de confidentialité (ex. LPRPDE) et autres lignes directrices pertinentes. <em>(obligatoire)</em></li>
+    <li><strong>B. Sécurité des données &amp; confidentialité</strong> – Protège les renseignements sensibles des employés contre l’accès non autorisé au moyen de mesures robustes. <em>(obligatoire)</em></li>
+    <li><strong>C. Technologie RH / Intégration</strong> – Évalue les nouvelles technologies RH pour les défis d’intégration, la compatibilité et l’alignement avec la stratégie numérique.</li>
+    <li><strong>D. Adoption et formation des utilisateurs</strong> – Se concentre sur la convivialité et l’efficacité des programmes de formation pour favoriser l’adoption.</li>
+    <li><strong>E. Analyse coûts-avantages</strong> – Analyse les implications financières et le ROI pour garantir la rentabilité et la durabilité.</li>
+    <li><strong>F. Fiabilité &amp; soutien du fournisseur</strong> – Examine la réputation, la stabilité et la qualité du support du fournisseur pour un service durable.</li>
+    <li><strong>G. Planification &amp; développement de la main-d’œuvre</strong> – Aligne les capacités de la main-d’œuvre sur les besoins futurs et appuie la gestion des talents.</li>
+    <li><strong>H. Mobilisation des employés &amp; changement de culture</strong> – Évalue les initiatives visant à améliorer la culture du lieu de travail et le bien-être.</li>
+    <li><strong>I. Programmes de diversité &amp; d’inclusion</strong> – Évalue l’efficacité des stratégies visant la diversité et l’inclusivité.</li>
+    <li><strong>J. Restructuration organisationnelle</strong> – Évalue l’impact des changements organisationnels sur l’alignement stratégique et la communication.</li>
+    <li><strong>K. Élaboration &amp; mise en œuvre des politiques</strong> – Garantit que les politiques RH sont alignées sur les objectifs et la conformité.</li>
+  </ul>
+</details>
+
+
     </div>
   </div>
 </section>
+<!------- end RRIT INTRO ----->
 
-<!-- ===== Step 0 – Category Selection Panel ===== -->
+
+<!-- STEP-0 ----------------------------------------------------------------->
 <section class="panel panel-default" id="step0">
   <header class="panel-heading">
     <h2 class="panel-title" data-lang="en">Step 0 — Select additional categories</h2>
     <h2 class="panel-title hidden" data-lang="fr">Étape 0 — Sélection des catégories supplémentaires</h2>
   </header>
   <div class="panel-body">
+    <!-- EN form -->
     <div data-lang="en">
       <p>Categories A and B are always included.</p>
       <form id="categoryFormEN" class="checkbox">
@@ -145,8 +182,9 @@
         <label><input type="checkbox" value="J"> J – Organizational Restructuring</label><br>
         <label><input type="checkbox" value="K"> K – Policy Development & Implementation</label><br>
       </form>
-      <button class="btn btn-primary" onclick="collectCategories();return false;">Continue</button>
+      <button class="btn btn-primary" onclick="collectCategories()">Continue</button>
     </div>
+    <!-- FR form -->
     <div data-lang="fr" class="hidden" aria-hidden="true">
       <p>Les catégories A et B sont toujours incluses.</p>
       <form id="categoryFormFR" class="checkbox">
@@ -160,14 +198,12 @@
         <label><input type="checkbox" value="J"> J – Restructuration organisationnelle</label><br>
         <label><input type="checkbox" value="K"> K – Élaboration et mise en œuvre des politiques</label><br>
       </form>
-      <button class="btn btn-primary" onclick="collectCategories();return false;">Continuer</button>
+      <button class="btn btn-primary" onclick="collectCategories()">Continuer</button>
     </div>
-    <p id="statusMsg" class="wb-inv"></p>
+     <p id="statusMsg" class="wb-inv"></p>
   </div>
 </section>
 
-<!-- RRIT categories, questions, summary, and logic will follow here... -->
-<!-- ===== CATEGORY A: Regulatory Compliance (Mandatory) ===== -->
 <!-- ====================================================================
      CATEGORY PANELS A – K
      C–K start with class="hidden" and are shown by collectCategories().
@@ -856,7 +892,10 @@
   </details>
 
 </section>
-<!-- ===== Risk Summary Section ===== -->
+
+<hr class="brdr-bttm mrgn-tp-xl">
+
+<!-- ===== Risk Summary Section (Bilingual) ===== -->
 <section id="rrit-summary" class="panel panel-default">
   <header class="panel-heading">
     <h2 class="panel-title" data-lang="en">Risk Profile Summary</h2>
@@ -865,8 +904,9 @@
   <div class="panel-body">
     <p data-lang="en">After completing the questions, click below to generate a category summary.</p>
     <p data-lang="fr" class="hidden">Après avoir répondu aux questions, cliquez ci-dessous pour générer un résumé par catégorie.</p>
-    <button class="btn btn-primary" type="button" onclick="generateSummary()">Generate Summary</button>
-    <button class="btn btn-secondary" type="button" onclick="window.print()">Print / Save as PDF</button>
+    <button class="btn btn-primary" onclick="generateSummary()">Generate Summary</button>
+    <button class="btn btn-secondary" onclick="window.print()">Print / Save as PDF</button>
+
     <div id="summaryTableContainer" class="hidden" style="margin-top: 2rem;">
       <table class="table table-striped">
         <thead>
@@ -883,31 +923,32 @@
       </table>
     </div>
   </div>
+
 </section>
 
 <script>
-// ==== DRY Config-Based Risk Scoring ====
-const questionWeights = {
-  // e.g., catAq1: { "No": 2, "Unknown": 1 }, catAq1f: { "Non": 2, "Inconnu": 1 }
-};
-const categoryWeights = {
-  // e.g., A: { "No": 2, "Unknown": 1, "Non": 2, "Inconnu": 1 }
-};
-const defaultWeights = { "Yes": 0, "No": 1, "Unknown": 0.5, "N/A": 0, "Oui": 0, "Non": 1, "Inconnu": 0.5 };
+// ===== CONFIGURATION BLOCK =====
 
-function getRiskWeight(qName, catKey, answer) {
-  return (questionWeights[qName]?.[answer])
-      || (categoryWeights[catKey]?.[answer])
-      || (defaultWeights[answer])
-      || 0;
-}
+const questionWeights = {
+  "No": 1,
+  "Unknown": 0.5,
+  "Non": 1,           // French "No"
+  "Inconnu": 0.5      // French "Unknown"
+};
+
 const riskLabels = {
   high: { en: "Requires Risk Mitigation", fr: "Requiert une atténuation des risques" },
   medium: { en: "Further research required", fr: "Recherche supplémentaire requise" },
   low: { en: "Risks Mitigated / N/A", fr: "Risques atténués / N/A" },
   notReviewed: { en: "Not reviewed", fr: "Non examiné" }
 };
-const riskThresholds = { high: 0.4, medium: 0.2 };
+
+const riskThresholds = {
+  high: 0.4,    // High if ≥ 40% "bad" weight
+  medium: 0.2   // Medium if ≥ 20% but < 40%
+  // Otherwise Low
+};
+
 const categories = {
   A: { en: "Regulatory Compliance (Mandatory)", fr: "Conformité réglementaire (Obligatoire)" },
   B: { en: "Data Security and Privacy (Mandatory)", fr: "Sécurité des données et confidentialité (Obligatoire)" },
@@ -922,13 +963,50 @@ const categories = {
   K: { en: "Policy Development and Implementation", fr: "Élaboration et mise en œuvre des politiques" }
 };
 
-function generateSummary() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  const lang = window.currentLang || "en";
-  const summaryBody = document.getElementById('summaryTableBody');
-  summaryBody.innerHTML = "";
+// ===== END CONFIGURATION =====
 
-  const printResponses = [];
+
+// ===== generateSummary FUNCTION =====
+
+
+function syncResponses() {
+  const valueMap = {
+    // EN → FR
+    "Yes": "Oui",
+    "No": "Non",
+    "Unknown": "Inconnu",
+    "Not Applicable": "Sans objet",
+    // FR → EN
+    "Oui": "Yes",
+    "Non": "No",
+    "Inconnu": "Unknown",
+    "Sans objet": "Not Applicable"
+  };
+
+  document.querySelectorAll('input[type="radio"]:checked').forEach(src => {
+    /* work out the twin’s name */
+    const otherName = src.name.endsWith('f')
+        ? src.name.slice(0, -1)      // catAq1f → catAq1
+        : src.name + 'f';             // catAq1  → catAq1f
+
+    /* translate value if needed */
+    const desiredValue = valueMap[src.value] || src.value;
+
+    /* find the twin radio and check it */
+    const twin = document.querySelector(
+      `input[name="${otherName}"][value="${desiredValue}"]`
+    );
+    if (twin) twin.checked = true;
+  });
+}
+  
+function generateSummary() {
+  const lang = currentLang || "en";
+
+  const summaryBody = document.getElementById('summaryTableBody');
+  summaryBody.innerHTML = ""; // clear previous
+
+  const printResponses = []; // <-- NEW: Array to collect responses for printing
   const categoryKeys = Object.keys(categories);
 
   categoryKeys.forEach(cat => {
@@ -936,19 +1014,25 @@ function generateSummary() {
     let accumulatedWeight = 0;
     let questions = [];
 
+    // English responses
     document.querySelectorAll(`input[name^="cat${cat}q"]:checked`).forEach(input => {
       const questionText = input.closest('fieldset').querySelector('legend').textContent;
       const answer = input.value;
       questions.push({ question: questionText, answer: answer });
-      accumulatedWeight += getRiskWeight(input.name, cat, answer);
+      if (answer in questionWeights) {
+        accumulatedWeight += questionWeights[answer];
+      }
       totalPossibleWeight += 1;
     });
 
+    // French responses
     document.querySelectorAll(`input[name^="cat${cat}qf"]:checked`).forEach(input => {
       const questionText = input.closest('fieldset').querySelector('legend').textContent;
       const answer = input.value;
       questions.push({ question: questionText, answer: answer });
-      accumulatedWeight += getRiskWeight(input.name, cat, answer);
+      if (answer in questionWeights) {
+        accumulatedWeight += questionWeights[answer];
+      }
       totalPossibleWeight += 1;
     });
 
@@ -972,13 +1056,15 @@ function generateSummary() {
       }
     }
 
-    const row = `<tr>
-      <td>${categories[cat][lang]}</td>
-      <td>${totalPossibleWeight > 0 ? `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}` : "-"}</td>
-      <td class="${riskClass}">${riskStatus}</td>
-    </tr>`;
+    // Create Risk Summary Row
+const row = `<tr>
+  <td>${categories[cat][lang]}</td>
+  <td>${totalPossibleWeight > 0 ? `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}` : "-"}</td>
+  <td class="${riskClass}">${riskStatus}</td>
+</tr>`;
     summaryBody.insertAdjacentHTML('beforeend', row);
 
+    // Save detailed responses if user reviewed this category
     if (questions.length > 0) {
       printResponses.push({
         category: categories[cat][lang],
@@ -987,45 +1073,174 @@ function generateSummary() {
     }
   });
 
+  // Save the collected responses in a global variable for printing
   window.collectedResponses = printResponses;
+
   document.getElementById('summaryTableContainer').classList.remove('hidden');
+  
+  // Hide the intro and initial category selector
+const intro = document.getElementById('rrit-intro');
+if (intro){
+intro.classList.add('hidden');
+intro.setAttribute('aria-hidden','true');
+}
+const step0 = document.getElementById('step0');
+if (step0) {
+  step0.classList.add('hidden');
+  step0.setAttribute('aria-hidden','true');
+}
+const summary = document.getElementById('summaryTableContainer');
+if (summary) {
+  summary.setAttribute('tabindex','-1');
+summary.focus();
+}
+const rritSummary = document.getElementById('rrit-summary');
+const firstQuestion = document.getElementById('stepA');
+if (rritSummary && firstQuestion) {
+firstQuestion.parentNode.insertBefore(rritSummary, firstQuestion);
+
 }
 
-function toggleLanguage(lang) {
-  window.currentLang = lang;
-  document.querySelectorAll('[data-lang="en"]').forEach(el => el.classList.toggle('hidden', lang !== 'en'));
-  document.querySelectorAll('[data-lang="fr"]').forEach(el => el.classList.toggle('hidden', lang !== 'fr'));
 }
+  function buildResponsesHTML(lang) {
+  let html = "";
 
-// Category panel show/hide logic (for Step 0 category selection)
-function collectCategories() {
-  // Always show A, B. Toggle C-K according to checkboxes.
-  document.getElementById("stepA").style.display = "";
-  document.getElementById("stepB").style.display = "";
-  const checked = [];
-  let lang = window.currentLang || "en";
-  let selector = (lang === "fr") ? "#categoryFormFR input[type=checkbox]" : "#categoryFormEN input[type=checkbox]";
-  document.querySelectorAll(selector).forEach(cb => {
-    const cat = cb.value;
-    const show = cb.checked;
-    const panel = document.getElementById("step" + cat);
-    if (panel) panel.style.display = show ? "" : "none";
-    if (show) checked.push(cat);
+  const categoryKeys = Object.keys(categories);
+
+  categoryKeys.forEach(cat => {
+    const section = document.getElementById("step" + cat);
+    if (!section || section.classList.contains("hidden")) return; // Only process visible categories
+
+    const title = categories[cat][lang];
+
+    html += `<h3 style="margin-top:1.5rem;">${title}</h3>`;
+
+    // Find fieldsets (each question)
+    const fieldsets = section.querySelectorAll(`fieldset`);
+
+    fieldsets.forEach(fs => {
+      const question = fs.querySelector('legend') ? fs.querySelector('legend').innerText : '';
+      let answer = "-";
+
+      // Find the checked radio input
+      const checked = fs.querySelector('input[type="radio"]:checked');
+      if (checked) {
+        answer = checked.value;
+      }
+
+      html += `<p><strong>${question}</strong><br>Response: ${answer}</p>`;
+    });
   });
-  document.getElementById("step0").style.display = "none";
-  document.getElementById("rritForm").style.display = "";
+
+  return html;
 }
-document.addEventListener("DOMContentLoaded", function() {
-  // Hide all panels except intro and step 0
-  ["stepA","stepB","stepC","stepD","stepE","stepF","stepG","stepH","stepI","stepJ","stepK"].forEach(id => {
-    var p = document.getElementById(id);
-    if(p) p.style.display = "none";
-  });
-  document.getElementById("rritForm").style.display = "none";
-});
+  
+
 </script>
-
-</form>
+  
 </main></div></div>
+
+  <div id="printContainer" class="hidden" style="margin-top:2rem;">
+  <h2 data-lang="en">Risk Assessment Details</h2>
+  <h2 data-lang="fr" class="hidden">Détails de l’évaluation des risques</h2>
+
+  <div id="printResponses"></div>
+
+  <h2 data-lang="en" style="margin-top:2rem;">Risk Profile Summary</h2>
+  <h2 data-lang="fr" class="hidden" style="margin-top:2rem;">Résumé du profil de risque</h2>
+
+  <div id="printSummary"></div>
+</div>
+  
+<!-- ===== Footer placeholder (optional) -->
+<div class="global-footer">
+  <footer id="wb-info">
+    <div class="gc-sub-footer">
+      <div class="container d-flex align-items-center">
+        <div class="wtrmrk align-self-end" style="margin-left:auto;">
+          <img
+            src="/RRIT/GCWeb/assets/wmms-blk.svg"
+            alt="Symbol of the Government of Canada"
+          />
+        </div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+
+<!-- ===== RRIT logic -->
+<script>
+/*  ==== RRIT logic – revised (no #langSel element needed) ====  */
+
+/* keep the current language in a simple variable */
+let currentLang = "en";
+
+/* show/hide all bilingual elements */
+function toggleLanguage(lang) {
+  currentLang = lang; /* remember the choice */
+
+  document.querySelectorAll("[data-lang]").forEach(el => {
+    const hide = el.getAttribute("data-lang") !== lang;
+    el.classList.toggle("hidden", hide);
+    el.setAttribute("aria-hidden", hide);
+  });
+
+  // Update the Generate Summary button text bilingualy
+  const genButton = document.querySelector('button[onclick="generateSummary()"]');
+  if (genButton) {
+    genButton.textContent = (lang === "en") ? "Generate Summary" : "Générer le résumé";
+  }
+
+  // Update the Print button bilingualy
+const printButton = document.querySelector('button[onclick="preparePrint()"]');
+if (printButton) {
+  printButton.textContent = (lang === "en") ? "Print / Save as PDF" : "Imprimer / Enregistrer en PDF";
+}
+
+  // Keep answers in sync across languages
+  syncResponses();  
+  
+  // If the summary table is showing, regenerate it to update the language
+  const summaryVisible = !document.getElementById('summaryTableContainer').classList.contains('hidden');
+  if (summaryVisible) {
+    generateSummary();
+  }
+}
+
+/* ===== Keep all questions expanded ===== */
+function expandAllQuestions() {
+  /* Only target <details> that are inside visible category panels */
+  document.querySelectorAll(
+    'section[id^="step"]:not(.hidden) details'
+  ).forEach(det => det.setAttribute('open', ''));
+}  
+  
+/* reveal the category panels the user selected in Step-0 */
+function collectCategories() {
+  /* use the variable we just set instead of reading #langSel */
+  const lang   = currentLang;
+  const formId = (lang === "en") ? "categoryFormEN" : "categoryFormFR";
+
+  const chosen = [...document.querySelectorAll("#" + formId + " input:checked")]
+                 .map(cb => cb.value);
+
+  const cats = ["A", "B", ...chosen];
+  cats.forEach(c => {
+    const sec = document.getElementById("step" + c);
+    if (sec) sec.classList.remove("hidden");
+  });
+
+  document.getElementById("statusMsg").textContent =
+    (lang === "en" ? "Categories shown: " : "Catégories affichées : ") +
+    cats.join(", ");
+}
+
+/* default to English when the page loads */
+document.addEventListener("DOMContentLoaded", () => toggleLanguage("en"));
+</script>
+<script src="/RRIT/wet-boew/jquery/2.2.4/jquery.min.js"></script>  <!-- must be first -->
+  <script src="/RRIT/wet-boew/js/wet-boew.min.js"></script>
+  <script src="/RRIT/GCWeb/js/theme.min.js"></script>
 </body>
 </html>
