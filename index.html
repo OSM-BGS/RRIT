@@ -1083,10 +1083,11 @@ function generateSummary() {
     step0.setAttribute('aria-hidden', 'true');
   }
   const summary = document.getElementById('summaryTableContainer');
-  if (summary) {
-    summary.setAttribute('tabindex', '-1');
-    summary.focus();
-  }
+if (summary) {
+  summary.setAttribute('tabindex','-1');
+  summary.focus();
+  summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
   const rritSummary = document.getElementById('rrit-summary');
   const firstQuestion = document.getElementById('stepA');
   if (rritSummary && firstQuestion) {
