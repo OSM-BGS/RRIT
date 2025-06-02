@@ -1082,11 +1082,13 @@ function generateSummary() {
     step0.classList.add('hidden');
     step0.setAttribute('aria-hidden', 'true');
   }
-  const summary = document.getElementById('summaryTableContainer');
-if (summary) {
-  summary.setAttribute('tabindex','-1');
-  summary.focus();
-  summary.scrollIntoView({ behavior: 'smooth', block: 'start' });
+const summaryEl = document.getElementById('summaryTableContainer');
+if (summaryEl) {
+  summaryEl.setAttribute('tabindex','-1');
+  summaryEl.focus();
+  setTimeout(() => {
+    summaryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100); // Allow DOM reflow before scrolling
 }
   const rritSummary = document.getElementById('rrit-summary');
   const firstQuestion = document.getElementById('stepA');
