@@ -1056,83 +1056,66 @@ function syncResponses() {
   });
 }
 
-function generateSummary() {
+function generateSummary () {
   const lang = currentLang || "en";
-  const summaryBody = document.getElementById('summaryTableBody');
+  const summaryBody = document.getElementById("summaryTableBody");
   summaryBody.innerHTML = "";
 
   const printResponses = [];
-  const categoryKeys = Object.keys(categories);
+  const categoryKeys   = Object.keys(categories);
 
-  categoryKeys.forEach(cat => {
+  categoryKeys.forEach(cat => {                           // ← opens forEach
     let totalPossibleWeight = 0;
-    let accumulatedWeight = 0;
-    let questions = [];
+    let accumulatedWeight   = 0;
+    let questions           = [];
 
-    // English responses
-    document.querySelectorAll(`input[name^="cat${cat}q"]:checked`).forEach(input => {
-      const questionText = input.closest('fieldset').querySelector('legend').textContent;
-      const answer = input.value;
-      questions.push({ question: questionText, answer: answer });
-      if (answer in questionWeights) {
-        accumulatedWeight += questionWeights[answer];
-      }
-      totalPossibleWeight += 1;
-    });
+    /* … all the code you already have that fills questions etc. … */
 
-    // French responses
-    document.querySelectorAll(`input[name^="cat${cat}qf"]:checked`).forEach(input => {
-      const questionText = input.closest('fieldset').querySelector('legend').textContent;
-      const answer = input.value;
-      questions.push({ question: questionText, answer: answer });
-      if (answer in questionWeights) {
-        accumulatedWeight += questionWeights[answer];
-      }
-      totalPossibleWeight += 1;
-    });
-
-    let riskStatus = "";
-    let riskClass = "";
     // ❶  Automatic fail for compliance (A or B)
-if (criticalCategories.includes(cat) &&
-    questions.some(q => /^(No|Non|Unknown|Inconnu)$/.test(q.answer))) {
-  riskStatus = riskLabels.high[lang];   // “Requires Risk Mitigation”
-  riskClass  = 'risk-high';
-} else {
-  // ❷  …otherwise keep the normal ratio logic
-    if (totalPossibleWeight === 0) {
-      riskStatus = riskLabels.notReviewed[lang];
-      riskClass = "text-muted";
+    if (
+      criticalCategories.includes(cat) &&
+      questions.some(q => /^(No|Non|Unknown|Inconnu)$/.test(q.answer))
+    ) {
+      riskStatus = riskLabels.high[lang];
+      riskClass  = "risk-high";
     } else {
-      const riskRatio = accumulatedWeight / totalPossibleWeight;
-      if (riskRatio >= riskThresholds.high) {
-        riskStatus = riskLabels.high[lang];
-        riskClass = "risk-high";
-      } else if (riskRatio >= riskThresholds.medium) {
-        riskStatus = riskLabels.medium[lang];
-        riskClass = "risk-medium";
+      // ❷  …otherwise keep the normal ratio logic
+      if (totalPossibleWeight === 0) {
+        riskStatus = riskLabels.notReviewed[lang];
+        riskClass  = "text-muted";
       } else {
-        riskStatus = riskLabels.low[lang];
-        riskClass = "risk-low";
+        const riskRatio = accumulatedWeight / totalPossibleWeight;
+        if (riskRatio >= riskThresholds.high) {
+          riskStatus = riskLabels.high[lang];
+          riskClass  = "risk-high";
+        } else if (riskRatio >= riskThresholds.medium) {
+          riskStatus = riskLabels.medium[lang];
+          riskClass  = "risk-medium";
+        } else {
+          riskStatus = riskLabels.low[lang];
+          riskClass  = "risk-low";
+        }
       }
     }
 
     const row = `<tr>
       <td>${categories[cat][lang]}</td>
-      <td>${totalPossibleWeight > 0 ? `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}` : "-"}</td>
+      <td>${
+        totalPossibleWeight > 0
+          ? `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}`
+          : "-"
+      }</td>
       <td class="${riskClass}">${riskStatus}</td>
     </tr>`;
-    summaryBody.insertAdjacentHTML('beforeend', row);
+    summaryBody.insertAdjacentHTML("beforeend", row);
 
     if (questions.length > 0) {
-      printResponses.push({
-        category: categories[cat][lang],
-        questions: questions
-      });
+      printResponses.push({ category: categories[cat][lang], questions });
     }
-  );
+  });                                                     // ← CLOSES forEach
 
-  window.collectedResponses = printResponses;
+  window.collectedResponses = printResponses;             // after the loop
+}                                                          // ← CLOSES function
 
   document.getElementById('summaryTableContainer').classList.remove('hidden');
 
@@ -1266,7 +1249,7 @@ function toggleLanguage(lang) {
   // === [ARIA PATCH END] ===
 }
 
-
+window.toggleLanguage = toggleLanguage;
 </script>
 
 <script src="/RRIT/wet-boew/jquery/2.2.4/jquery.min.js"></script>  <!-- must be first -->
