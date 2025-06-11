@@ -63,7 +63,7 @@
 <!------- RRIT INTRO – clean version (no citations) ----->
 <section id="rrit-intro" class="panel panel-default">
   <header class="panel-heading">
-    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR InitiativesY</h1>
+    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR InitiativesZ</h1>
     <h1 class="panel-title hidden" data-lang="fr">Outil d'identification rapide des risques (OIRR) pour les initiatives RH</h1>
   </header>
 
@@ -1236,6 +1236,9 @@ function toggleLanguage(lang) {
     }
   });
   // === [ARIA PATCH END] ===
+    /* ✱✱ NEW — shift focus to the link that is now visible ✱✱ */
+  const activeLink = document.querySelector(`#wb-lng a[lang="${lang}"]`);
+  if (activeLink) activeLink.focus();     // prevents “blocked aria-hidden” warning
 }
 
 window.toggleLanguage = toggleLanguage;
