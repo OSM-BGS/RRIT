@@ -1164,10 +1164,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // ===== UI and Bilingual Logic =====
 
 function toggleLanguage(lang) {
-  currentLang = lang;
-
-  // Set <html lang="..."> for accessibility and compliance
-  document.documentElement.setAttribute("lang", lang);
+  currentLang = lang; /* remember the choice */
 
   document.querySelectorAll("[data-lang]").forEach(el => {
     const hide = el.getAttribute("data-lang") !== lang;
@@ -1175,32 +1172,21 @@ function toggleLanguage(lang) {
     el.setAttribute("aria-hidden", hide);
   });
 
-  // Update the Generate Summary button bilingualy
+   // Toggle visibility of language toggle buttons
+  const showEnglishToggle = lang === 'fr';
+  document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', !showEnglishToggle));
+  document.querySelectorAll('.lang-fr').forEach(el => el.classList.toggle('hidden', showEnglishToggle));
+
+  // Update the Generate Summary button text bilingualy
   const genButton = document.querySelector('button[onclick="generateSummary()"]');
   if (genButton) {
     genButton.textContent = (lang === "en") ? "Generate Summary" : "Générer le résumé";
   }
-  // (Print button toggle intentionally left unchanged per your instruction.)
 
-  // Keep answers in sync across languages
-  syncResponses();
-
-  // If the summary table is showing, regenerate it to update the language
-  const summaryVisible = !document.getElementById('summaryTableContainer').classList.contains('hidden');
-  if (summaryVisible) {
-    generateSummary();
-  }
-
-  // === [ARIA PATCH START] ===
-  // Mark active language for screen readers
-  document.querySelectorAll('#wb-lng a').forEach(link => {
-    if (link.getAttribute('lang') === lang) {
-      link.setAttribute('aria-current', 'page');
-    } else {
-      link.removeAttribute('aria-current');
-    }
-  });
-  // === [ARIA PATCH END] ===
+  // Update the Print button bilingualy
+const printButton = document.querySelector('button[onclick="preparePrint()"]');
+if (printButton) {
+  printButton.textContent = (lang === "en") ? "Print / Save as PDF" : "Imprimer / Enregistrer en PDF";
 }
 
 
