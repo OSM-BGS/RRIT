@@ -994,7 +994,7 @@ const questionWeights = {
   "Non": 1,           // French "No"
   "Inconnu": 0.5      // French "Unknown"
 };
-
+const criticalCategories = ['A', 'B'];   // ← NEW
 const riskLabels = {
   high:    { en: "Requires Risk Mitigation",        fr: "Requiert une atténuation des risques" },
   medium:  { en: "Further research required",       fr: "Recherche supplémentaire requise" },
@@ -1093,7 +1093,13 @@ function generateSummary() {
 
     let riskStatus = "";
     let riskClass = "";
-
+    // ❶  Automatic fail for compliance (A or B)
+if (criticalCategories.includes(cat) &&
+    questions.some(q => /^(No|Non|Unknown|Inconnu)$/.test(q.answer))) {
+  riskStatus = riskLabels.high[lang];   // “Requires Risk Mitigation”
+  riskClass  = 'risk-high';
+} else {
+  // ❷  …otherwise keep the normal ratio logic
     if (totalPossibleWeight === 0) {
       riskStatus = riskLabels.notReviewed[lang];
       riskClass = "text-muted";
