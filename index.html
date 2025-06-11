@@ -63,7 +63,7 @@
 <!------- RRIT INTRO – clean version (no citations) ----->
 <section id="rrit-intro" class="panel panel-default">
   <header class="panel-heading">
-    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR InitiativesX</h1>
+    <h1 class="panel-title" data-lang="en">Rapid Risk Identification Tool (RRIT) for HR InitiativesY</h1>
     <h1 class="panel-title hidden" data-lang="fr">Outil d'identification rapide des risques (OIRR) pour les initiatives RH</h1>
   </header>
 
@@ -1057,21 +1057,49 @@ function syncResponses() {
 }
 
 function generateSummary () {
-  const lang = currentLang || "en";
-  const summaryBody = document.getElementById("summaryTableBody");
+  const lang         = currentLang || "en";
+  const summaryBody  = document.getElementById("summaryTableBody");
   summaryBody.innerHTML = "";
 
   const printResponses = [];
   const categoryKeys   = Object.keys(categories);
 
-  categoryKeys.forEach(cat => {                           // ← opens forEach
+  /* ----------------------------------------------------------
+   * loop over each category (A … K)
+   * -------------------------------------------------------- */
+  categoryKeys.forEach(cat => {
     let totalPossibleWeight = 0;
     let accumulatedWeight   = 0;
-    let questions           = [];
+    const questions         = [];
 
-    /* … all the code you already have that fills questions etc. … */
+    /* ---------- English answers ---------- */
+    document
+      .querySelectorAll(`input[name^="cat${cat}q"]:checked`)
+      .forEach(input => {
+        const qText  = input.closest("fieldset").querySelector("legend").textContent;
+        const answer = input.value;
+        questions.push({ question: qText, answer });
 
-    // ❶  Automatic fail for compliance (A or B)
+        if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
+        totalPossibleWeight += 1;
+      });
+
+    /* ---------- French answers ---------- */
+    document
+      .querySelectorAll(`input[name^="cat${cat}qf"]:checked`)
+      .forEach(input => {
+        const qText  = input.closest("fieldset").querySelector("legend").textContent;
+        const answer = input.value;
+        questions.push({ question: qText, answer });
+
+        if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
+        totalPossibleWeight += 1;
+      });
+
+    /* ---------- work out risk status ---------- */
+    let riskStatus, riskClass;
+
+    /* ❶  hard-fail if A or B has a “No / Unknown” answer */
     if (
       criticalCategories.includes(cat) &&
       questions.some(q => /^(No|Non|Unknown|Inconnu)$/.test(q.answer))
@@ -1079,16 +1107,16 @@ function generateSummary () {
       riskStatus = riskLabels.high[lang];
       riskClass  = "risk-high";
     } else {
-      // ❷  …otherwise keep the normal ratio logic
+      /* ❷  normal ratio logic for all other cases */
       if (totalPossibleWeight === 0) {
         riskStatus = riskLabels.notReviewed[lang];
         riskClass  = "text-muted";
       } else {
-        const riskRatio = accumulatedWeight / totalPossibleWeight;
-        if (riskRatio >= riskThresholds.high) {
+        const ratio = accumulatedWeight / totalPossibleWeight;
+        if (ratio >= riskThresholds.high) {
           riskStatus = riskLabels.high[lang];
           riskClass  = "risk-high";
-        } else if (riskRatio >= riskThresholds.medium) {
+        } else if (ratio >= riskThresholds.medium) {
           riskStatus = riskLabels.medium[lang];
           riskClass  = "risk-medium";
         } else {
@@ -1098,74 +1126,35 @@ function generateSummary () {
       }
     }
 
-    const row = `<tr>
-      <td>${categories[cat][lang]}</td>
-      <td>${
-        totalPossibleWeight > 0
-          ? `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}`
-          : "-"
-      }</td>
-      <td class="${riskClass}">${riskStatus}</td>
-    </tr>`;
-    summaryBody.insertAdjacentHTML("beforeend", row);
+    /* ---------- add the row to the summary table ---------- */
+    summaryBody.insertAdjacentHTML(
+      "beforeend",
+      `<tr>
+         <td>${categories[cat][lang]}</td>
+         <td>${totalPossibleWeight > 0 ? `${accumulatedWeight.toFixed(1)} / ${totalPossibleWeight}` : "-"}</td>
+         <td class="${riskClass}">${riskStatus}</td>
+       </tr>`
+    );
 
-    if (questions.length > 0) {
+    if (questions.length) {
       printResponses.push({ category: categories[cat][lang], questions });
     }
-  });                                                     // ← CLOSES forEach
+  });   // ← END of categoryKeys.forEach(…)
 
-  window.collectedResponses = printResponses;             // after the loop
-}                                                          // ← CLOSES function
+  /* ----------------------------------------------------------
+   * one-time work that should run ONCE per summary
+   * -------------------------------------------------------- */
+  window.collectedResponses = printResponses;
 
-  document.getElementById('summaryTableContainer').classList.remove('hidden');
+  document.getElementById("summaryTableContainer").classList.remove("hidden");
 
-  // Hide intro and initial category selector
-  const intro = document.getElementById('rrit-intro');
-  if (intro) {
-    intro.classList.add('hidden');
-    intro.setAttribute('aria-hidden', 'true');
-  }
-  const step0 = document.getElementById('step0');
-  if (step0) {
-    step0.classList.add('hidden');
-    step0.setAttribute('aria-hidden', 'true');
-  }
-const summaryEl = document.getElementById('summaryTableContainer');
-if (summaryEl) {
-  summaryEl.setAttribute('tabindex','-1');
-  summaryEl.focus();
-  setTimeout(() => {
-    summaryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 100); // Allow DOM reflow before scrolling
-}
-  const rritSummary = document.getElementById('rrit-summary');
-  const firstQuestion = document.getElementById('stepA');
+  /* move Summary panel above Step A (for accessibility) */
+  const rritSummary   = document.getElementById("rrit-summary");
+  const firstQuestion = document.getElementById("stepA");
   if (rritSummary && firstQuestion) {
     firstQuestion.parentNode.insertBefore(rritSummary, firstQuestion);
   }
-}
-
-function buildResponsesHTML(lang) {
-  let html = "";
-  const categoryKeys = Object.keys(categories);
-  categoryKeys.forEach(cat => {
-    const section = document.getElementById("step" + cat);
-    if (!section || section.classList.contains("hidden")) return;
-    const title = categories[cat][lang];
-    html += `<h3 style="margin-top:1.5rem;">${title}</h3>`;
-    const fieldsets = section.querySelectorAll(`fieldset`);
-    fieldsets.forEach(fs => {
-      const question = fs.querySelector('legend') ? fs.querySelector('legend').innerText : '';
-      let answer = "-";
-      const checked = fs.querySelector('input[type="radio"]:checked');
-      if (checked) {
-        answer = checked.value;
-      }
-      html += `<p><strong>${question}</strong><br>Response: ${answer}</p>`;
-    });
-  });
-  return html;
-}
+}     // ← END of generateSummary()
 
 // ===== UI and Bilingual Logic =====
 
