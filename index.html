@@ -1147,6 +1147,26 @@ function generateSummary () {
 
   document.getElementById("summaryTableContainer").classList.remove("hidden");
 
+  // Hide intro and initial category selector
+  const intro = document.getElementById('rrit-intro');
+  if (intro) {
+    intro.classList.add('hidden');
+    intro.setAttribute('aria-hidden', 'true');
+  }
+  const step0 = document.getElementById('step0');
+  if (step0) {
+    step0.classList.add('hidden');
+    step0.setAttribute('aria-hidden', 'true');
+  }
+  const summaryEl = document.getElementById('summaryTableContainer');
+  if (summaryEl) {
+    summaryEl.setAttribute('tabindex','-1');
+    summaryEl.focus();
+    setTimeout(() => {
+      summaryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100); // Allow DOM reflow before scrolling
+  }
+  
   /* move Summary panel above Step A (for accessibility) */
   const rritSummary   = document.getElementById("rrit-summary");
   const firstQuestion = document.getElementById("stepA");
