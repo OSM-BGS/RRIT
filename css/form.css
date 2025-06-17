@@ -109,7 +109,10 @@ tr.risk-low td {
   color: #666;
   margin-top: 2rem;
 }
-
+.panel-title {
+  color: white;
+  background-color: #264a88; /* GC blue */
+}
 /* ========== PRINT STYLES ========== */
 
 
