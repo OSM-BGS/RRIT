@@ -1055,77 +1055,68 @@ function syncResponses() {
   });
 }
 
-function generateSummary () {
-  const lang         = currentLang || "en";
-  const summaryBody  = document.getElementById("summaryTableBody");
+function generateSummary() {
+  const lang = currentLang || "en";
+  const summaryBody = document.getElementById("summaryTableBody");
   summaryBody.innerHTML = "";
 
   const printResponses = [];
-  const categoryKeys   = Object.keys(categories);
 
-  /* ----------------------------------------------------------
-   * loop over each category (A … K)
-   * -------------------------------------------------------- */
-  categoryKeys.forEach(cat => {
+  // Use only currently visible categories (from global state)
+  const visibleCats = window.visibleCategories || Object.keys(categories);
+
+  visibleCats.forEach(cat => {
     let totalPossibleWeight = 0;
-    let accumulatedWeight   = 0;
-    const questions         = [];
+    let accumulatedWeight = 0;
+    const questions = [];
 
-    /* ---------- English answers ---------- */
-    document
-      .querySelectorAll(`input[name^="cat${cat}q"]:checked`)
-      .forEach(input => {
-        const qText  = input.closest("fieldset").querySelector("legend").textContent;
-        const answer = input.value;
-        questions.push({ question: qText, answer });
+    // English responses
+    document.querySelectorAll(`section#step${cat} input[name^="cat${cat}q"]:checked`).forEach(input => {
+      const qText = input.closest("fieldset").querySelector("legend").textContent;
+      const answer = input.value;
+      questions.push({ question: qText, answer });
 
-        if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
-        totalPossibleWeight += 1;
-      });
+      if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
+      totalPossibleWeight += 1;
+    });
 
-    /* ---------- French answers ---------- */
-    document
-      .querySelectorAll(`input[name^="cat${cat}qf"]:checked`)
-      .forEach(input => {
-        const qText  = input.closest("fieldset").querySelector("legend").textContent;
-        const answer = input.value;
-        questions.push({ question: qText, answer });
+    // French responses
+    document.querySelectorAll(`section#step${cat} input[name^="cat${cat}qf"]:checked`).forEach(input => {
+      const qText = input.closest("fieldset").querySelector("legend").textContent;
+      const answer = input.value;
+      questions.push({ question: qText, answer });
 
-        if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
-        totalPossibleWeight += 1;
-      });
+      if (answer in questionWeights) accumulatedWeight += questionWeights[answer];
+      totalPossibleWeight += 1;
+    });
 
-    /* ---------- work out risk status ---------- */
+    // Determine risk status
     let riskStatus, riskClass;
 
-    /* ❶  hard-fail if A or B has a “No / Unknown” answer */
     if (
       criticalCategories.includes(cat) &&
       questions.some(q => /^(No|Non|Unknown|Inconnu)$/.test(q.answer))
     ) {
       riskStatus = riskLabels.high[lang];
-      riskClass  = "risk-high";
+      riskClass = "risk-high";
+    } else if (totalPossibleWeight === 0) {
+      riskStatus = riskLabels.notReviewed[lang];
+      riskClass = "text-muted";
     } else {
-      /* ❷  normal ratio logic for all other cases */
-      if (totalPossibleWeight === 0) {
-        riskStatus = riskLabels.notReviewed[lang];
-        riskClass  = "text-muted";
+      const ratio = accumulatedWeight / totalPossibleWeight;
+      if (ratio >= riskThresholds.high) {
+        riskStatus = riskLabels.high[lang];
+        riskClass = "risk-high";
+      } else if (ratio >= riskThresholds.medium) {
+        riskStatus = riskLabels.medium[lang];
+        riskClass = "risk-medium";
       } else {
-        const ratio = accumulatedWeight / totalPossibleWeight;
-        if (ratio >= riskThresholds.high) {
-          riskStatus = riskLabels.high[lang];
-          riskClass  = "risk-high";
-        } else if (ratio >= riskThresholds.medium) {
-          riskStatus = riskLabels.medium[lang];
-          riskClass  = "risk-medium";
-        } else {
-          riskStatus = riskLabels.low[lang];
-          riskClass  = "risk-low";
-        }
+        riskStatus = riskLabels.low[lang];
+        riskClass = "risk-low";
       }
     }
 
-    /* ---------- add the row to the summary table ---------- */
+    // Add to summary table
     summaryBody.insertAdjacentHTML(
       "beforeend",
       `<tr>
@@ -1138,46 +1129,43 @@ function generateSummary () {
     if (questions.length) {
       printResponses.push({ category: categories[cat][lang], questions });
     }
-  });   // ← END of categoryKeys.forEach(…)
+  });
 
-  /* ----------------------------------------------------------
-   * one-time work that should run ONCE per summary
-   * -------------------------------------------------------- */
+  // Store summary data
   window.collectedResponses = printResponses;
 
-  document.getElementById("summaryTableContainer").classList.remove("hidden");
+  // Show summary
+  const summaryEl = document.getElementById("summaryTableContainer");
+  summaryEl.classList.remove("hidden");
 
-  // Hide intro and initial category selector
-  const intro = document.getElementById('rrit-intro');
+  // Hide intro and category selector
+  const intro = document.getElementById("rrit-intro");
+  const step0 = document.getElementById("step0");
   if (intro) {
-    intro.classList.add('hidden');
-    intro.setAttribute('aria-hidden', 'true');
+    intro.classList.add("hidden");
+    intro.setAttribute("aria-hidden", "true");
   }
-  const step0 = document.getElementById('step0');
   if (step0) {
-    step0.classList.add('hidden');
-    step0.setAttribute('aria-hidden', 'true');
+    step0.classList.add("hidden");
+    step0.setAttribute("aria-hidden", "true");
   }
-  const summaryEl = document.getElementById('summaryTableContainer');
-if (summaryEl) {
-  summaryEl.setAttribute('tabindex','-1');
-  summaryEl.focus();
 
-  // Prevent scroll on initial page load
-  if (!window.preventInitialScroll) {
+  // Scroll only if not blocked
+  if (summaryEl && !window.preventInitialScroll) {
+    summaryEl.setAttribute("tabindex", "-1");
+    summaryEl.focus();
     setTimeout(() => {
-      summaryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      summaryEl.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 100);
   }
-}
-  
-  /* move Summary panel above Step A (for accessibility) */
-  const rritSummary   = document.getElementById("rrit-summary");
+
+  // Move summary above questions for screen readers
+  const rritSummary = document.getElementById("rrit-summary");
   const firstQuestion = document.getElementById("stepA");
   if (rritSummary && firstQuestion) {
     firstQuestion.parentNode.insertBefore(rritSummary, firstQuestion);
   }
-}     // ← END of generateSummary()
+}
 
 // ===== UI and Bilingual Logic =====
 
