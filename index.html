@@ -1159,13 +1159,16 @@ function generateSummary () {
     step0.setAttribute('aria-hidden', 'true');
   }
   const summaryEl = document.getElementById('summaryTableContainer');
-  if (summaryEl) {
-    summaryEl.setAttribute('tabindex','-1');
-    summaryEl.focus();
-   if (!window.preventInitialScroll) {
-  setTimeout(() => {
-    summaryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 100);
+if (summaryEl) {
+  summaryEl.setAttribute('tabindex','-1');
+  summaryEl.focus();
+
+  // Prevent scroll on initial page load
+  if (!window.preventInitialScroll) {
+    setTimeout(() => {
+      summaryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
 }
   
   /* move Summary panel above Step A (for accessibility) */
@@ -1230,6 +1233,13 @@ document.addEventListener("DOMContentLoaded", () => {
   allCheckboxes.forEach(cb => {
     cb.addEventListener("change", collectCategories);
   });
+ // ✅ Block auto-scroll on initial page load
+  window.preventInitialScroll = true;
+
+  // (Optional) Reset after a few seconds to allow scrolling later
+  setTimeout(() => {
+    window.preventInitialScroll = false;
+  }, 4000); // adjust time if needed
 });
 
 // ===== UI and Bilingual Logic =====
