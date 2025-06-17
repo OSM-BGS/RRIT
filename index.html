@@ -1062,15 +1062,24 @@ function generateSummary() {
 
   const printResponses = [];
 
-  // Use only currently visible categories (from global state)
-  const visibleCats = window.visibleCategories || Object.keys(categories);
+  // Always include A and B, and add only checked boxes from C–K
+  const checkedInputs = document.querySelectorAll(
+    "#categoryFormEN input:checked, #categoryFormFR input:checked"
+  );
+
+  const selectedCats = new Set(["A", "B"]);
+  checkedInputs.forEach(input => {
+    selectedCats.add(input.value);
+  });
+
+  const visibleCats = [...selectedCats];
 
   visibleCats.forEach(cat => {
     let totalPossibleWeight = 0;
     let accumulatedWeight = 0;
     const questions = [];
 
-    // English responses
+    // English answers
     document.querySelectorAll(`section#step${cat} input[name^="cat${cat}q"]:checked`).forEach(input => {
       const qText = input.closest("fieldset").querySelector("legend").textContent;
       const answer = input.value;
@@ -1080,7 +1089,7 @@ function generateSummary() {
       totalPossibleWeight += 1;
     });
 
-    // French responses
+    // French answers
     document.querySelectorAll(`section#step${cat} input[name^="cat${cat}qf"]:checked`).forEach(input => {
       const qText = input.closest("fieldset").querySelector("legend").textContent;
       const answer = input.value;
@@ -1090,7 +1099,6 @@ function generateSummary() {
       totalPossibleWeight += 1;
     });
 
-    // Determine risk status
     let riskStatus, riskClass;
 
     if (
@@ -1116,7 +1124,6 @@ function generateSummary() {
       }
     }
 
-    // Add to summary table
     summaryBody.insertAdjacentHTML(
       "beforeend",
       `<tr>
@@ -1131,16 +1138,13 @@ function generateSummary() {
     }
   });
 
-  // Store summary data
   window.collectedResponses = printResponses;
 
-  // Show summary
   const summaryEl = document.getElementById("summaryTableContainer");
   summaryEl.classList.remove("hidden");
 
-  // Hide intro and category selector
-  const intro = document.getElementById("rrit-intro");
-  const step0 = document.getElementById("step0");
+  const intro = document.getElementById('rrit-intro');
+  const step0 = document.getElementById('step0');
   if (intro) {
     intro.classList.add("hidden");
     intro.setAttribute("aria-hidden", "true");
@@ -1150,7 +1154,6 @@ function generateSummary() {
     step0.setAttribute("aria-hidden", "true");
   }
 
-  // Scroll only if not blocked
   if (summaryEl && !window.preventInitialScroll) {
     summaryEl.setAttribute("tabindex", "-1");
     summaryEl.focus();
@@ -1159,7 +1162,6 @@ function generateSummary() {
     }, 100);
   }
 
-  // Move summary above questions for screen readers
   const rritSummary = document.getElementById("rrit-summary");
   const firstQuestion = document.getElementById("stepA");
   if (rritSummary && firstQuestion) {
