@@ -999,6 +999,43 @@ En savoir plus <span class="wb-inv"> sur la mobilisation des employés et le cha
       </table>
     </div>
   </div>
+<details id="riskSummaryHelp" class="hidden">
+  <summary id="riskSummaryHelpLabel">📘 How to interpret the Risk Summary</summary>
+
+  <!-- English Content -->
+  <div id="riskHelpEN">
+    <p>Each category in the Risk Profile Summary includes:</p>
+    <ul>
+      <li><strong>A score</strong> (e.g., 2.5 / 4) showing how many responses indicate lower risk.</li>
+      <li><strong>A risk status</strong>: High, Medium, Low, or Not Reviewed.</li>
+    </ul>
+    <p>Use the results to identify areas needing attention:</p>
+    <ul>
+      <li><strong>High Risk</strong>: Prioritize review and mitigation.</li>
+      <li><strong>Medium Risk</strong>: Clarify and improve where needed.</li>
+      <li><strong>Low Risk</strong>: Proceed, but continue monitoring.</li>
+      <li><strong>Not Reviewed</strong>: Complete this section for full results.</li>
+    </ul>
+    <p>The summary supports business case development, planning, and informed decision-making.</p>
+  </div>
+
+  <!-- French Content -->
+  <div id="riskHelpFR" class="hidden">
+    <p>Chaque catégorie du sommaire du profil de risque comprend :</p>
+    <ul>
+      <li><strong>Un score</strong> (p. ex., 2,5 / 4) indiquant combien de réponses signalent un risque faible.</li>
+      <li><strong>Un statut de risque</strong> : Élevé, Moyen, Faible ou Non examiné.</li>
+    </ul>
+    <p>Utilisez les résultats pour cibler les domaines nécessitant une attention :</p>
+    <ul>
+      <li><strong>Risque élevé</strong> : Priorisez la révision et les mesures d'atténuation.</li>
+      <li><strong>Risque moyen</strong> : Clarifiez et améliorez les aspects en cause.</li>
+      <li><strong>Risque faible</strong> : Continuez, tout en assurant un suivi.</li>
+      <li><strong>Non examiné</strong> : Complétez cette section pour obtenir un résultat complet.</li>
+    </ul>
+    <p>Ce sommaire soutient la planification, la prise de décision et la justification d'investissement.</p>
+  </div>
+</details>
 
 </section>
 
@@ -1195,6 +1232,12 @@ if (generateBtn) {
 if (printBtn) {
   printBtn.classList.remove("hidden");
   printBtn.setAttribute("aria-hidden", "false");
+}
+  // ✅ Show and expand accordion help block
+const helpBlock = document.getElementById("riskSummaryHelp");
+if (helpBlock) {
+  helpBlock.classList.remove("hidden");
+  helpBlock.setAttribute("open", ""); // optional: expands automatically
 }
 }
 
