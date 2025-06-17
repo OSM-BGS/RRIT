@@ -1162,10 +1162,11 @@ function generateSummary () {
   if (summaryEl) {
     summaryEl.setAttribute('tabindex','-1');
     summaryEl.focus();
-    setTimeout(() => {
-      summaryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100); // Allow DOM reflow before scrolling
-  }
+   if (!window.preventInitialScroll) {
+  setTimeout(() => {
+    summaryEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
   
   /* move Summary panel above Step A (for accessibility) */
   const rritSummary   = document.getElementById("rrit-summary");
