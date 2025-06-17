@@ -207,3 +207,15 @@ tr.risk-low td {
   height: auto;       /* maintain aspect ratio */
 }
 }
+
+@media print {
+  #riskSummaryHelp {
+    display: block;
+  }
+  #riskSummaryHelp:not([open])::before {
+    content: ''; /* Some browsers collapse otherwise */
+  }
+  #riskSummaryHelp summary {
+    display: none; /* Optional: hide clickable label in print */
+  }
+}
