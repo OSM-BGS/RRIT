@@ -1292,8 +1292,13 @@ function toggleLanguage(lang) {
   if (genButton) {
     genButton.textContent = (lang === "en") ? "Generate Summary" : "Générer le résumé";
   }
-  // (Print button toggle intentionally left unchanged per your instruction.)
-
+ // Update the Print button label bilingualy (if visible)
+const printButton = document.getElementById("printSummaryBtn");
+if (printButton && !printButton.classList.contains("hidden")) {
+  printButton.textContent = (lang === "en")
+    ? "Print / Save as PDF"
+    : "Imprimer / Enregistrer en PDF";
+}
   // Keep answers in sync across languages
   syncResponses();
 
