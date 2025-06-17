@@ -1203,7 +1203,7 @@ function collectCategories() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Detect browser-preferred language, default to English
+  // Detect browser language
   const browserLang =
     (navigator.languages && navigator.languages.length)
       ? navigator.languages[0]
@@ -1213,6 +1213,12 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     toggleLanguage("en");
   }
+
+  // Enable real-time toggling of category sections
+  const allCheckboxes = document.querySelectorAll("#categoryFormEN input, #categoryFormFR input");
+  allCheckboxes.forEach(cb => {
+    cb.addEventListener("change", collectCategories);
+  });
 });
 
 // ===== UI and Bilingual Logic =====
