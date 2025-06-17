@@ -219,3 +219,59 @@ tr.risk-low td {
     display: none; /* Optional: hide clickable label in print */
   }
 }
+
+/* ============================
+   PRINT STYLES FOR RRIT TOOL
+   ============================ */
+@media print {
+
+  /* Ensure hidden elements like accordion help are printed */
+  .hidden {
+    display: block !important;
+  }
+
+  /* Hide navigation, language switchers, and buttons */
+  header, footer, nav,
+  #lang-switch, #generateSummaryBtn, #printSummaryBtn,
+  button, .btn, .no-print {
+    display: none !important;
+  }
+
+  /* Expand accordion if open and suppress <summary> label */
+  #riskSummaryHelp summary {
+    display: none !important;
+  }
+
+  #riskSummaryHelp::before {
+    content: ""; /* ensures visibility in some browsers */
+  }
+
+  /* Improve legibility and layout */
+  body {
+    font-size: 12pt;
+    color: #000;
+    margin: 1in;
+    background: white !important;
+  }
+
+  table {
+    width: 100% !important;
+    border-collapse: collapse;
+    page-break-inside: avoid;
+  }
+
+  table th, table td {
+    border: 1px solid #000;
+    padding: 0.25em 0.5em;
+  }
+
+  h1, h2, h3 {
+    page-break-after: avoid;
+    color: #000 !important;
+  }
+
+  /* Prevent page breaks inside important elements */
+  .panel, section, fieldset, details {
+    page-break-inside: avoid;
+  }
+}
