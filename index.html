@@ -1268,10 +1268,12 @@ function toggleLanguage(lang) {
   syncResponses();
 
   // If the summary table is showing, regenerate it to update the language
-  const summaryVisible = !document.getElementById('summaryTableContainer').classList.contains('hidden');
-  if (summaryVisible) {
-    generateSummary();
-  }
+  const summaryContainer = document.getElementById('summaryTableContainer');
+const alreadyInteracted = document.querySelector('input[type="radio"]:checked');
+
+if (summaryContainer && !summaryContainer.classList.contains('hidden') && alreadyInteracted) {
+  generateSummary();
+}
 
   // === [ARIA PATCH START] ===
   // Mark active language for screen readers
