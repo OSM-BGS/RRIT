@@ -1342,6 +1342,20 @@ if (printButton && !printButton.classList.contains("hidden")) {
     ? "Print / Save as PDF"
     : "Imprimer / Enregistrer en PDF";
 }
+  // ✅ Update accordion help content based on language
+const riskHelpEN = document.getElementById("riskHelpEN");
+const riskHelpFR = document.getElementById("riskHelpFR");
+if (riskHelpEN && riskHelpFR) {
+  riskHelpEN.classList.toggle("hidden", lang !== "en");
+  riskHelpFR.classList.toggle("hidden", lang !== "fr");
+}
+
+const helpLabel = document.getElementById("riskSummaryHelpLabel");
+if (helpLabel) {
+  helpLabel.textContent = (lang === "en")
+    ? "📘 How to interpret the Risk Summary"
+    : "📘 Comment interpréter le sommaire du profil de risque";
+}
   // Keep answers in sync across languages
   syncResponses();
 
