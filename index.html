@@ -1187,18 +1187,28 @@ function expandAllQuestions() {
 function collectCategories() {
   const lang = currentLang;
   const formId = (lang === "en") ? "categoryFormEN" : "categoryFormFR";
-  const chosen = [...document.querySelectorAll("#" + formId + " input:checked")]
-                 .map(cb => cb.value);
-  const cats = ["A", "B", ...chosen];
-  cats.forEach(c => {
-    const sec = document.getElementById("step" + c);
-    if (sec) sec.classList.remove("hidden");
+  const selected = [...document.querySelectorAll("#" + formId + " input:checked")].map(cb => cb.value);
+  const visibleCats = ["A", "B", ...selected];
+
+  // Loop through all defined categories (A–K)
+  Object.keys(categories).forEach(cat => {
+    const sec = document.getElementById("step" + cat);
+    if (!sec) return;
+
+    if (visibleCats.includes(cat)) {
+      sec.classList.remove("hidden");
+      sec.setAttribute("aria-hidden", "false");
+    } else {
+      sec.classList.add("hidden");
+      sec.setAttribute("aria-hidden", "true");
+    }
   });
+
+  // Update live feedback
   document.getElementById("statusMsg").textContent =
     (lang === "en" ? "Categories shown: " : "Catégories affichées : ") +
-    cats.join(", ");
+    visibleCats.join(", ");
 }
-
 // ===== On Page Load =====
 
 
