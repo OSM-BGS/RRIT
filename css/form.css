@@ -111,20 +111,7 @@ tr.risk-low td {
 }
 
 /* ========== PRINT STYLES ========== */
-@media print {
-  /* Hide header, nav, language selector, intro, and initial selection */
-  #wb-bnr,
-  #wb-tphp,
-  #wb-lng,
-  #rrit-intro,
-  #step0 {
-    display: none !important;
-  }
 
-  /* Hide any collapsed details panels */
-  details:not([open]) {
-    display: none !important;
-  }
 
   /* Base print typography */
   html, body {
@@ -208,13 +195,7 @@ tr.risk-low td {
 }
 }
 
-@media print {
-  #riskSummaryHelp {
-    display: block;
-  }
-  #riskSummaryHelp:not([open])::before {
-    content: ''; /* Some browsers collapse otherwise */
-  }
+
   #riskSummaryHelp summary {
     display: none; /* Optional: hide clickable label in print */
   }
@@ -223,19 +204,7 @@ tr.risk-low td {
 /* ============================
    PRINT STYLES FOR RRIT TOOL
    ============================ */
-@media print {
 
-  /* Ensure hidden elements like accordion help are printed */
-  .hidden {
-    display: block !important;
-  }
-
-  /* Hide navigation, language switchers, and buttons */
-  header, footer, nav,
-  #lang-switch, #generateSummaryBtn, #printSummaryBtn,
-  button, .btn, .no-print {
-    display: none !important;
-  }
 
   /* Expand accordion if open and suppress <summary> label */
   #riskSummaryHelp summary {
@@ -271,6 +240,128 @@ tr.risk-low td {
   }
 
   /* Prevent page breaks inside important elements */
+  .panel, section, fieldset, details {
+    page-break-inside: avoid;
+  }
+}
+
+/* ============================
+   UNIFIED PRINT STYLES FOR RRIT TOOL
+   ============================ */
+@media print {
+
+  /* Hide navigation, language switchers, intro, and buttons */
+  #wb-bnr, #wb-tphp, #wb-lng, #rrit-intro, #step0,
+  header, footer, nav, #lang-switch,
+  #generateSummaryBtn, #printSummaryBtn,
+  button, .btn, .no-print {
+    display: none !important;
+  }
+
+  /* Force hidden elements to display (accordion, summary) */
+  .hidden {
+    display: block !important;
+  }
+
+  /* Expand accordion in print and hide <summary> */
+  #riskSummaryHelp {
+    display: block !important;
+  }
+  #riskSummaryHelp summary {
+    display: none !important;
+  }
+  #riskSummaryHelp::before {
+    content: "";
+  }
+
+  /* Typography */
+  html, body {
+    margin: 1in;
+    padding: 0;
+    font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 12pt;
+    line-height: 1.4;
+    color: #000;
+    background: white !important;
+  }
+
+  h1, h2, h3 {
+    page-break-after: avoid;
+    color: #000 !important;
+  }
+
+  h2 {
+    font-size: 16pt;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+  }
+
+  h3 {
+    font-size: 13pt;
+    margin-top: 1.5rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid #ccc;
+    font-weight: bold;
+  }
+
+  /* Table styling */
+  table.table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #000;
+    margin-bottom: 1rem;
+    font-size: 11pt;
+    table-layout: fixed;
+  }
+
+  table.table th,
+  table.table td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: left;
+    vertical-align: top;
+    word-break: break-word;
+  }
+
+  table.table th {
+    background-color: #f1f1f1;
+    font-weight: bold;
+  }
+
+  table.table tr {
+    page-break-inside: avoid;
+  }
+
+  table.table th:nth-child(1),
+  table.table td:nth-child(1) { width: 40%; }
+
+  table.table th:nth-child(2),
+  table.table td:nth-child(2) { width: 20%; }
+
+  table.table th:nth-child(3),
+  table.table td:nth-child(3) { width: 40%; }
+
+  /* Risk indicators */
+  tr.risk-high td { border-left: 5px solid #dc3545; }
+  tr.risk-medium td { border-left: 5px solid #ffc107; }
+  tr.risk-low td { border-left: 5px solid #28a745; }
+
+  /* Footer watermark or image */
+  .footer-canada img {
+    float: right;
+    width: 50px;
+    height: auto;
+  }
+
+  .generated-on {
+    font-size: 10pt;
+    text-align: right;
+    margin-top: 3rem;
+    color: #666;
+  }
+
+  /* Prevent page breaks in structured sections */
   .panel, section, fieldset, details {
     page-break-inside: avoid;
   }
