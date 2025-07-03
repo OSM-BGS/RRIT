@@ -238,29 +238,41 @@ function collectCategories() {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Detect browser language
+  /* ─── 1. Detect browser language and set UI  ─── */
   const browserLang =
     (navigator.languages && navigator.languages.length)
       ? navigator.languages[0]
       : navigator.language || navigator.userLanguage || "en";
-  if (browserLang.toLowerCase().startsWith("fr")) {
-    toggleLanguage("fr");
-  } else {
-    toggleLanguage("en");
+  toggleLanguage(browserLang.toLowerCase().startsWith("fr") ? "fr" : "en");
+
+  /* ─── 2. ONE-TIME retrofit: add data-question to every input  ─── */
+  document.querySelectorAll("fieldset").forEach(fs => {
+    const qText = fs.querySelector("legend")?.textContent.trim() || "";
+    fs.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(inp => {
+      inp.setAttribute("data-question", qText);
+    });
+  });
+
+  /* ─── 3. Enable real-time toggling of category sections  ─── */
+  document
+    .querySelectorAll("#categoryFormEN input, #categoryFormFR input")
+    .forEach(cb => cb.addEventListener("change", collectCategories));
+
+  /* ─── 4. Wire the new action-flow buttons (if present in HTML)  ─── */
+  document.getElementById("editAnswersBtn") ?.addEventListener("click", editAnswersFlow);
+  document.getElementById("newScenarioBtn")  ?.addEventListener("click", startNewScenario);
+  document.getElementById("backToSummary")  ?.addEventListener("click", returnToSummary);
+
+  /* ─── 5. Restore saved scenario, if any  ─── */
+  const saved = loadScenario();
+  if (saved) {
+    window.collectedResponses = saved.data || [];
+    showPostResultActions();   // reveals the Edit/New buttons
   }
 
-  // Enable real-time toggling of category sections
-  const allCheckboxes = document.querySelectorAll("#categoryFormEN input, #categoryFormFR input");
-  allCheckboxes.forEach(cb => {
-    cb.addEventListener("change", collectCategories);
-  });
- // ✅ Block auto-scroll on initial page load
+  /* ─── 6. Block initial WET auto-scroll (existing behaviour)  ─── */
   window.preventInitialScroll = true;
-
-  // (Optional) Reset after a few seconds to allow scrolling later
-  setTimeout(() => {
-    window.preventInitialScroll = false;
-  }, 4000); // adjust time if needed
+  setTimeout(() => { window.preventInitialScroll = false; }, 4000);
 });
 
 // ===== UI and Bilingual Logic =====
