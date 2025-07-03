@@ -196,10 +196,93 @@ if (printBtn) {
 const helpBlock = document.getElementById("riskSummaryHelp");
 if (helpBlock) {
   helpBlock.classList.remove("hidden");
-
 }
+  
+  /* ─── NEW: persist answers + show action bar ─── */
+saveScenario(window.collectedResponses);
+showPostResultActions();
+}
+/* =====  NEW -- Scenario persistence & action-bar helpers  ===== */
+
+let currentLang = "en";             // used by toggleLanguage()
+
+const STORAGE_KEY = "rrit_savedScenario";
+function saveScenario(state) {
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify({ savedAt: new Date().toISOString(), data: state })
+  );
+}
+function loadScenario() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "null"); }
+  catch { return null; }
+}
+function clearScenario() {
+  localStorage.removeItem(STORAGE_KEY);
 }
 
+function showPostResultActions() {
+  const bar = document.getElementById("postResultActions");
+  if (bar) {
+    bar.classList.remove("hidden");
+    bar.setAttribute("aria-hidden", "false");
+  }
+}
+
+function editAnswersFlow() {
+  const data = loadScenario();
+  if (!data) return;
+
+  document.getElementById("rrit-summary")?.classList.add("hidden");
+  document.getElementById("postResultActions")?.classList.add("hidden");
+
+  const back = document.getElementById("backToSummary");
+  if (back) {
+    back.classList.remove("hidden");
+    back.setAttribute("aria-hidden", "false");
+  }
+
+  /* reopen accordions */
+  document.querySelectorAll('section[id^="step"]:not(.hidden) details')
+    .forEach(det => det.setAttribute("open",""));
+
+  /* re-check saved answers (relies on data-question retrofit) */
+  data.data.forEach(cat =>
+    cat.questions.forEach(q => {
+      const radio = document.querySelector(
+        `input[data-question="${q.question.replace(/"/g,'\\"')}"][value="${q.answer}"]`
+      );
+      if (radio) radio.checked = true;
+    })
+  );
+}
+
+function returnToSummary() {
+  collectCategories();      // refresh visible panels
+  generateSummary();        // rebuild scores & table
+  document.getElementById("backToSummary")?.classList.add("hidden");
+}
+
+function startNewScenario() {
+  const msg = currentLang === "fr"
+    ? "Cette action supprimera vos réponses et démarrera un nouveau scénario. Continuer?"
+    : "This will clear your answers and start a new scenario. Proceed?";
+  if (!confirm(msg)) return;
+
+  clearScenario();
+  window.collectedResponses = [];
+
+  /* uncheck everything */
+  document.querySelectorAll('input[type="radio"],input[type="checkbox"]')
+    .forEach(i => (i.checked = false));
+
+  /* reset UI */
+  document.getElementById("rrit-summary")?.classList.add("hidden");
+  document.getElementById("postResultActions")?.classList.add("hidden");
+  document.getElementById("rrit-intro")?.classList.remove("hidden");
+  document.getElementById("step0")?.classList.remove("hidden");
+  document.getElementById("rrit-intro")?.scrollIntoView({behavior:"smooth"});
+}
 // ===== UI and Bilingual Logic =====
 
 
