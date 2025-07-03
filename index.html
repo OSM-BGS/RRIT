@@ -967,7 +967,7 @@ En savoir plus <span class="wb-inv"> sur la mobilisation des employés et le cha
 </section>
 
 <hr class="brdr-bttm mrgn-tp-xl">
-
+html<br><button id="backToSummary" class="btn btn-link hidden" aria-hidden="true" type="button">Back to Summary</button>
 <!-- ===== Risk Summary Section (Bilingual) ===== -->
 <section id="rrit-summary" class="panel panel-default">
   <header class="panel-heading">
@@ -980,7 +980,7 @@ En savoir plus <span class="wb-inv"> sur la mobilisation des employés et le cha
     <button id="generateSummaryBtn" class="btn btn-primary" type="button" onclick="generateSummary()">Generate Summary</button>
     <button id="printSummaryBtn" class="btn btn-secondary hidden" aria-hidden="true" type="button" onclick="window.print()">
   Print / Save as PDF</button>
-
+html<br><!-- Post-result actions: visible only after first summary --><br><div id="postResultActions" class="hidden" aria-hidden="true" style="margin-top:1rem;"><br> <button id="editAnswersBtn" class="btn btn-default" type="button">Edit Answers</button><br> <button id="newScenarioBtn" class="btn btn-link" type="button">Start New Scenario</button><br></div>
     <div id="summaryTableContainer" class="hidden" style="margin-top: 2rem;">
       <table class="table table-striped">
         <caption data-lang="en">Risk Profile Summary Table</caption>
