@@ -1,4 +1,4 @@
-<script>
+
 // ===== RRIT CONFIGURATION BLOCK =====
 
 const questionWeights = {
@@ -342,4 +342,4 @@ if (summaryContainer && !summaryContainer.classList.contains('hidden') && alread
 }
 
 window.toggleLanguage = toggleLanguage;
-</script>
+
