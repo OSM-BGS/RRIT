@@ -241,7 +241,9 @@ function editAnswersFlow() {
     back.classList.remove("hidden");
     back.setAttribute("aria-hidden", "false");
   }
-
+ 
+    // 🆕 bind (or re-bind) the click handler right here
+    back.onclick = returnToSummary;
   /* reopen accordions */
   document.querySelectorAll('section[id^="step"]:not(.hidden) details')
     .forEach(det => det.setAttribute("open",""));
