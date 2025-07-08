@@ -233,22 +233,25 @@ function editAnswersFlow() {
   const data = loadScenario();
   if (!data) return;
 
+  /* 1. Hide summary + action bar */
   document.getElementById("rrit-summary")?.classList.add("hidden");
   document.getElementById("postResultActions")?.classList.add("hidden");
 
-  const back = document.getElementById("backToSummary");
-  if (back) {
-    back.classList.remove("hidden");
-    back.setAttribute("aria-hidden", "false");
-  }
- 
-    // 🆕 bind (or re-bind) the click handler right here
-    back.onclick = returnToSummary;
-  /* reopen accordions */
-  document.querySelectorAll('section[id^="step"]:not(.hidden) details')
-    .forEach(det => det.setAttribute("open",""));
+  /* 2. Show intro + category picker */
+  document.getElementById("rrit-intro")?.classList.remove("hidden");
+  document.getElementById("rrit-intro")?.setAttribute("aria-hidden","false");
 
-  /* re-check saved answers (relies on data-question retrofit) */
+  const step0 = document.getElementById("step0");
+  if (step0) {
+    step0.classList.remove("hidden");
+    step0.setAttribute("aria-hidden","false");
+  }
+
+  /* 3. Collapse all panels */
+  document.querySelectorAll('section[id^="step"] details[open]')
+    .forEach(det => det.removeAttribute('open'));
+
+  /* 4. Re-check saved answers */
   data.data.forEach(cat =>
     cat.questions.forEach(q => {
       const radio = document.querySelector(
@@ -257,7 +260,22 @@ function editAnswersFlow() {
       if (radio) radio.checked = true;
     })
   );
+
+  /* 5. Refresh visible panels */
+  collectCategories();
+
+  /* 6. Show Back-to-Summary link */
+  const back = document.getElementById("backToSummary");
+  if (back) {
+    back.classList.remove("hidden");
+    back.setAttribute("aria-hidden","false");
+    back.onclick = returnToSummary;      // (re)bind handler
+  }
+
+  /* 7. Scroll to intro */
+  document.getElementById("rrit-intro")?.scrollIntoView({behavior:"smooth"});
 }
+
 
 function returnToSummary() {
   collectCategories();      // refresh visible panels
