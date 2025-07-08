@@ -267,7 +267,17 @@ function editAnswersFlow() {
     step0.classList.remove("hidden");
     step0.setAttribute("aria-hidden", "false");
   }
-
+/* 5-ter.  Show Generate Summary button, hide Print button */
+const gen = document.getElementById("generateSummaryBtn");
+if (gen) {
+  gen.classList.remove("hidden");
+  gen.setAttribute("aria-hidden", "false");
+}
+const print = document.getElementById("printSummaryBtn");
+if (print) {
+  print.classList.add("hidden");
+  print.setAttribute("aria-hidden", "true");
+}
   /* 6. Show & bind Back-to-Summary link */
   const back = document.getElementById("backToSummary");
   if (back) {
