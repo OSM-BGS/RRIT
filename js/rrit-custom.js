@@ -237,19 +237,16 @@ function editAnswersFlow() {
   document.getElementById("rrit-summary")?.classList.add("hidden");
   document.getElementById("postResultActions")?.classList.add("hidden");
 
-  /* 2. Show intro + category picker */
-  document.getElementById("rrit-intro")?.classList.remove("hidden");
-  document.getElementById("rrit-intro")?.setAttribute("aria-hidden","false");
-
-  const step0 = document.getElementById("step0");
-  if (step0) {
-    step0.classList.remove("hidden");
-    step0.setAttribute("aria-hidden","false");
+  /* 2. Show intro text */
+  const intro = document.getElementById("rrit-intro");
+  if (intro) {
+    intro.classList.remove("hidden");
+    intro.setAttribute("aria-hidden", "false");
   }
 
   /* 3. Collapse all panels */
   document.querySelectorAll('section[id^="step"] details[open]')
-    .forEach(det => det.removeAttribute('open'));
+    .forEach(det => det.removeAttribute("open"));
 
   /* 4. Re-check saved answers */
   data.data.forEach(cat =>
@@ -261,19 +258,26 @@ function editAnswersFlow() {
     })
   );
 
-  /* 5. Refresh visible panels */
+  /* 5. Refresh which panels are visible */
   collectCategories();
 
-  /* 6. Show Back-to-Summary link */
+  /* 5-bis.  Now un-hide the category-picker block */
+  const step0 = document.getElementById("step0");
+  if (step0) {
+    step0.classList.remove("hidden");
+    step0.setAttribute("aria-hidden", "false");
+  }
+
+  /* 6. Show & bind Back-to-Summary link */
   const back = document.getElementById("backToSummary");
   if (back) {
     back.classList.remove("hidden");
-    back.setAttribute("aria-hidden","false");
-    back.onclick = returnToSummary;      // (re)bind handler
+    back.setAttribute("aria-hidden", "false");
+    back.onclick = returnToSummary;
   }
 
-  /* 7. Scroll to intro */
-  document.getElementById("rrit-intro")?.scrollIntoView({behavior:"smooth"});
+  /* 7. Scroll user to intro */
+  intro?.scrollIntoView({ behavior: "smooth" });
 }
 
 
