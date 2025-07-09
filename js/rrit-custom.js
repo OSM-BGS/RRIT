@@ -233,8 +233,11 @@ function editAnswersFlow() {
   const data = loadScenario();
   if (!data) return;
 
-  /* 1. Hide summary + action bar */
-  document.getElementById("rrit-summary")?.classList.add("hidden");
+  /* 1. Hide result details (table, Print button, help accordion),
+       but keep #rrit-summary visible so the Generate button remains */
+  document.getElementById("summaryTableContainer")?.classList.add("hidden");
+  document.getElementById("printSummaryBtn")?.classList.add("hidden");
+  document.getElementById("riskSummaryHelp")?.classList.add("hidden");
   document.getElementById("postResultActions")?.classList.add("hidden");
 
   /* 2. Show intro text */
@@ -244,40 +247,43 @@ function editAnswersFlow() {
     intro.setAttribute("aria-hidden", "false");
   }
 
-  /* 3. Collapse all panels */
-  document.querySelectorAll('section[id^="step"] details[open]')
+  /* 3. Collapse all open <details> panels */
+  document
+    .querySelectorAll('section[id^="step"] details[open]')
     .forEach(det => det.removeAttribute("open"));
 
   /* 4. Re-check saved answers */
   data.data.forEach(cat =>
     cat.questions.forEach(q => {
       const radio = document.querySelector(
-        `input[data-question="${q.question.replace(/"/g,'\\"')}"][value="${q.answer}"]`
+        `input[data-question="${q.question.replace(/"/g, '\\"')}"][value="${q.answer}"]`
       );
       if (radio) radio.checked = true;
     })
   );
 
-  /* 5. Refresh which panels are visible */
+  /* 5. Refresh visible category panels */
   collectCategories();
 
-  /* 5-bis.  Now un-hide the category-picker block */
+  /* 5-bis. Ensure the category picker block (#step0) is shown */
   const step0 = document.getElementById("step0");
   if (step0) {
     step0.classList.remove("hidden");
     step0.setAttribute("aria-hidden", "false");
   }
-/* 5-ter.  Show Generate Summary button, hide Print button */
-const gen = document.getElementById("generateSummaryBtn");
-if (gen) {
-  gen.classList.remove("hidden");
-  gen.setAttribute("aria-hidden", "false");
-}
-const print = document.getElementById("printSummaryBtn");
-if (print) {
-  print.classList.add("hidden");
-  print.setAttribute("aria-hidden", "true");
-}
+
+  /* 5-ter. Toggle buttons: show Generate, hide Print */
+  const gen = document.getElementById("generateSummaryBtn");
+  if (gen) {
+    gen.classList.remove("hidden");
+    gen.setAttribute("aria-hidden", "false");
+  }
+  const print = document.getElementById("printSummaryBtn");
+  if (print) {
+    print.classList.add("hidden");
+    print.setAttribute("aria-hidden", "true");
+  }
+
   /* 6. Show & bind Back-to-Summary link */
   const back = document.getElementById("backToSummary");
   if (back) {
@@ -286,7 +292,7 @@ if (print) {
     back.onclick = returnToSummary;
   }
 
-  /* 7. Scroll user to intro */
+  /* 7. Scroll user to the intro section */
   intro?.scrollIntoView({ behavior: "smooth" });
 }
 
