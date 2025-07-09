@@ -160,9 +160,12 @@ function generateSummary() {
 // ── Scroll to the “Risk Profile Summary” heading ──
 const summaryHeading = document.getElementById("rrit-summary");
 if (summaryHeading) {
-  summaryHeading.scrollIntoView({ behavior: "smooth", block: "start" });
-  summaryHeading.setAttribute("tabindex", "-1"); // optional a11y
-  summaryHeading.focus();                        // optional a11y
+  // wait one paint-cycle so the new layout is in place
+  requestAnimationFrame(() => {
+    summaryHeading.scrollIntoView({ behavior: "smooth", block: "start" });
+    summaryHeading.setAttribute("tabindex", "-1");  // a11y focus-target
+    summaryHeading.focus();
+  });
 }
   
 // ── Update instructional text once the summary is shown ──
