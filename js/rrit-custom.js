@@ -156,7 +156,13 @@ function generateSummary() {
 
   const summaryEl = document.getElementById("summaryTableContainer");
   summaryEl.classList.remove("hidden");
-
+  
+// ── Update instructional text once the summary is shown ──
+document.querySelector('#rrit-summary p[data-lang="en"]').textContent =
+  "Risk profile summary generated. Review the results below, or click Edit Answers to make changes.";
+document.querySelector('#rrit-summary p[data-lang="fr"]').textContent =
+  "Sommaire du profil de risque généré. Consultez les résultats ci-dessous ou cliquez sur Modifier les réponses pour apporter des changements.";
+  
   const intro = document.getElementById('rrit-intro');
   const step0 = document.getElementById('step0');
   if (intro) {
