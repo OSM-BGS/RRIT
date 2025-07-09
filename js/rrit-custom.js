@@ -156,6 +156,14 @@ function generateSummary() {
 
   const summaryEl = document.getElementById("summaryTableContainer");
   summaryEl.classList.remove("hidden");
+
+// ── Scroll to the “Risk Profile Summary” heading ──
+const summaryHeading = document.getElementById("rrit-summary");
+if (summaryHeading) {
+  summaryHeading.scrollIntoView({ behavior: "smooth", block: "start" });
+  summaryHeading.setAttribute("tabindex", "-1"); // optional a11y
+  summaryHeading.focus();                        // optional a11y
+}
   
 // ── Update instructional text once the summary is shown ──
 document.querySelector('#rrit-summary p[data-lang="en"]').textContent =
@@ -174,13 +182,7 @@ document.querySelector('#rrit-summary p[data-lang="fr"]').textContent =
     step0.setAttribute("aria-hidden", "true");
   }
 
-  if (summaryEl && !window.preventInitialScroll) {
-    summaryEl.setAttribute("tabindex", "-1");
-    summaryEl.focus();
-    setTimeout(() => {
-      summaryEl.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 100);
-  }
+
 
   const rritSummary = document.getElementById("rrit-summary");
   const firstQuestion = document.getElementById("stepA");
