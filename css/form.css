@@ -379,10 +379,53 @@ tr.risk-low td {
     page-break-inside: avoid;
   }
 }
-/* ========= RRIT HOT-FIX: mobile width = 100 %  ========= */
-@media (max-width: 767.98px) {   /* phones & small tablets (Bootstrap “xs”) */
-  .container {
-    width: 100% !important;      /* fill the viewport */
-    max-width: none !important;  /* cancel any rogue fixed width */
+/* ========= RRIT HOT-FIX: make containers truly full-width on phones ===== */
+@media (max-width: 767.98px) {                /* phones & small tablets */
+  .container,
+  .container-fluid {
+    width: 100% !important;                  /* fill the viewport   */
+    max-width: none !important;              /* kill any fixed max  */
+    padding-left: 0 !important;              /* remove 15 px gutters*/
+    padding-right: 0 !important;
   }
+}
+
+/* Stamp used when printing */
+.generated-on {
+  font-size: 10pt;
+  text-align: right;
+  margin-top: 3rem;
+  color: #666;
+}
+
+/* Prevent awkward page breaks when printing */
+.panel,
+section,
+fieldset,
+details {
+  page-break-inside: avoid;
+}
+
+/* ===== Remove panel side padding & margins on phones =================== */
+@media (max-width: 767.98px) {
+  /* headings + bodies */
+  #wb-cont .panel-heading,
+  #wb-cont .panel-body {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* whole panel – gets rid of Bootstrap’s 15 px margin */
+  #wb-cont .panel {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    border-left-width: 0;   /* optional – trims double border */
+    border-right-width: 0;
+  }
+}
+
+/* Make bilingual logos scale down nicely */
+.rrit-logo img {
+  max-width: 100%;
+  height: auto;
 }
