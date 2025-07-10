@@ -449,33 +449,29 @@ function toggleLanguage(lang) {
     }
   });
 
-  // Update the Generate Summary button bilingualy
-  const genButton = document.querySelector('button[onclick="generateSummary()"]');
-  if (genButton) {
-    genButton.textContent = (lang === "en") ? "Generate Summary" : "Générer le résumé";
-  }
- // Update the Print button label bilingualy (if visible)
+// ── Update action-button labels (bilingual) ──────────────────────────
+const genButton   = document.querySelector('button[onclick="generateSummary()"]');
 const printButton = document.getElementById("printSummaryBtn");
-const printButton = document.getElementById("printSummaryBtn");
-if (printButton) {
-  printButton.textContent = (lang === "en")
-    ? "Print / Save as PDF"
-    : "Imprimer / Enregistrer en PDF";
-}
-  /* --- NEW: bilingual labels for Edit & New Scenario buttons --- */
-  const editBtn = document.getElementById("editAnswersBtn");
-  if (editBtn) {
-    editBtn.textContent = (lang === "en")
-      ? "Edit Answers"
-      : "Modifier les réponses";
-  }
+const editBtn     = document.getElementById("editAnswersBtn");
+const newBtn      = document.getElementById("newScenarioBtn");
 
-  const newBtn = document.getElementById("newScenarioBtn");
-  if (newBtn) {
-    newBtn.textContent = (lang === "en")
-      ? "Start New Scenario"
-      : "Nouveau scénario";
-  }
+// 1. Set visible text
+if (genButton)   genButton.textContent   = (lang === "en")
+  ? "Generate Summary"   : "Générer le résumé";
+
+if (printButton) printButton.textContent = (lang === "en")
+  ? "Print / Save as PDF" : "Imprimer / Enregistrer en PDF";
+
+if (editBtn)     editBtn.textContent     = (lang === "en")
+  ? "Edit Answers"        : "Modifier les réponses";
+
+if (newBtn)      newBtn.textContent      = (lang === "en")
+  ? "Start New Scenario"  : "Nouveau scénario";
+
+// 2. Keep aria-labels in sync with the new text
+[genButton, printButton, editBtn, newBtn].forEach(btn => {
+  if (btn) btn.setAttribute("aria-label", btn.textContent.trim());
+});
 
   /* ---------- NEW: keep aria-labels in sync with button text ---------- */
   function syncLabel(btn) {
