@@ -85,7 +85,13 @@ tr.risk-low td    {border-left:4px solid #28a745;}
     border-right-width:0;
   }
 }
-
+/* --- Optional: add 12 px side-padding on very small screens ----- */
+@media (max-width: 767.98px){      /* phones & small tablets */
+  body{
+    padding-left : 12px;           /* tweak to taste: 8-16 px is common */
+    padding-right: 12px;
+  }
+}
 /* ---------- 3. PRINT ----------------------------------------- */
 @media print{
 
