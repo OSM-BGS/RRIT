@@ -378,7 +378,7 @@ tr.risk-low td {
   .panel, section, fieldset, details {
     page-break-inside: avoid;
   }
-
+}
 /* ========= RRIT HOT-FIX: make containers truly full-width on phones ===== */
 @media (max-width: 767.98px) {                /* phones & small tablets */
   .container,
