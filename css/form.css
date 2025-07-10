@@ -379,3 +379,10 @@ tr.risk-low td {
     page-break-inside: avoid;
   }
 }
+/* ========= RRIT HOT-FIX: mobile width = 100 %  ========= */
+@media (max-width: 767.98px) {   /* phones & small tablets (Bootstrap “xs”) */
+  .container {
+    width: 100% !important;      /* fill the viewport */
+    max-width: none !important;  /* cancel any rogue fixed width */
+  }
+}
