@@ -456,33 +456,47 @@ function toggleLanguage(lang) {
   }
  // Update the Print button label bilingualy (if visible)
 const printButton = document.getElementById("printSummaryBtn");
-if (printButton && !printButton.classList.contains("hidden")) {
+const printButton = document.getElementById("printSummaryBtn");
+if (printButton) {
   printButton.textContent = (lang === "en")
     ? "Print / Save as PDF"
     : "Imprimer / Enregistrer en PDF";
 }
   /* --- NEW: bilingual labels for Edit & New Scenario buttons --- */
-const editBtn = document.getElementById("editAnswersBtn");
-if (editBtn) {
-  editBtn.textContent = (lang === "en")
-    ? "Edit Answers"
-    : "Modifier les réponses";
-}
+  const editBtn = document.getElementById("editAnswersBtn");
+  if (editBtn) {
+    editBtn.textContent = (lang === "en")
+      ? "Edit Answers"
+      : "Modifier les réponses";
+  }
 
-const newBtn  = document.getElementById("newScenarioBtn");
-if (newBtn) {
-  newBtn.textContent = (lang === "en")
-    ? "Start New Scenario"
-    : "Nouveau scénario";
-}
+  const newBtn = document.getElementById("newScenarioBtn");
+  if (newBtn) {
+    newBtn.textContent = (lang === "en")
+      ? "Start New Scenario"
+      : "Nouveau scénario";
+  }
+
+  /* ---------- NEW: keep aria-labels in sync with button text ---------- */
+  function syncLabel(btn) {
+    if (btn) btn.setAttribute("aria-label", btn.textContent.trim());
+  }
+  syncLabel(genButton);
+  syncLabel(printButton);
+  syncLabel(editBtn);
+  syncLabel(newBtn);
+  /* ---------- END aria-label block ----------------------------------- */
 
   // ✅ Update accordion help content based on language
-const riskHelpEN = document.getElementById("riskHelpEN");
-const riskHelpFR = document.getElementById("riskHelpFR");
-if (riskHelpEN && riskHelpFR) {
-  riskHelpEN.classList.toggle("hidden", lang !== "en");
-  riskHelpFR.classList.toggle("hidden", lang !== "fr");
-}
+  const riskHelpEN = document.getElementById("riskHelpEN");
+  const riskHelpFR = document.getElementById("riskHelpFR");
+  if (riskHelpEN && riskHelpFR) {
+    riskHelpEN.classList.toggle("hidden", lang !== "en");
+    riskHelpFR.classList.toggle("hidden", lang !== "fr");
+  }
+
+  // ... (rest of toggleLanguage: live region msg, wb-lng aria-current patch, etc.)
+
 
 const helpLabel = document.getElementById("riskSummaryHelpLabel");
 if (helpLabel) {
@@ -490,6 +504,7 @@ if (helpLabel) {
     ? "📘 How to interpret the Risk Summary"
     : "📘 Comment interpréter le sommaire du profil de risque";
 }
+}   
   // Keep answers in sync across languages
   syncResponses();
 
