@@ -378,7 +378,7 @@ tr.risk-low td {
   .panel, section, fieldset, details {
     page-break-inside: avoid;
   }
-}
+
 /* ========= RRIT HOT-FIX: make containers truly full-width on phones ===== */
 @media (max-width: 767.98px) {                /* phones & small tablets */
   .container,
@@ -387,7 +387,11 @@ tr.risk-low td {
     max-width: none !important;              /* kill any fixed max  */
     padding-left: 0 !important;              /* remove 15 px gutters*/
     padding-right: 0 !important;
+      **margin-left: 0 !important;   /* NEW — stop auto-centering */
+    margin-right: 0 !important;**
   }
+    .row         { margin-left: 0 !important; margin-right: 0 !important; }
+  [class*="col-"] { padding-left: 0 !important; padding-right: 0 !important; }
 }
 
 /* Stamp used when printing */
