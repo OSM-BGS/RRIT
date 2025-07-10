@@ -232,11 +232,25 @@ function clearScenario() {
   localStorage.removeItem(STORAGE_KEY);
 }
 
-function showPostResultActions() {
-  const bar = document.getElementById("postResultActions");
-  if (bar) {
-    bar.classList.remove("hidden");
-    bar.setAttribute("aria-hidden", "false");
+/* ============================================================
+   Show / hide action-bar buttons after the first summary
+   ============================================================ */
+function showPostResultActions () {
+
+  // 1.  Reveal the three follow-up buttons
+  ["editAnswersBtn", "newScenarioBtn", "printSummaryBtn"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.classList.remove("hidden");
+      el.setAttribute("aria-hidden", "false");
+    }
+  });
+
+  // 2.  Hide the Generate button (so the row doesn’t duplicate)
+  const gen = document.getElementById("generateSummaryBtn");
+  if (gen) {
+    gen.classList.add("hidden");
+    gen.setAttribute("aria-hidden", "true");
   }
 }
 
@@ -447,6 +461,21 @@ if (printButton && !printButton.classList.contains("hidden")) {
     ? "Print / Save as PDF"
     : "Imprimer / Enregistrer en PDF";
 }
+  /* --- NEW: bilingual labels for Edit & New Scenario buttons --- */
+const editBtn = document.getElementById("editAnswersBtn");
+if (editBtn) {
+  editBtn.textContent = (lang === "en")
+    ? "Edit Answers"
+    : "Modifier les réponses";
+}
+
+const newBtn  = document.getElementById("newScenarioBtn");
+if (newBtn) {
+  newBtn.textContent = (lang === "en")
+    ? "Start New Scenario"
+    : "Nouveau scénario";
+}
+
   // ✅ Update accordion help content based on language
 const riskHelpEN = document.getElementById("riskHelpEN");
 const riskHelpFR = document.getElementById("riskHelpFR");
