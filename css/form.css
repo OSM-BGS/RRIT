@@ -1,435 +1,156 @@
-/*===========PLACING THE CANADA MARK============*/
+/* ==============================================================
+   RRIT  –  CLEAN STYLE SHEET
+   ============================================================== */
 
-.gc-sub-footer .wtrmrk {
-  float: right;
-  /* Optionally constrain its size so it doesn’t stretch full width: */
-  max-width: 200px;
+/* ---------- 1. GLOBAL (SCREEN) -------------------------------- */
+
+/* Canada watermark in GCWeb sub-footer */
+.gc-sub-footer .wtrmrk{
+  float:right;
+  max-width:200px;           /* stop it stretching full width */
 }
 
-/*========== TBS LOGO ===============*/
-.tbs-logo img {
-  vertical-align: middle;
-  height: 24px;    /* match your banner height */
-  width: auto;
+/* TBS bilingual word-mark inside banner */
+.tbs-logo img{
+  vertical-align:middle;
+  height:24px;               /* match banner height */
+  width:auto;
 }
 
-/* ========== SCREEN STYLES ========== */
-.hidden {
-  display: none !important;
+/* Generic helpers */
+.hidden{display:none!important;}
+
+/* Form layout -------------------------------------------------- */
+fieldset{border:1px solid #d9d9d9;padding:1rem;margin:0 0 1rem;}
+legend{font-weight:700;}
+
+.radio-spacing{display:inline-block;margin:0 1.5rem 0.5rem 0;}
+.rrit-responses{margin-bottom:1.5rem;}
+.rrit-status{margin-top:1rem;font-weight:700;}
+
+/* Summary table ------------------------------------------------ */
+#summaryTableContainer table{font-size:1rem;border:1px solid #dee2e6;border-radius:.5rem;overflow:hidden;}
+#summaryTableContainer th{background:#f1f1f1;font-weight:700;font-size:1.05rem;}
+#summaryTableContainer td,
+#summaryTableContainer th{padding:.75rem;vertical-align:middle;}
+#summaryTableContainer tr{transition:background-color .3s}
+
+/* Row accent bars */
+tr.risk-high td   {border-left:4px solid #dc3545;}
+tr.risk-medium td {border-left:4px solid #ffc107;}
+tr.risk-low td    {border-left:4px solid #28a745;}
+
+.risk-high   {background:#f8d7da;color:#721c24;font-weight:bold;}
+.risk-medium {background:#fff3cd;color:#856404;font-weight:bold;}
+.risk-low    {background:#d4edda;color:#155724;font-weight:bold;}
+
+/* Panel headings */
+.panel-title{
+  background:#264a88;
+  color:#fff!important;
+  padding:.75rem 1rem;
+  border-radius:.25rem .25rem 0 0;
 }
 
-fieldset {
-  border: 1px solid #d9d9d9;
-  padding: 1rem;
-  margin: 0 0 1rem;
-}
+/* Print-timestamp stamp */
+.generated-on{font-size:.875rem;text-align:right;color:#666;margin-top:2rem;}
 
-legend {
-  font-weight: 700;
-}
+/* Make bilingual intro logo responsive */
+.rrit-logo img{max-width:100%;height:auto;}
 
-.radio-spacing {
-  display: inline-block;
-  margin-right: 1.5rem;
-  margin-bottom: 0.5rem;
-  font-weight: normal;
-}
+/* ---------- 2. MOBILE HOT-FIX  (≤ 767 px) --------------------- */
 
-.rrit-responses {
-  margin-bottom: 1.5rem;
-}
+@media (max-width:767.98px){      /* phones & small tablets */
 
-.rrit-status {
-  margin-top: 1rem;
-  font-weight: 700;
-}
-
-#summaryTableContainer table td {
-  vertical-align: middle;
-  font-size: 1rem;
-  padding: 0.75rem;
-}
-
-#summaryTableContainer table tr {
-  transition: background-color 0.3s ease;
-}
-
-table.table {
-  font-size: 1rem;
-  border: 1px solid #dee2e6;
-  border-radius: 0.5rem;
-  overflow: hidden;
-}
-
-table.table th {
-  font-weight: 700;
-  font-size: 1.05rem;
-  padding: 0.75rem;
-  vertical-align: middle;
-  background-color: #f1f1f1;
-}
-
-table.table td {
-  padding: 0.75rem;
-  vertical-align: middle;
-}
-
-/* Row accent indicators */
-tr.risk-high td {
-  border-left: 4px solid #dc3545;
-}
-tr.risk-medium td {
-  border-left: 4px solid #ffc107;
-}
-tr.risk-low td {
-  border-left: 4px solid #28a745;
-}
-
-.risk-high {
-  background-color: #f8d7da;
-  color: #721c24;
-  font-weight: bold;
-}
-
-.risk-medium {
-  background-color: #fff3cd;
-  color: #856404;
-  font-weight: bold;
-}
-
-.risk-low {
-  background-color: #d4edda;
-  color: #155724;
-  font-weight: bold;
-}
-
-.generated-on {
-  font-size: 0.875rem;
-  text-align: right;
-  color: #666;
-  margin-top: 2rem;
-}
-.panel-title {
-  background-color: #264a88; /* GC Blue */
-  color: #ffffff !important; /* Force white text */
-  padding: 0.75rem 1rem;
-  border-radius: 0.25rem 0.25rem 0 0;
-}
-/* ========== PRINT STYLES ========== */
-
-
-  /* Base print typography */
-  html, body {
-    margin: 0;
-    padding: 0;
-    font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 11pt;
-    line-height: 1.4;
-    color: #000;
-  }
-
-  /* Headings */
-  h2 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    font-size: 16pt;
-    font-weight: bold;
-  }
-  h3 {
-    margin-top: 1.5rem;
-    font-size: 13pt;
-    font-weight: bold;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 0.3rem;
-  }
-
-  /* Table styling */
-  table.table {
-    width: 100%;
-    border-collapse: collapse;
-    border: 2px solid #000;
-    margin-bottom: 1rem;
-    font-size: 11pt;
-    table-layout: fixed;
-  }
-  table.table th,
-  table.table td {
-    border: 1px solid #000;
-    padding: 8px;
-    text-align: left;
-    vertical-align: top;
-    word-break: break-word;
-  }
-  table.table th {
-    background-color: #f1f1f1;
-    font-weight: bold;
-    font-size: 11pt;
-  }
-  table.table tr {
-    page-break-inside: avoid;
-  }
-  table.table th:nth-child(1),
-  table.table td:nth-child(1) { width: 40%; }
-  table.table th:nth-child(2),
-  table.table td:nth-child(2) { width: 20%; }
-  table.table th:nth-child(3),
-  table.table td:nth-child(3) { width: 40%; }
-
-  /* Row accent indicators for print */
-  tr.risk-high td {
-    border-left: 5px solid #dc3545;
-  }
-  tr.risk-medium td {
-    border-left: 5px solid #ffc107;
-  }
-  tr.risk-low td {
-    border-left: 5px solid #28a745;
-  }
-
-  .generated-on {
-    font-size: 10pt;
-    margin-top: 3rem;
-    text-align: right;
-    color: #666;
-  }
-  /* ========== FOOTER IMAGE STYLE ========== */
-.footer-canada img {
-  float: right;       /* push it to the right */
-  width: 50px;       /* or whatever fixed/max you like */
-  height: auto;       /* maintain aspect ratio */
-}
-}
-
-
-  #riskSummaryHelp summary {
-    display: none; /* Optional: hide clickable label in print */
-  }
-}
-
-/* ============================
-   PRINT STYLES FOR RRIT TOOL
-   ============================ */
-
-
-  /* Expand accordion if open and suppress <summary> label */
-  #riskSummaryHelp summary {
-    display: none !important;
-  }
-
-  #riskSummaryHelp::before {
-    content: ""; /* ensures visibility in some browsers */
-  }
-
-  /* Improve legibility and layout */
-  body {
-    font-size: 12pt;
-    color: #000;
-    margin: 1in;
-    background: white !important;
-  }
-
-  table {
-    width: 100% !important;
-    border-collapse: collapse;
-    page-break-inside: avoid;
-  }
-
-  table th, table td {
-    border: 1px solid #000;
-    padding: 0.25em 0.5em;
-  }
-
-  h1, h2, h3 {
-    page-break-after: avoid;
-    color: #000 !important;
-  }
-
-  /* Prevent page breaks inside important elements */
-  .panel, section, fieldset, details {
-    page-break-inside: avoid;
-  }
-}
-
-/* ============================
-   UNIFIED PRINT STYLES FOR RRIT TOOL
-   ============================ */
-@media print {
-
-  /* Hide navigation, language switchers, intro, and buttons */
-  #wb-bnr, #wb-tphp, #wb-lng, #rrit-intro, #step0,
-  header, footer, nav, #lang-switch,
-  #generateSummaryBtn, #printSummaryBtn,
-  button, .btn, .no-print {
-    display: none !important;
-  }
-
-  /* Force hidden elements to display (accordion, summary) */
-  .hidden {
-    display: block !important;
-  }
-
-  /* Expand accordion in print and hide <summary> */
-  #riskSummaryHelp {
-    display: block !important;
-  }
-  #riskSummaryHelp summary {
-    display: none !important;
-  }
-  #riskSummaryHelp::before {
-    content: "";
-  }
-
-  /* Typography */
-  html, body {
-    margin: 1in;
-    padding: 0;
-    font-family: "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 12pt;
-    line-height: 1.4;
-    color: #000;
-    background: white !important;
-  }
-
-  h1, h2, h3 {
-    page-break-after: avoid;
-    color: #000 !important;
-  }
-
-  h2 {
-    font-size: 16pt;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    font-weight: bold;
-  }
-
-  h3 {
-    font-size: 13pt;
-    margin-top: 1.5rem;
-    padding-bottom: 0.3rem;
-    border-bottom: 1px solid #ccc;
-    font-weight: bold;
-  }
-
-  /* Table styling */
-  table.table {
-    width: 100%;
-    border-collapse: collapse;
-    border: 2px solid #000;
-    margin-bottom: 1rem;
-    font-size: 11pt;
-    table-layout: fixed;
-  }
-
-  table.table th,
-  table.table td {
-    border: 1px solid #000;
-    padding: 8px;
-    text-align: left;
-    vertical-align: top;
-    word-break: break-word;
-  }
-
-  table.table th {
-    background-color: #f1f1f1;
-    font-weight: bold;
-  }
-
-  table.table tr {
-    page-break-inside: avoid;
-  }
-
-  table.table th:nth-child(1),
-  table.table td:nth-child(1) { width: 40%; }
-
-  table.table th:nth-child(2),
-  table.table td:nth-child(2) { width: 20%; }
-
-  table.table th:nth-child(3),
-  table.table td:nth-child(3) { width: 40%; }
-
-  /* Risk indicators */
-  tr.risk-high td { border-left: 5px solid #dc3545; }
-  tr.risk-medium td { border-left: 5px solid #ffc107; }
-  tr.risk-low td { border-left: 5px solid #28a745; }
-
-  /* Footer watermark or image */
-  .footer-canada img {
-    float: right;
-    width: 50px;
-    height: auto;
-  }
-
-  /* ========= RRIT HOT-FIX: mobile width = 100 %  ========= */
-@media (max-width: 767.98px) {   /* phones & small tablets (Bootstrap “xs”) */
-  .container {
-    width: 100% !important;      /* fill the viewport */
-    max-width: none !important;  /* cancel any rogue fixed width */
-  }
-}
-
-  .generated-on {
-    font-size: 10pt;
-    text-align: right;
-    margin-top: 3rem;
-    color: #666;
-  }
-
-  /* Prevent page breaks in structured sections */
-  .panel, section, fieldset, details {
-    page-break-inside: avoid;
-  }
-}
-/* ========= RRIT HOT-FIX: make containers truly full-width on phones ===== */
-@media (max-width: 767.98px) {                /* phones & small tablets */
+  /* Kill Bootstrap gutters & centering */
   .container,
-  .container-fluid {
-    width: 100% !important;                  /* fill the viewport   */
-    max-width: none !important;              /* kill any fixed max  */
-    padding-left: 0 !important;              /* remove 15 px gutters*/
-    padding-right: 0 !important;
-      **margin-left: 0 !important;   /* NEW — stop auto-centering */
-    margin-right: 0 !important;**
+  .container-fluid{
+    width:100%!important;
+    max-width:none!important;
+    padding:0!important;
+    margin:0!important;
   }
-    .row         { margin-left: 0 !important; margin-right: 0 !important; }
-  [class*="col-"] { padding-left: 0 !important; padding-right: 0 !important; }
-}
 
-/* Stamp used when printing */
-.generated-on {
-  font-size: 10pt;
-  text-align: right;
-  margin-top: 3rem;
-  color: #666;
-}
+  /* Neutralise row/col offsets */
+  .row{margin:0!important;}
+  [class*="col-"]{padding:0!important;}
 
-/* Prevent awkward page breaks when printing */
-.panel,
-section,
-fieldset,
-details {
-  page-break-inside: avoid;
-}
-
-/* ===== Remove panel side padding & margins on phones =================== */
-@media (max-width: 767.98px) {
-  /* headings + bodies */
+  /* Flush panels */
   #wb-cont .panel-heading,
-  #wb-cont .panel-body {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
+  #wb-cont .panel-body{padding:0!important;}
 
-  /* whole panel – gets rid of Bootstrap’s 15 px margin */
-  #wb-cont .panel {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    border-left-width: 0;   /* optional – trims double border */
-    border-right-width: 0;
+  #wb-cont .panel{
+    margin:0!important;
+    border-left-width:0;
+    border-right-width:0;
   }
 }
 
-/* Make bilingual logos scale down nicely */
-.rrit-logo img {
-  max-width: 100%;
-  height: auto;
+/* ---------- 3. PRINT ----------------------------------------- */
+@media print{
+
+  /* Hide navigation, language switchers, buttons & intro */
+  #wb-bnr,#wb-tphp,#wb-lng,#rrit-intro,#step0,
+  header,footer,nav,#lang-switch,
+  #generateSummaryBtn,#printSummaryBtn,
+  button,.btn,.no-print{display:none!important;}
+
+  /* Force hidden items to print */
+  .hidden{display:block!important;}
+
+  /* Expand accordion help */
+  #riskSummaryHelp{display:block!important;}
+  #riskSummaryHelp summary{display:none!important;}
+
+  /* Page body */
+  html,body{
+    margin:1in;
+    font:12pt/1.4 "Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    background:#fff!important;
+    color:#000;
+  }
+
+  h1,h2,h3{page-break-after:avoid;color:#000!important;}
+  h2{font-size:16pt;margin:2rem 0 1rem;font-weight:bold;}
+  h3{font-size:13pt;margin-top:1.5rem;border-bottom:1px solid #ccc;padding-bottom:.3rem;font-weight:bold;}
+
+  /* Summary table */
+  table.table{
+    width:100%!important;
+    border-collapse:collapse;
+    border:2px solid #000;
+    margin-bottom:1rem;
+    font-size:11pt;
+    table-layout:fixed;
+  }
+  table.table th,
+  table.table td{
+    border:1px solid #000;
+    padding:8px;
+    text-align:left;
+    vertical-align:top;
+    word-break:break-word;
+  }
+  table.table th{background:#f1f1f1;font-weight:bold;}
+  table.table tr{page-break-inside:avoid;}
+  table.table th:nth-child(1),
+  table.table td:nth-child(1){width:40%;}
+  table.table th:nth-child(2),
+  table.table td:nth-child(2){width:20%;}
+  table.table th:nth-child(3),
+  table.table td:nth-child(3){width:40%;}
+
+  /* Accent bars */
+  tr.risk-high td{border-left:5px solid #dc3545;}
+  tr.risk-medium td{border-left:5px solid #ffc107;}
+  tr.risk-low td{border-left:5px solid #28a745;}
+
+  /* Footer watermark */
+  .footer-canada img{float:right;width:50px;height:auto;}
+
+  /* Avoid splits */
+  .panel,section,fieldset,details{page-break-inside:avoid;}
+
+  /* Timestamp */
+  .generated-on{font-size:10pt;text-align:right;margin-top:3rem;color:#666;}
 }
