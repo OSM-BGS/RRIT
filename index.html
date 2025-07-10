@@ -977,10 +977,42 @@ En savoir plus <span class="wb-inv"> sur la mobilisation des employés et le cha
   <div class="panel-body">
     <p data-lang="en">After completing the questions, click below to generate a category summary.</p>
     <p data-lang="fr" class="hidden">Après avoir répondu aux questions, cliquez ci-dessous pour générer un résumé par catégorie.</p>
-    <button id="generateSummaryBtn" class="btn btn-primary" type="button" onclick="generateSummary()">Generate Summary</button>
-    <button id="printSummaryBtn" class="btn btn-secondary hidden" aria-hidden="true" type="button" onclick="window.print()">
-  Print / Save as PDF</button>
-<br><!-- Post-result actions: visible only after first summary --><br><div id="postResultActions" class="hidden" aria-hidden="true" style="margin-top:1rem;"><br> <button id="editAnswersBtn" class="btn btn-default" type="button">Edit Answers</button><br> <button id="newScenarioBtn" class="btn btn-link" type="button">Start New Scenario</button><br></div>
+    
+    <!-- ─────────────  ACTION BAR  (Generate / Edit / New / Print) ──────────── -->
+<div id="summaryActionRow" class="d-flex flex-wrap gap-2 mt-3">
+
+  <button id="generateSummaryBtn"
+          class="btn btn-primary"
+          type="button"
+          onclick="generateSummary()">
+    Generate Summary
+  </button>
+
+  <button id="editAnswersBtn"
+          class="btn btn-primary hidden"
+          aria-hidden="true"
+          type="button">
+    Edit Answers
+  </button>
+
+  <button id="newScenarioBtn"
+          class="btn btn-primary hidden"
+          aria-hidden="true"
+          type="button">
+    Start New Scenario
+  </button>
+
+  <button id="printSummaryBtn"
+          class="btn btn-secondary hidden"
+          aria-hidden="true"
+          type="button"
+          onclick="window.print()">
+    Print / Save as PDF
+  </button>
+
+</div>
+<!-- ─────────────────────────────────────────────────────────────────────── -->
+
     <div id="summaryTableContainer" class="hidden" style="margin-top: 2rem;">
       <table class="table table-striped">
         <caption data-lang="en">Risk Profile Summary Table</caption>
