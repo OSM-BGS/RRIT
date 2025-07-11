@@ -139,8 +139,18 @@ function generateSummary() {
 }
 
 /* ---------- ACTION-BAR HANDLERS -------------------------- */
-function showPostResultActions() {
-  ["editAnswersBtn","newScenarioBtn","printSummaryBtn"].forEach(id => setVis(qs(`#${id}`), true));
+function showPostResultActions () {
+
+  /* 1 – unhide the wrapper row itself */
+  const bar = qs("#postResultActions");
+  setVis(bar, true);                 // removes .hidden + aria-hidden
+
+  /* 2 – reveal the individual buttons */
+  ["editAnswersBtn", "newScenarioBtn", "printSummaryBtn"]
+    .forEach(id => setVis(qs(`#${id}`), true));
+
+  /* 3 – hide the Generate button so the row doesn’t duplicate */
+  setVis(qs("#generateSummaryBtn"), false);
 }
 function editAnswersFlow() {
   const saved = loadScenario();
