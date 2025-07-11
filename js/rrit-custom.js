@@ -113,6 +113,10 @@ function generateSummary() {
   window.collectedResponses = responses;
   setVis(qs("#summaryTableContainer"), true);
 
+ /* ── hide intro + picker ───────────────────────────────── */
+  setVis(qs("#rrit-intro"), false);   //  <<< add this line
+  setVis(qs("#step0"),      false);   //  <<< and this one
+   
   /* scroll & update UI ------------------------------------ */
   const heading = qs("#rrit-summary");
   heading && requestAnimationFrame(() => {
