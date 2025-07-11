@@ -225,20 +225,42 @@ function editAnswersFlow() {
 
 function returnToSummary() { collectCategories(); generateSummary(); qs("#backToSummary")?.classList.add("hidden"); }
 
-function startNewScenario() {
-  const ok = confirm(currentLang === "fr"
-    ? "Cette action supprimera vos réponses et démarrera un nouveau scénario. Continuer ?"
-    : "This will clear your answers and start a new scenario. Proceed?");
+function startNewScenario () {
+  const ok = confirm(
+    currentLang === "fr"
+      ? "Cette action supprimera vos réponses et démarrera un nouveau scénario. Continuer ?"
+      : "This will clear your answers and start a new scenario. Proceed?"
+  );
   if (!ok) return;
 
+  /* 1 ▸ clear answers & storage */
   clearScenario();
   qsa('input[type="radio"],input[type="checkbox"]').forEach(i => (i.checked = false));
 
-  ["#rrit-summary", "#postResultActions"].forEach(sel => qs(sel)?.classList.add("hidden"));
+  /* 2 ▸ hide everything “post-summary” */
+  setVis(qs("#summaryTableContainer"), false);
+  setVis(qs("#riskSummaryHelp"),       false);
+  setVis(qs("#postResultActions"),     false);           // Edit / New / Print row
+  setVis(qs("#rrit-summary"),          false);           // whole summary panel
+
+  /* 3 ▸ show intro, picker & first two panels */
   setVis(qs("#rrit-intro"), true);
   setVis(qs("#step0"),      true);
-setVis(qs("#generateSummaryBtn"), true);   // ← show the button again
-  qs("#rrit-intro").scrollIntoView({ behavior:"smooth" });
+  collectCategories();                                     // ensures A & B visible
+
+  /* 4 ▸ reset ACTION-BAR to “pre-summary” */
+  const gen = qs("#generateSummaryBtn");
+  if (gen) {
+    gen.classList.remove("hidden");
+    gen.setAttribute("aria-hidden", "false");
+  }
+
+  /* 5 ▸ send focus / viewport back to intro */
+  qs("#rrit-intro").scrollIntoView({ behavior: "smooth" });
+
+  /* 6 ▸ (optional) move summary panel back to bottom so DOM order
+          again matches first load; harmless if it’s already there. */
+  placeSummaryBottom();
 }
 
 /* ---------- CATEGORY VISIBILITY -------------------------- */
