@@ -113,6 +113,9 @@ function generateSummary() {
   window.collectedResponses = responses;
   setVis(qs("#summaryTableContainer"), true);
 
+/* ── show the help accordion ─────────────── */
+setVis(qs("#riskSummaryHelp"), true);
+   
 /* ── NEW #1: hide intro & picker ───────────────────────── */
   setVis(qs("#rrit-intro"), false);
   setVis(qs("#step0"),      false);
@@ -276,9 +279,16 @@ document.addEventListener("DOMContentLoaded", () => {
   qs("#newScenarioBtn")?.addEventListener("click", startNewScenario);
   qs("#backToSummary") ?.addEventListener("click", returnToSummary);
 
-  /* restore draft */
-  const saved = loadScenario();
-  if (saved) { window.collectedResponses = saved.data; showPostResultActions(); }
+/* ─── 5. Restore saved scenario, if any ─── */
+const saved = loadScenario();
+if (saved && Array.isArray(saved.data) && saved.data.length) {
+  window.collectedResponses = saved.data;
+  showPostResultActions();            // reveals Edit/New/Print
+} else {
+  // make sure we start in pre-summary state
+  setVis(qs("#postResultActions"), false);   // hide Edit/New/Print row
+  setVis(qs("#generateSummaryBtn"), true);   // show Generate
+}
 
   /* block initial WET auto-scroll */
   window.preventInitialScroll = true; setTimeout(()=>{ window.preventInitialScroll=false; }, 4000);
