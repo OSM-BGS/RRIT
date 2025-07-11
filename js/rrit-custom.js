@@ -63,6 +63,29 @@ function syncResponses() {
   });
 }
 
+/* ----------------------------------------------------------
+   Helpers to move the summary panel up or down in the DOM
+-----------------------------------------------------------*/
+function placeSummaryTop () {
+  const firstPanel   = qs("#stepA");          // always present
+  const summaryPanel = qs("#rrit-summary");
+  if (firstPanel && summaryPanel &&
+      summaryPanel.previousElementSibling !== firstPanel) {
+    firstPanel.parentNode.insertBefore(summaryPanel, firstPanel);
+  }
+}
+
+function placeSummaryBottom () {
+  const summaryPanel = qs("#rrit-summary");
+  // find the last visible category panel (may be K or earlier)
+  const panels = qsa('section[id^="step"]:not(.hidden)');
+  const last   = panels[panels.length - 1];
+  if (summaryPanel && last &&
+      summaryPanel.nextElementSibling !== null) {
+    last.parentNode.insertBefore(summaryPanel, last.nextSibling);
+  }
+}
+
 /* ---------- SUMMARY GENERATION --------------------------- */
 function generateSummary() {
   const lang        = currentLang;
@@ -113,6 +136,16 @@ function generateSummary() {
   window.collectedResponses = responses;
   setVis(qs("#summaryTableContainer"), true);
 
+/* ── hide intro & picker ───────────────────────────────────*/
+setVis(qs("#rrit-intro"), false);
+setVis(qs("#step0"),      false);
+
+/* ── move summary to the top (once per summary) ───────────*/
+placeSummaryTop();
+
+/* ── show the help accordion ───────────────────────────────*/
+setVis(qs("#riskSummaryHelp"), true);
+   
 /* ── show the help accordion ─────────────── */
 setVis(qs("#riskSummaryHelp"), true);
    
