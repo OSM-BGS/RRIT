@@ -113,10 +113,18 @@ function generateSummary() {
   window.collectedResponses = responses;
   setVis(qs("#summaryTableContainer"), true);
 
- /* ── hide intro + picker ───────────────────────────────── */
-  setVis(qs("#rrit-intro"), false);   //  <<< add this line
-  setVis(qs("#step0"),      false);   //  <<< and this one
-   
+/* ── NEW #1: hide intro & picker ───────────────────────── */
+  setVis(qs("#rrit-intro"), false);
+  setVis(qs("#step0"),      false);
+
+  /* ── NEW #2: move summary panel just once ─────────────── */
+  const firstPanel   = qs("#stepA");           // A is always present
+  const summaryPanel = qs("#rrit-summary");
+  if (summaryPanel && firstPanel &&
+      summaryPanel.previousElementSibling !== null) {  // only if not already on top
+    firstPanel.parentNode.insertBefore(summaryPanel, firstPanel);
+  }
+
   /* scroll & update UI ------------------------------------ */
   const heading = qs("#rrit-summary");
   heading && requestAnimationFrame(() => {
@@ -134,10 +142,12 @@ function generateSummary() {
   setVis(qs("#generateSummaryBtn"), false);
   setVis(qs("#printSummaryBtn"), true);
 
+/* ── NEW #3: unhide the wrapper row itself ─────────────── */
+  setVis(qs("#postResultActions"), true);
+
   saveScenario(responses);
   showPostResultActions();
 }
-
 /* ---------- ACTION-BAR HANDLERS -------------------------- */
 function showPostResultActions () {
 
