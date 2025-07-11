@@ -237,6 +237,7 @@ function startNewScenario() {
   ["#rrit-summary", "#postResultActions"].forEach(sel => qs(sel)?.classList.add("hidden"));
   setVis(qs("#rrit-intro"), true);
   setVis(qs("#step0"),      true);
+setVis(qs("#generateSummaryBtn"), true);   // ← show the button again
   qs("#rrit-intro").scrollIntoView({ behavior:"smooth" });
 }
 
