@@ -71,30 +71,28 @@ tr.risk-low td    {border-left:4px solid #28a745;}
 
 @media (max-width: 767.98px) {
 
-  /* Kill Bootstrap gutters & centering */
-  .container,
-  .container-fluid {
-    width: 100% !important;
-    max-width: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
+  /* Ensure header leaves room for floating lang-switch */
+  #wb-lng {
+    position: relative;
+    min-height: 2.5rem;
+    text-align: right !important;
+    padding: 0.5rem 1rem 0 0;
+    background: transparent;
+    z-index: 100;
   }
 
-  /* Float language switcher right */
+  /* Float lang-switch safely in top-right corner */
   #lang-switch {
     position: absolute;
-    top: 0.75rem;
-    right: 1rem;
-    text-align: right;
-    z-index: 1000; /* Optional: helps keep it on top */
-  }
-
-  #wb-lng {
-    text-align: right !important;
-    padding-right: 1rem;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0.25rem 0.5rem;
+    background: white;   /* Optional: white background to avoid banner overlap */
+    border-radius: 0 0 0.25rem 0.25rem;
+    z-index: 999;
   }
 }
-
 
   /* Neutralise row/col offsets */
   .row{margin:0!important;}
