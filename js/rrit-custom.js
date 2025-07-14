@@ -105,17 +105,7 @@ function generateSummary() {
   const completedBy = qs("#completedBy")?.value || "(Not specified)";
 
 // Clear any previous project metadata if user regenerates summary
-  qs("#projectSummaryBlock")?.remove();
 
-// Insert project summary block
- qs("#summaryTableContainer").insertAdjacentHTML("afterbegin", `
-  <div id="projectSummaryBlock" class="generated-on">
-    <strong>Project:</strong> ${name}<br>
-    <strong>Description:</strong> ${desc}<br>
-    <strong>Date:</strong> ${date}<br>
-    <strong>Completed by:</strong> ${completedBy}
-  </div>
-`);
    
   /* 1. Which categories are visible? */
   const selected = new Set(["A","B"]);
