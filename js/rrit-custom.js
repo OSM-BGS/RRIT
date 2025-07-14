@@ -49,7 +49,7 @@ function saveScenario(data) {
 function loadScenario() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
 }
-const clearScenario = () => localStorage.removeItem(STORAGE_KEY);
+
 
 /* ---------- SYNC ANSWERS ACROSS LANGUAGES ---------------- */
 function syncResponses() {
