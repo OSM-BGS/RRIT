@@ -310,13 +310,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /* ─── 5. Restore saved scenario, if any ─── */
 const saved = loadScenario();
-if (saved && Array.isArray(saved.data) && saved.data.length) {
+const hasResults = saved && Array.isArray(saved.data) && saved.data.length;
+const summaryVisible = !qs("#summaryTableContainer")?.classList.contains("hidden");
+
+if (hasResults && summaryVisible) {
   window.collectedResponses = saved.data;
-  showPostResultActions();            // reveals Edit/New/Print
+  showPostResultActions();  // only show if results are still visible
 } else {
-  // make sure we start in pre-summary state
   setVis(qs("#postResultActions"), false);   // hide Edit/New/Print row
-  setVis(qs("#generateSummaryBtn"), true);   // show Generate
+  setVis(qs("#generateSummaryBtn"), true);   // show Generate button
 }
 
   /* block initial WET auto-scroll */
