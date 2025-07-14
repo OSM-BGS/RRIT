@@ -230,8 +230,10 @@ const clearScenario = () => {
   localStorage.removeItem("rrit_savedScenario");    // legacy (if any)
 };
 function startNewScenario() {
-  clearScenario(); // Clear local storage
-  window.location.reload(); // Reload the page to reset the tool
+  clearScenario();             // clear RRIT-related data
+  setTimeout(() => {
+    window.location.reload();  // wait until localStorage is cleared
+  }, 100);                     // slight delay allows for async removal
 }
 
 /* ---------- CATEGORY VISIBILITY -------------------------- */
