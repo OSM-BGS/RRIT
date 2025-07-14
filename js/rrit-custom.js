@@ -139,10 +139,11 @@ function generateSummary() {
       else { status = riskLabels.low[lang];    css = "risk-low"; }
     }
 
-    body.insertAdjacentHTML("beforeend",
-      `<tr><td>${categories[cat][lang]}</td>
-           <td>${total ? `${weight.toFixed(1)} / ${total}` : "-"}</td>
-           <td class="${css}">${status}</td></tr>`);
+    // <td>${total ? `${weight.toFixed(1)} / ${total}` : "-"}</td>  ← saved for reactivation
+
+body.insertAdjacentHTML("beforeend",
+  `<tr><td>${categories[cat][lang]}</td>
+       <td class="${css}">${status}</td></tr>`);
 
     if (qList.length) responses.push({ category: categories[cat][lang], questions: qList });
   });
