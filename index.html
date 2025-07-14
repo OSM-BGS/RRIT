@@ -982,37 +982,44 @@ En savoir plus <span class="wb-inv"> sur la mobilisation des employés et le cha
     <!-- ─────────────  ACTION BAR  (Generate / Edit / New / Print) ──────────── -->
 <div id="summaryActionRow" class="d-flex flex-wrap gap-2 mt-3">
 
- <!-- Risk-summary controls -->
-<button id="generateSummaryBtn"
-        class="btn btn-primary"
-        type="button"
-        onclick="generateSummary()"
-        aria-label="Generate summary">Generate Summary</button>
-
-<!-- Actions that appear only after the first summary -->
-<div id="postResultActions" class="hidden" aria-hidden="true" style="margin-top:1rem;">
-
-  <button id="editAnswersBtn"
+  <!-- Visible on first load -->
+  <button id="generateSummaryBtn"
           class="btn btn-primary"
-          class="hidden" aria-hidden="true"
           type="button"
-          aria-label="Edit answers">Edit Answers</button>
+          aria-label="Generate summary">
+    Generate Summary
+  </button>
 
- <button id="newScenarioBtn"
-        class="btn btn-primary hidden"   <!-- merged classes -->
-        aria-hidden="true"
-        type="button"
-        aria-label="Start new scenario">
-  Start New Scenario
-</button>
-  <button id="printSummaryBtn"
-          class="btn btn-secondary"
-          class="hidden" aria-hidden="true"
-          type="button"
-          onclick="window.print()"
-          aria-label="Print or save as PDF">Print / Save as PDF</button>
+  <!-- Revealed only after the first summary -->
+  <div id="postResultActions" class="hidden" aria-hidden="true">
 
+    <button id="editAnswersBtn"
+            class="btn btn-primary hidden"
+            aria-hidden="true"
+            type="button"
+            aria-label="Edit answers">
+      Edit Answers
+    </button>
+
+    <button id="newScenarioBtn"
+            class="btn btn-primary hidden"
+            aria-hidden="true"
+            type="button"
+            aria-label="Start new scenario">
+      Start New Scenario
+    </button>
+
+    <button id="printSummaryBtn"
+            class="btn btn-secondary hidden"
+            aria-hidden="true"
+            type="button"
+            aria-label="Print or save as PDF">
+      Print / Save as PDF
+    </button>
+
+  </div>
 </div>
+
 <!-- ─────────────────────────────────────────────────────────────────────── -->
 </div>
     <div id="summaryTableContainer" class="hidden" style="margin-top: 2rem;">
