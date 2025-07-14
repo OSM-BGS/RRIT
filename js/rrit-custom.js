@@ -229,6 +229,10 @@ const clearScenario = () => {
   localStorage.removeItem("rrit_savedScenario_v1"); // current
   localStorage.removeItem("rrit_savedScenario");    // legacy (if any)
 };
+function startNewScenario() {
+  clearScenario(); // Clear local storage
+  window.location.reload(); // Reload the page to reset the tool
+}
 
 /* ---------- CATEGORY VISIBILITY -------------------------- */
 function collectCategories() {
