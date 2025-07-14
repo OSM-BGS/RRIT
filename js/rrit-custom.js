@@ -44,12 +44,18 @@ const setTxt  = (el, txt) => el && (el.textContent = txt);
 const setVis  = (el, show=true) => el && el.classList.toggle("hidden", !show);
 
 function saveScenario(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ savedAt: Date.now(), data }));
+  const metadata = {
+    name: qs("#projectName")?.value || "",
+    desc: qs("#projectDesc")?.value || "",
+    date: qs("#assessmentDate")?.value || new Date().toISOString().split("T")[0],
+    completedBy: qs("#completedBy")?.value || ""
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ savedAt: Date.now(), data, metadata }));
 }
+
 function loadScenario() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
 }
-
 
 /* ---------- SYNC ANSWERS ACROSS LANGUAGES ---------------- */
 function syncResponses() {
@@ -92,7 +98,25 @@ function generateSummary() {
   const body        = qs("#summaryTableBody");
   body.innerHTML    = "";
   const responses   = [];
+  // Add project info at the top of the summary
+  const name        = qs("#projectName")?.value || "(No project name)";
+  const desc        = qs("#projectDesc")?.value || "(No description)";
+  const date        = qs("#assessmentDate")?.value || new Date().toISOString().split("T")[0];
+  const completedBy = qs("#completedBy")?.value || "(Not specified)";
 
+// Clear any previous project metadata if user regenerates summary
+  qs("#projectSummaryBlock")?.remove();
+
+// Insert project summary block
+ qs("#summaryTableContainer").insertAdjacentHTML("afterbegin", `
+  <div id="projectSummaryBlock" class="generated-on">
+    <strong>Project:</strong> ${name}<br>
+    <strong>Description:</strong> ${desc}<br>
+    <strong>Date:</strong> ${date}<br>
+    <strong>Completed by:</strong> ${completedBy}
+  </div>
+`);
+   
   /* 1. Which categories are visible? */
   const selected = new Set(["A","B"]);
   qsa("#categoryFormEN input:checked, #categoryFormFR input:checked")
