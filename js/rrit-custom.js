@@ -218,6 +218,10 @@ function editAnswersFlow() {
 
   setVis(qs("#generateSummaryBtn"), true);
 
+   if (qs("#rrit-summary") && qs("#stepK")?.nextElementSibling !== qs("#rrit-summary")) {
+  placeSummaryBottom();
+}
+   
   qs("#backToSummary")?.classList.remove("hidden");
   qs("#backToSummary").onclick = returnToSummary;
   qs("#rrit-intro").scrollIntoView({ behavior:"smooth" });
