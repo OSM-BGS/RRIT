@@ -225,17 +225,11 @@ function editAnswersFlow() {
 
 function returnToSummary() { collectCategories(); generateSummary(); qs("#backToSummary")?.classList.add("hidden"); }
 
-function startNewScenario () {
-  const ok = confirm(
-    currentLang === "fr"
-      ? "Cette action supprimera vos réponses et rafraîchira la page. Continuer ?"
-      : "This will clear your answers and refresh the page. Proceed?"
-  );
-  if (!ok) return;
+const clearScenario = () => {
+  localStorage.removeItem("rrit_savedScenario_v1"); // current
+  localStorage.removeItem("rrit_savedScenario");    // legacy (if any)
+};
 
-  clearScenario();                 // purge localStorage draft
-  window.location.reload();        // hard-refresh (same URL)
-}
 /* ---------- CATEGORY VISIBILITY -------------------------- */
 function collectCategories() {
   const lang     = currentLang;
