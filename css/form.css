@@ -45,13 +45,13 @@ tr.risk-low td    {border-left:4px solid #28a745;}
 .risk-low    {background:#d4edda;color:#155724;font-weight:bold;}
 
 /* Temporarily hide Risk Score column */
-@media screen {
+/* @media screen {
   #summaryTableContainer th:nth-child(2),
   #summaryTableContainer td:nth-child(2) {
     display: none;
   }
 }
-
+*/
 
 /* Panel headings */
 .panel-title{
