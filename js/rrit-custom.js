@@ -304,7 +304,8 @@ document.addEventListener("DOMContentLoaded", () => {
   qsa("#categoryFormEN input, #categoryFormFR input").forEach(cb => cb.addEventListener("change", collectCategories));
 
   /* action buttons */
-  qs("#editAnswersBtn")?.addEventListener("click", editAnswersFlow);
+  qs("#generateSummaryBtn")?.addEventListener("click", generateSummary);
+   qs("#editAnswersBtn")?.addEventListener("click", editAnswersFlow);
   qs("#newScenarioBtn")?.addEventListener("click", startNewScenario);
   qs("#backToSummary") ?.addEventListener("click", returnToSummary);
 
