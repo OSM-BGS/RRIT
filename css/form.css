@@ -28,62 +28,7 @@ legend{font-weight:700;}
 .rrit-responses{margin-bottom:1.5rem;}
 .rrit-status{margin-top:1rem;font-weight:700;}
 
-/* ===========================
-   Robust RRIT Summary Table
-   =========================== */
-#summaryTableContainer {
-  /* Just in case—ensure container displays block */
-  display: block;
-  margin-top: 2rem;
-}
 
-/* Main summary table: strong black outline, collapsed grid for no gaps */
-#summaryTableContainer table {
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 1.75rem;
-  border: 4px solid #000;         /* strong, visible black border */
-  border-radius: .5rem;
-  background: #fff;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-/* Table head: large, bold, shaded */
-#summaryTableContainer th {
-  background: #f1f1f1;
-  font-weight: 700;
-  font-size: 1.8rem;
-  border: 1.5px solid #333;
-  padding: 1rem;
-  vertical-align: middle;
-  text-align: left;
-}
-
-/* Table cells: add clear, consistent border all around */
-#summaryTableContainer td {
-  border: 1.5px solid #333;
-  padding: 1rem;
-  vertical-align: middle;
-  background: #fff;
-}
-
-/* Accent color bars INSIDE left margin, preserves the left border */
-tr.risk-high td   { box-shadow: inset 8px 0 0 #dc3545; }
-tr.risk-medium td { box-shadow: inset 8px 0 0 #ffc107; }
-tr.risk-low td    { box-shadow: inset 8px 0 0 #28a745; }
-
-/* Risk coloring (kept distinct for contrast, works with/without accent) */
-.risk-high   { background: #f8d7da !important; color: #721c24 !important; font-weight: bold; }
-.risk-medium { background: #fff3cd !important; color: #856404 !important; font-weight: bold; }
-.risk-low    { background: #d4edda !important; color: #155724 !important; font-weight: bold; }
-
-/* Optional: Responsive tweaks for small screens */
-@media (max-width: 800px) {
-  #summaryTableContainer table { font-size: 1.20rem; }
-  #summaryTableContainer th { font-size: 1.3rem; }
-  #summaryTableContainer td { padding: .75rem; }
-}
 /* Temporarily hide Risk Score column */
 /* @media screen {
   #summaryTableContainer th:nth-child(2),
@@ -213,3 +158,57 @@ tr.risk-low td    { box-shadow: inset 8px 0 0 #28a745; }
   /* Timestamp */
   .generated-on{font-size:10pt;text-align:right;margin-top:3rem;color:#666;}
 }
+
+/* ===========================
+   Robust RRIT Summary Table
+   =========================== */
+#summaryTableContainer table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 1.75rem;
+  background: #fff;
+}
+
+/* Existing per-cell borders */
+#summaryTableContainer th,
+#summaryTableContainer td {
+  border: 1.5px solid #333;
+  padding: 1rem;
+  vertical-align: middle;
+}
+#summaryTableContainer th {
+  font-size: 1.8rem;
+}
+
+/* Accent color bars */
+tr.risk-high td   { box-shadow: inset 8px 0 0 #dc3545; }
+tr.risk-medium td { box-shadow: inset 8px 0 0 #ffc107; }
+tr.risk-low td    { box-shadow: inset 8px 0 0 #28a745; }
+
+.risk-high   { background: #f8d7da !important; color: #721c24 !important; font-weight: bold; }
+.risk-medium { background: #fff3cd !important; color: #856404 !important; font-weight: bold; }
+.risk-low    { background: #d4edda !important; color: #155724 !important; font-weight: bold; }
+
+/* ---- OUTLINE HACK: Force the outer border sides ---- */
+#summaryTableContainer tr > td:first-child,
+#summaryTableContainer tr > th:first-child {
+  border-left: 4px solid #000 !important;
+}
+#summaryTableContainer tr > td:last-child,
+#summaryTableContainer tr > th:last-child {
+  border-right: 4px solid #000 !important;
+}
+#summaryTableContainer tr:last-child > td {
+  border-bottom: 4px solid #000 !important;
+}
+#summaryTableContainer tr:first-child > th {
+  border-top: 4px solid #000 !important;
+}
+/* Temporarily hide Risk Score column */
+/* @media screen {
+  #summaryTableContainer th:nth-child(2),
+  #summaryTableContainer td:nth-child(2) {
+    display: none;
+  }
+}
+*/
