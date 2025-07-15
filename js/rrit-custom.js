@@ -279,7 +279,7 @@ if (backBtn) {
   backBtn.setAttribute("aria-hidden", "true");
   backBtn.classList.add("hidden");
 }
-
+}
 /* ---------- CATEGORY VISIBILITY -------------------------- */
 function collectCategories() {
   const lang     = currentLang;
