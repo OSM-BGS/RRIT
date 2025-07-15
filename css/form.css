@@ -29,8 +29,8 @@ legend{font-weight:700;}
 .rrit-status{margin-top:1rem;font-weight:700;}
 
 /* Summary table ------------------------------------------------ */
-#summaryTableContainer table{font-size:1rem;border:1px solid #dee2e6;border-radius:.5rem;overflow:hidden;}
-#summaryTableContainer th{background:#f1f1f1;font-weight:700;font-size:1.05rem;}
+#summaryTableContainer table{font-size:1.75rem;border:2px solid #dee2e6;border-radius:.5rem;overflow:hidden;}
+#summaryTableContainer th{background:#f1f1f1;font-weight:700;font-size:1.8rem;}
 #summaryTableContainer td,
 #summaryTableContainer th{padding:.75rem;vertical-align:middle;}
 #summaryTableContainer tr{transition:background-color .3s}
