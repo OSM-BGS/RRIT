@@ -260,13 +260,13 @@ function returnToSummary() {
   qs("#rrit-summary")?.scrollIntoView({ behavior: "smooth" });
 
   // ✅ Unset aria-hidden and blur before hiding
-  const backBtn = qs("#backToSummary");
-  if (backBtn) {
-    backBtn.removeAttribute("aria-hidden"); // <- optional but safe
-    backBtn.blur();                         // <- release focus
-    backBtn.classList.add("hidden");        // <- now hide
-    backBtn.setAttribute("aria-hidden", "true"); // <- restore if needed
-  }
+ const backBtn = qs("#backToSummary");
+if (backBtn) {
+  backBtn.blur();                        // ✅ remove keyboard focus
+  backBtn.setAttribute("inert", "");     // ✅ prevent future focus
+  backBtn.setAttribute("aria-hidden", "true"); // ✅ hide from assistive tech
+  backBtn.classList.add("hidden");       // ✅ visually hide
+}
 }
 
 
