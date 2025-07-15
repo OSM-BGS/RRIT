@@ -260,15 +260,25 @@ function returnToSummary() {
   qs("#rrit-summary")?.scrollIntoView({ behavior: "smooth" });
 
   // ✅ Unset aria-hidden and blur before hiding
- const backBtn = qs("#backToSummary");
+const backBtn = qs("#backToSummary");
 if (backBtn) {
-  backBtn.blur();                        // ✅ remove keyboard focus
-  backBtn.setAttribute("inert", "");     // ✅ prevent future focus
-  backBtn.setAttribute("aria-hidden", "true"); // ✅ hide from assistive tech
-  backBtn.classList.add("hidden");       // ✅ visually hide
-}
-}
+  // Move focus to a visible, non-hidden element before hiding
+  const heading = qs("#rrit-summary");
+  if (heading) {
+    // Make sure heading can receive focus
+    heading.setAttribute("tabindex", "-1");
+    heading.focus();
+  } else {
+    // Fallback to body if heading doesn't exist
+    document.body.focus();
+  }
 
+  // Now safe to blur & hide the button
+  backBtn.blur();
+  backBtn.setAttribute("inert", "");
+  backBtn.setAttribute("aria-hidden", "true");
+  backBtn.classList.add("hidden");
+}
 
 /* ---------- CATEGORY VISIBILITY -------------------------- */
 function collectCategories() {
