@@ -233,6 +233,8 @@ function returnToSummary() {
   collectCategories();
   generateSummary();
   showPostResultActions();
+   setVis(qs("#rrit-summary"), true);
+setVis(qs("#summaryTableContainer"), true);
   qs("#rrit-summary")?.scrollIntoView({ behavior: "smooth" });
 
   // Hide "Back to Summary"
