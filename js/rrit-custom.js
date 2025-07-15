@@ -258,15 +258,15 @@ function returnToSummary() {
   collectCategories();
   generateSummary();
   showPostResultActions();
-   
+
   qs("#rrit-summary")?.scrollIntoView({ behavior: "smooth" });
-   
-  // Hide "Back to Summary" link again
-  qs("#backToSummary")?const backBtn = qs("#backToSummary");
-if (backBtn) {
-  backBtn.blur(); // remove focus before hiding
-  backBtn.classList.add("hidden");
-}.classList.add("hidden");
+
+  // ✅ Fix: properly blur & hide the button
+  const backBtn = qs("#backToSummary");
+  if (backBtn) {
+    backBtn.blur();
+    backBtn.classList.add("hidden");
+  }
 }
 
 /* ---------- CATEGORY VISIBILITY -------------------------- */
