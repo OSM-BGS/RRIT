@@ -257,6 +257,8 @@ function returnToSummary() {
 
   collectCategories();
   generateSummary();
+  showPostResultActions();
+   
   qs("#rrit-summary")?.scrollIntoView({ behavior: "smooth" });
    
   // Hide "Back to Summary" link again
