@@ -247,12 +247,10 @@ function returnToSummary() {
   const saved = loadScenario();
   if (!saved || !Array.isArray(saved.data) || !saved.data.length) return;
 
-  // Restore answers to form inputs
   saved.data.forEach(cat => cat.questions.forEach(q => {
     qs(`input[data-question="${q.question.replace(/"/g, '\\"')}"][value="${q.answer}"]`)?.click();
   }));
 
-  // Restore internal state
   window.collectedResponses = saved.data;
 
   collectCategories();
@@ -261,13 +259,16 @@ function returnToSummary() {
 
   qs("#rrit-summary")?.scrollIntoView({ behavior: "smooth" });
 
-  // ✅ Fix: properly blur & hide the button
+  // ✅ Unset aria-hidden and blur before hiding
   const backBtn = qs("#backToSummary");
   if (backBtn) {
-    backBtn.blur();
-    backBtn.classList.add("hidden");
+    backBtn.removeAttribute("aria-hidden"); // <- optional but safe
+    backBtn.blur();                         // <- release focus
+    backBtn.classList.add("hidden");        // <- now hide
+    backBtn.setAttribute("aria-hidden", "true"); // <- restore if needed
   }
 }
+
 
 /* ---------- CATEGORY VISIBILITY -------------------------- */
 function collectCategories() {
