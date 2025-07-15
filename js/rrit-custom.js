@@ -221,6 +221,7 @@ function editAnswersFlow() {
   setVis(qs("#printSummaryBtn"),      false);
   setVis(qs("#riskSummaryHelp"),      false);
   setVis(qs("#postResultActions"),    false);
+  setVis(qs("#rrit-summary"), false); // hide summary panel
 
   setVis(qs("#rrit-intro"), true);
   setVis(qs("#step0"),      true);
