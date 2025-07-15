@@ -243,17 +243,24 @@ function editAnswersFlow() {
   qs("#rrit-intro").scrollIntoView({ behavior:"smooth" });
 }
 
-function returnToSummary() { collectCategories(); generateSummary(); qs("#backToSummary")?.classList.add("hidden"); }
+function returnToSummary() {
+  const saved = loadScenario();
+  if (!saved || !Array.isArray(saved.data) || !saved.data.length) return;
 
-const clearScenario = () => {
-  localStorage.removeItem("rrit_savedScenario_v1"); // current
-  localStorage.removeItem("rrit_savedScenario");    // legacy (if any)
-};
-function startNewScenario() {
-  clearScenario();             // clear RRIT-related data
-  setTimeout(() => {
-    window.location.reload();  // wait until localStorage is cleared
-  }, 100);                     // slight delay allows for async removal
+  // Restore answers to form inputs
+  saved.data.forEach(cat => cat.questions.forEach(q => {
+    qs(`input[data-question="${q.question.replace(/"/g, '\\"')}"][value="${q.answer}"]`)?.click();
+  }));
+
+  // Restore internal state
+  window.collectedResponses = saved.data;
+
+  collectCategories();
+  generateSummary();
+  qs("#rrit-summary")?.scrollIntoView({ behavior: "smooth" });
+   
+  // Hide "Back to Summary" link again
+  qs("#backToSummary")?.classList.add("hidden");
 }
 
 /* ---------- CATEGORY VISIBILITY -------------------------- */
