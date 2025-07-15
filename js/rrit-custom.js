@@ -262,7 +262,11 @@ function returnToSummary() {
   qs("#rrit-summary")?.scrollIntoView({ behavior: "smooth" });
    
   // Hide "Back to Summary" link again
-  qs("#backToSummary")?.classList.add("hidden");
+  qs("#backToSummary")?const backBtn = qs("#backToSummary");
+if (backBtn) {
+  backBtn.blur(); // remove focus before hiding
+  backBtn.classList.add("hidden");
+}.classList.add("hidden");
 }
 
 /* ---------- CATEGORY VISIBILITY -------------------------- */
@@ -322,6 +326,13 @@ function toggleLanguage(lang) {
   if (!qs("#summaryTableContainer")?.classList.contains("hidden")) generateSummary();
 }
 window.toggleLanguage = toggleLanguage;
+
+function startNewScenario() {
+  clearScenario();
+  setTimeout(() => {
+    window.location.reload();
+  }, 100);
+}
 
 /* ---------- DOM READY ------------------------------------ */
 document.addEventListener("DOMContentLoaded", () => {
