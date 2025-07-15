@@ -81,17 +81,7 @@ tr.risk-low td    {border-left:4px solid #28a745;}
     z-index: 100;
   }
 
-  /* Float lang-switch safely in top-right corner */
-  #lang-switch {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0;
-    padding: 0.25rem 0.5rem;
-    background: white;   /* Optional: white background to avoid banner overlap */
-    border-radius: 0 0 0.25rem 0.25rem;
-    z-index: 999;
-  }
+
 }
 
   /* Neutralise row/col offsets */
