@@ -29,12 +29,12 @@ legend{font-weight:700;}
 .rrit-status{margin-top:1rem;font-weight:700;}
 
 #summaryTableContainer table {
-  font-size: 1.75rem;
-  border: 3px solid #222;
-  border-radius: .5rem;
-  overflow: hidden;
   border-collapse: collapse;
+  border-radius: .5rem;
   background: #fff;
+  font-size: 1.75rem;
+  /* Remove border property if using box-shadow */
+  box-shadow: 0 0 0 3px #222;
 }
 #summaryTableContainer th,
 #summaryTableContainer td {
