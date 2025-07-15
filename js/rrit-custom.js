@@ -297,6 +297,11 @@ function toggleLanguage(lang) {
     el.setAttribute("aria-label", el.textContent.trim());
   });
 
+  /* Back to Summary */
+   setVis(qs('#backToSummary span[data-lang="en"]'), lang === "en");
+  setVis(qs('#backToSummary span[data-lang="fr"]'), lang === "fr");
+
+   
   /* help accordion */
   setVis(qs("#riskHelpEN"), lang === "en");
   setVis(qs("#riskHelpFR"), lang === "fr");
