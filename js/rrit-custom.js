@@ -265,6 +265,44 @@ function editAnswersFlow() {
   qs("#rrit-intro").scrollIntoView({ behavior: "smooth" });
 }
 
+function returnToSummary() {
+  // Hide input panels and show summary
+  setVis(qs("#summaryTableContainer"), true);
+  setVis(qs("#printSummaryBtn"),      true);
+  setVis(qs("#riskSummaryHelp"),      true);
+  setVis(qs("#postResultActions"),    true);
+  setVis(qs("#rrit-summary"),         true);
+  setVis(qs("#rrit-intro"),           false);
+  setVis(qs("#step0"),                false);
+
+  // Hide all category panels
+  Object.keys(categories).forEach(cat => setVis(qs(`#step${cat}`), false));
+
+  // Hide Generate button again
+  setVis(qs("#generateSummaryBtn"), false);
+
+  // Move summary panel back to bottom
+  placeSummaryBottom();
+
+  // Disable Back to Summary button
+  const backBtn = qs("#backToSummary");
+  if (backBtn) {
+    backBtn.setAttribute("inert", "true");
+    backBtn.setAttribute("aria-hidden", "true");
+    backBtn.classList.add("hidden");
+  }
+
+  // Accessibility: focus heading
+  const heading = qs("#rrit-summary");
+  if (heading) {
+    heading.setAttribute("tabindex", "-1");
+    heading.focus();
+    setTimeout(() => heading.removeAttribute("tabindex"), 100);
+  }
+
+  console.log("[RRIT] Returned to summary view.");
+}
+
 
 function collectCategories() {
   const lang     = currentLang;
