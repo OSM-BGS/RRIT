@@ -51,7 +51,7 @@ const setTxt  = (el, txt) => el && (el.textContent = txt);
 const setVis  = (el, show=true) => el && el.classList.toggle("hidden", !show);
 
 /* ----- [LocalStorage] ----- */
-function saveScenario(data) {
+function saveScenario(responses) {
   const metadata = {
     name: qs("#projectName")?.value || "",
     desc: qs("#projectDesc")?.value || "",
@@ -59,12 +59,17 @@ function saveScenario(data) {
     completedBy: qs("#completedBy")?.value || ""
   };
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ savedAt: Date.now(), data, metadata }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      savedAt: Date.now(),
+      metadata,
+      data: responses // ✅ This is what restoreScenarioResponses expects
+    }));
   } catch (err) {
     console.error("[RRIT] Could not save scenario to localStorage.", err);
     alert("Warning: Unable to save scenario. Check your browser's storage settings.");
   }
 }
+
 function restoreScenarioResponses(saved) {
   if (!saved || !Array.isArray(saved.data)) {
     console.warn("[RRIT] No saved scenario data available for restoration.");
@@ -201,7 +206,7 @@ function generateSummary() {
   setVis(qs("#printSummaryBtn"), true);
   setVis(qs("#postResultActions"), true);
 
-  saveScenario({ data: responses });
+  saveScenario(responses);
   showPostResultActions();
 }
 
