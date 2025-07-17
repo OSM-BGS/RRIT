@@ -289,25 +289,35 @@ function editAnswersFlow() {
 }
 
 function returnToSummary() {
-  // Hide input panels and show summary
-  setVis(qs("#summaryTableContainer"), true);
-  setVis(qs("#printSummaryBtn"),      true);
-  setVis(qs("#riskSummaryHelp"),      true);
-  setVis(qs("#postResultActions"),    true);
-  setVis(qs("#rrit-summary"),         true);
-  setVis(qs("#rrit-intro"),           false);
-  setVis(qs("#step0"),                false);
+  // Re-collect answers
+  const updatedResponses = collectResponses(); // <-- fresh answers
+  window.collectedResponses = updatedResponses;
+  console.log("[RRIT] Updated responses collected on return:", updatedResponses);
 
-  // Hide all category panels
+  // Save again
+  saveScenario(updatedResponses);
+
+  // Rebuild the summary
+  buildSummaryTable(updatedResponses); // <-- regenerate table from new answers
+
+  // Show summary, hide intro & inputs
+  setVis(qs("#summaryTableContainer"), true);
+  setVis(qs("#printSummaryBtn"), true);
+  setVis(qs("#riskSummaryHelp"), true);
+  setVis(qs("#postResultActions"), true);
+  setVis(qs("#rrit-summary"), true);
+  setVis(qs("#rrit-intro"), false);
+  setVis(qs("#step0"), false);
+
   Object.keys(categories).forEach(cat => setVis(qs(`#step${cat}`), false));
 
   // Hide Generate button again
   setVis(qs("#generateSummaryBtn"), false);
 
-  // Move summary panel back to bottom
+  // Move summary back to bottom
   placeSummaryBottom();
 
-  // Disable Back to Summary button
+  // Hide Back to Summary button again
   const backBtn = qs("#backToSummary");
   if (backBtn) {
     backBtn.setAttribute("inert", "true");
@@ -315,7 +325,7 @@ function returnToSummary() {
     backBtn.classList.add("hidden");
   }
 
-  // Accessibility: focus heading
+  // Accessibility focus
   const heading = qs("#rrit-summary");
   if (heading) {
     heading.setAttribute("tabindex", "-1");
@@ -323,7 +333,7 @@ function returnToSummary() {
     setTimeout(() => heading.removeAttribute("tabindex"), 100);
   }
 
-  console.log("[RRIT] Returned to summary view.");
+  console.log("[RRIT] Returned to summary view with updated profile.");
 }
 
 
