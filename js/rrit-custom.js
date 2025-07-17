@@ -323,7 +323,7 @@ function returnToSummary() {
   saveScenario(updatedResponses);
 
   // Step 3: Rebuild the summary table
-  buildSummaryTable(updatedResponses); // R
+ generateSummary();
 
 
 function collectCategories() {
@@ -427,4 +427,3 @@ document.addEventListener("DOMContentLoaded", () => {
   window.preventInitialScroll = true;
   setTimeout(()=>{ window.preventInitialScroll=false; }, 4000);
 });
-}
