@@ -201,7 +201,7 @@ function generateSummary() {
   setVis(qs("#printSummaryBtn"), true);
   setVis(qs("#postResultActions"), true);
 
-  saveScenario(responses);
+  saveScenario({ data: responses });
   showPostResultActions();
 }
 
