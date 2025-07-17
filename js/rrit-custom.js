@@ -229,9 +229,21 @@ function editAnswersFlow() {
   setVis(qs("#rrit-intro"), true);
   setVis(qs("#step0"), true);
 
-  prepareScenario(saved);
+  // Show selected categories before restoring answers
+  collectCategories();  // This reveals only the selected category panels
 
-  // Show the Generate Summary button
+  // Assign data-qid to all inputs in the now-visible categories
+  qsa("fieldset[data-qid]").forEach(fs => {
+    const qid = fs.dataset.qid;
+    qsa('input[type="radio"],input[type="checkbox"]', fs).forEach(inp => {
+      inp.dataset.qid = qid;
+    });
+  });
+
+  // Restore answers from saved scenario
+  restoreScenarioResponses(saved);
+
+  // Show the Generate Summary button again
   setVis(qs("#generateSummaryBtn"), true);
 
   // Reposition summary panel if needed
@@ -239,54 +251,20 @@ function editAnswersFlow() {
     placeSummaryBottom();
   }
 
-  // Re-enable the Back to Summary button
+  // Re-enable Back to Summary button
   const backBtn = qs("#backToSummary");
   if (backBtn) {
     backBtn.removeAttribute("inert");
     backBtn.removeAttribute("aria-hidden");
     backBtn.classList.remove("hidden");
     backBtn.onclick = returnToSummary;
-    console.log("BackToSummary re-enabled and handler set.");
+    console.log("[RRIT] BackToSummary re-enabled.");
   }
 
+  // Scroll to top of form
   qs("#rrit-intro").scrollIntoView({ behavior: "smooth" });
 }
 
-/* ----- [Back to Summary (from Edit)] ----- */
-function returnToSummary() {
-  const saved = loadScenario();
-  if (!saved || !Array.isArray(saved.data) || !saved.data.length) {
-    alert("No saved scenario to return to.");
-    return;
-  }
-
-  // Reassign qids and restore answers
-  prepareScenario(saved);
-  // Store and show responses
-  window.collectedResponses = saved.data;
-  generateSummary();
-  showPostResultActions();
-  setVis(qs("#rrit-summary"), true);
-  setVis(qs("#summaryTableContainer"), true);
-  qs("#rrit-summary")?.scrollIntoView({ behavior: "smooth" });
-
-  // Hide Back to Summary button safely
-  const backBtn = qs("#backToSummary");
-  if (backBtn) {
-    const heading = qs("#rrit-summary");
-    if (heading) {
-      heading.setAttribute("tabindex", "-1");
-      heading.focus();
-      setTimeout(() => heading.removeAttribute("tabindex"), 100);
-    } else {
-      document.body.focus();
-    }
-    backBtn.blur();
-    backBtn.setAttribute("inert", "");
-    backBtn.setAttribute("aria-hidden", "true");
-    backBtn.classList.add("hidden");
-  }
-}
 
 function collectCategories() {
   const lang     = currentLang;
