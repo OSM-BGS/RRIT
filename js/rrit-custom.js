@@ -300,6 +300,15 @@ function collectCategories() {
     (lang === "en" ? "Categories shown: " : "Catégories affichées : ") + selected.join(", "));
 }
 
+function placeSummaryTop() {
+  const firstPanel   = qs('section[id^="step"]:not(.hidden)');
+  const summaryPanel = qs("#rrit-summary");
+  if (firstPanel && summaryPanel &&
+      summaryPanel.previousElementSibling !== firstPanel) {
+    firstPanel.parentNode.insertBefore(summaryPanel, firstPanel);
+  }
+}
+
 
 function placeSummaryBottom() {
   const summaryPanel = qs("#rrit-summary");
