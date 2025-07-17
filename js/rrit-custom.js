@@ -66,6 +66,32 @@ function saveScenario(data) {
   }
 }
 function restoreScenarioResponses(saved) {
+  if (!saved || !Array.isArray(saved.data)) {
+    console.warn("[RRIT] No saved scenario data available for restoration.");
+    return;
+  }
+  let restoreCount = 0, errorCount = 0;
+  const missing = [];
+  saved.data.forEach(cat =>
+    cat.questions.forEach(q => {
+      const inp = qs(`input[data-qid="${q.qid}"][value="${q.answer}"]`);
+      if (inp && !inp.checked) {
+        inp.click();
+        restoreCount++;
+      } else if (!inp) {
+        missing.push({ qid: q.qid, value: q.answer });
+        errorCount++;
+      }
+    })
+  );
+  if (restoreCount === 0 && saved.data.length > 0) {
+    console.warn("[RRIT] No saved answers restored — questions may have changed.");
+  }
+  if (errorCount > 0) {
+    console.warn(`[RRIT] ${errorCount} answers could not be restored. Details:`, missing);
+  }
+  // Only after ALL restore attempts, sync cross-language answers
+  syncResponses();
 }
 function loadScenario() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); }
