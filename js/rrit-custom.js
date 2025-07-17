@@ -211,6 +211,12 @@ function editAnswersFlow() {
   setVis(qs("#rrit-summary"),         false);
   setVis(qs("#rrit-intro"), true); setVis(qs("#step0"), true);
 
+   // Assign data-qid to all radio inputs on page load from fieldset
+  qsa("fieldset[data-qid]").forEach(fs => {
+    const qid = fs.dataset.qid;
+    qsa('input[type="radio"],input[type="checkbox"]', fs).forEach(inp => { inp.dataset.qid = qid; });
+  });
+
   // Restore previous answers by qid
 restoreScenarioResponses(saved);
   collectCategories();
@@ -336,12 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const browserLang = (navigator.languages?.[0] || navigator.language || "en").toLowerCase();
   toggleLanguage(browserLang.startsWith("fr") ? "fr" : "en");
 
-  // Assign data-qid to all radio inputs on page load from fieldset
-  qsa("fieldset[data-qid]").forEach(fs => {
-    const qid = fs.dataset.qid;
-    qsa('input[type="radio"],input[type="checkbox"]', fs).forEach(inp => { inp.dataset.qid = qid; });
-  });
-
+  
   qsa("#categoryFormEN input, #categoryFormFR input").forEach(cb => cb.addEventListener("change", collectCategories));
   qs("#generateSummaryBtn")?.addEventListener("click", generateSummary);
   qs("#editAnswersBtn")?.addEventListener("click", editAnswersFlow);
