@@ -99,6 +99,21 @@ function loadScenario() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); }
   catch (err) { return null; }
 }
+function reassignQids() {
+  qsa("fieldset[data-qid]").forEach(fs => {
+    const qid = fs.dataset.qid;
+    qsa('input[type="radio"],input[type="checkbox"]', fs).forEach(inp => {
+      inp.dataset.qid = qid;
+    });
+  });
+}
+
+function prepareScenario(saved) {
+  collectCategories();   // Reveal correct panels
+  reassignQids();        // Ensure inputs have data-qid
+  restoreScenarioResponses(saved); // Restore answers
+}
+
 
 /* ----- [Answer Sync EN<->FR] ----- */
 function syncResponses() {
@@ -204,31 +219,37 @@ function editAnswersFlow() {
     alert("No saved scenario found.");
     return;
   }
+
+  // Hide summary, show intro
   setVis(qs("#summaryTableContainer"), false);
   setVis(qs("#printSummaryBtn"),      false);
   setVis(qs("#riskSummaryHelp"),      false);
   setVis(qs("#postResultActions"),    false);
   setVis(qs("#rrit-summary"),         false);
-  setVis(qs("#rrit-intro"), true); setVis(qs("#step0"), true);
+  setVis(qs("#rrit-intro"), true);
+  setVis(qs("#step0"), true);
 
-   // Assign data-qid to all radio inputs on page load from fieldset
-  qsa("fieldset[data-qid]").forEach(fs => {
-    const qid = fs.dataset.qid;
-    qsa('input[type="radio"],input[type="checkbox"]', fs).forEach(inp => { inp.dataset.qid = qid; });
-  });
+  prepareScenario(saved);
 
-  // Restore previous answers by qid
-restoreScenarioResponses(saved);
-  collectCategories();
+  // Show the Generate Summary button
   setVis(qs("#generateSummaryBtn"), true);
 
+  // Reposition summary panel if needed
   if (qs("#rrit-summary") && qs("#stepK")?.nextElementSibling !== qs("#rrit-summary")) {
     placeSummaryBottom();
   }
 
-  qs("#backToSummary")?.classList.remove("hidden");
-  qs("#backToSummary").onclick = returnToSummary;
-  qs("#rrit-intro").scrollIntoView({ behavior:"smooth" });
+  // Re-enable the Back to Summary button
+  const backBtn = qs("#backToSummary");
+  if (backBtn) {
+    backBtn.removeAttribute("inert");
+    backBtn.removeAttribute("aria-hidden");
+    backBtn.classList.remove("hidden");
+    backBtn.onclick = returnToSummary;
+    console.log("BackToSummary re-enabled and handler set.");
+  }
+
+  qs("#rrit-intro").scrollIntoView({ behavior: "smooth" });
 }
 
 /* ----- [Back to Summary (from Edit)] ----- */
@@ -239,17 +260,17 @@ function returnToSummary() {
     return;
   }
 
-restoreScenarioResponses(saved);
-
+  // Reassign qids and restore answers
+  prepareScenario(saved);
+  // Store and show responses
   window.collectedResponses = saved.data;
-  collectCategories();
   generateSummary();
   showPostResultActions();
-   setVis(qs("#rrit-summary"), true);
-setVis(qs("#summaryTableContainer"), true);
+  setVis(qs("#rrit-summary"), true);
+  setVis(qs("#summaryTableContainer"), true);
   qs("#rrit-summary")?.scrollIntoView({ behavior: "smooth" });
 
-  // Hide "Back to Summary"
+  // Hide Back to Summary button safely
   const backBtn = qs("#backToSummary");
   if (backBtn) {
     const heading = qs("#rrit-summary");
@@ -257,7 +278,9 @@ setVis(qs("#summaryTableContainer"), true);
       heading.setAttribute("tabindex", "-1");
       heading.focus();
       setTimeout(() => heading.removeAttribute("tabindex"), 100);
-    } else { document.body.focus(); }
+    } else {
+      document.body.focus();
+    }
     backBtn.blur();
     backBtn.setAttribute("inert", "");
     backBtn.setAttribute("aria-hidden", "true");
@@ -265,26 +288,6 @@ setVis(qs("#summaryTableContainer"), true);
   }
 }
 
-/* ---- [Panel Controls] ---- */
-function collectCategories() {
-  const lang     = currentLang;
-  const formId   = lang === "en" ? "categoryFormEN" : "categoryFormFR";
-  const selected = ["A", "B", ...qsa(`#${formId} input:checked`).map(cb => cb.value)];
-  Object.keys(categories).forEach(cat => {
-    const sec = qs(`#step${cat}`);
-    if (sec) setVis(sec, selected.includes(cat));
-  });
-  setTxt(qs("#statusMsg"), (lang === "en" ? "Categories shown: " : "Catégories affichées : ") + selected.join(", "));
-}
-
-function placeSummaryTop() {
-  const firstPanel   = qs("#stepA");
-  const summaryPanel = qs("#rrit-summary");
-  if (firstPanel && summaryPanel &&
-      summaryPanel.previousElementSibling !== firstPanel) {
-    firstPanel.parentNode.insertBefore(summaryPanel, firstPanel);
-  }
-}
 function placeSummaryBottom() {
   const summaryPanel = qs("#rrit-summary");
   const panels = qsa('section[id^="step"]:not(.hidden)');
