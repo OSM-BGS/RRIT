@@ -74,6 +74,8 @@ function restoreScenarioResponses(saved) {
   const missing = [];
   saved.data.forEach(cat =>
     cat.questions.forEach(q => {
+   // Always uncheck all options for this qid!
+      qsa(`input[data-qid="${q.qid}"]`).forEach(i => i.checked = false);
       const inp = qs(`input[data-qid="${q.qid}"][value="${q.answer}"]`);
       if (inp && !inp.checked) {
         inp.click();
