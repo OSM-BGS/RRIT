@@ -288,6 +288,19 @@ function returnToSummary() {
   }
 }
 
+function collectCategories() {
+  const lang     = currentLang;
+  const formId   = lang === "en" ? "categoryFormEN" : "categoryFormFR";
+  const selected = ["A", "B", ...qsa(`#${formId} input:checked`).map(cb => cb.value)];
+  Object.keys(categories).forEach(cat => {
+    const sec = qs(`#step${cat}`);
+    if (sec) setVis(sec, selected.includes(cat));
+  });
+  setTxt(qs("#statusMsg"),
+    (lang === "en" ? "Categories shown: " : "Catégories affichées : ") + selected.join(", "));
+}
+
+
 function placeSummaryBottom() {
   const summaryPanel = qs("#rrit-summary");
   const panels = qsa('section[id^="step"]:not(.hidden)');
