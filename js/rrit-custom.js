@@ -324,7 +324,7 @@ function returnToSummary() {
 
   // Step 3: Rebuild the summary table
  generateSummary();
-
+}
 
 function collectCategories() {
   const lang     = currentLang;
