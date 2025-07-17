@@ -102,6 +102,7 @@ function loadScenario() {
 function reassignQids() {
   qsa("fieldset[data-qid]").forEach(fs => {
     const qid = fs.dataset.qid;
+    if (!qid) return;
     qsa('input[type="radio"],input[type="checkbox"]', fs).forEach(inp => {
       inp.dataset.qid = qid;
     });
@@ -220,33 +221,30 @@ function editAnswersFlow() {
     return;
   }
 
-  // Hide summary, show intro
+  // Hide summary and related elements
   setVis(qs("#summaryTableContainer"), false);
   setVis(qs("#printSummaryBtn"),      false);
   setVis(qs("#riskSummaryHelp"),      false);
   setVis(qs("#postResultActions"),    false);
   setVis(qs("#rrit-summary"),         false);
+
+  // Show form intro and step 0
   setVis(qs("#rrit-intro"), true);
   setVis(qs("#step0"), true);
 
-  // Show selected categories before restoring answers
-  collectCategories();  // This reveals only the selected category panels
+  // Reveal only selected category panels
+  collectCategories();
 
-  // Assign data-qid to all inputs in the now-visible categories
-  qsa("fieldset[data-qid]").forEach(fs => {
-    const qid = fs.dataset.qid;
-    qsa('input[type="radio"],input[type="checkbox"]', fs).forEach(inp => {
-      inp.dataset.qid = qid;
-    });
-  });
+  // Assign data-qid to inputs within those panels
+  reassignQids();
 
-  // Restore answers from saved scenario
+  // Restore answers
   restoreScenarioResponses(saved);
 
-  // Show the Generate Summary button again
+  // Make sure Generate Summary is shown again
   setVis(qs("#generateSummaryBtn"), true);
 
-  // Reposition summary panel if needed
+  // Place the summary panel back at the bottom (will remain hidden)
   if (qs("#rrit-summary") && qs("#stepK")?.nextElementSibling !== qs("#rrit-summary")) {
     placeSummaryBottom();
   }
@@ -261,7 +259,7 @@ function editAnswersFlow() {
     console.log("[RRIT] BackToSummary re-enabled.");
   }
 
-  // Scroll to top of form
+  // Scroll to top
   qs("#rrit-intro").scrollIntoView({ behavior: "smooth" });
 }
 
