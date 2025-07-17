@@ -261,28 +261,23 @@ function editAnswersFlow() {
   console.log("[RRIT] Entering editAnswersFlow()");
   console.log("[RRIT] Saved answers to restore:", saved.data);
 
-  // Hide summary, show intro
+  // Hide summary, show intro and input panels
   setVis(qs("#summaryTableContainer"), false);
   setVis(qs("#printSummaryBtn"),      false);
   setVis(qs("#riskSummaryHelp"),      false);
   setVis(qs("#postResultActions"),    false);
   setVis(qs("#rrit-summary"),         false);
-  setVis(qs("#rrit-intro"), true);
-  setVis(qs("#step0"), true);
+  setVis(qs("#rrit-intro"),           true);
+  setVis(qs("#step0"),                true);
 
   // Reveal the selected category panels
   collectCategories(); 
   console.log("[RRIT] collectCategories() called – visible panels should match previous selection.");
 
-  // Assign data-qid to inputs now that panels are visible
-  qsa("fieldset[data-qid]").forEach(fs => {
-    const qid = fs.dataset.qid;
-    qsa('input[type="radio"],input[type="checkbox"]', fs).forEach(inp => {
-      inp.dataset.qid = qid;
-    });
-  });
+  // Assign data-qid attributes to inputs before restoring
+  reassignQids(); // ✅ critical step before restoration
 
-  // Log visible radios that now have data-qid
+  // Log visible radio buttons to verify state
   const visibleRadios = [...document.querySelectorAll('input[type="radio"]')]
     .filter(el => el.offsetParent !== null && el.dataset.qid);
   console.log("[RRIT] Visible radio buttons with data-qid:", visibleRadios.map(r => ({
@@ -291,13 +286,13 @@ function editAnswersFlow() {
     qid: r.dataset.qid
   })));
 
-  // Try to restore responses
+  // Attempt to restore saved responses
   restoreScenarioResponses(saved);
 
   // Show Generate Summary button again
   setVis(qs("#generateSummaryBtn"), true);
 
-  // Reposition summary
+  // Move the summary panel back to bottom if out of place
   if (qs("#rrit-summary") && qs("#stepK")?.nextElementSibling !== qs("#rrit-summary")) {
     placeSummaryBottom();
   }
@@ -312,8 +307,8 @@ function editAnswersFlow() {
     console.log("[RRIT] BackToSummary re-enabled.");
   }
 
-  // Scroll to top of form
-  qs("#rrit-intro").scrollIntoView({ behavior: "smooth" });
+  // Scroll to top of form for accessibility
+  qs("#rrit-intro")?.scrollIntoView({ behavior: "smooth" });
 
   console.log("[RRIT] editAnswersFlow() complete.");
 }
