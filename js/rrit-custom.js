@@ -427,3 +427,4 @@ document.addEventListener("DOMContentLoaded", () => {
   window.preventInitialScroll = true;
   setTimeout(()=>{ window.preventInitialScroll=false; }, 4000);
 });
+}
