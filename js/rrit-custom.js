@@ -65,6 +65,8 @@ function saveScenario(data) {
     alert("Warning: Unable to save scenario. Check your browser's storage settings.");
   }
 }
+function restoreScenarioResponses(saved) {
+}
 function loadScenario() {
   try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); }
   catch (err) { return null; }
@@ -182,19 +184,7 @@ function editAnswersFlow() {
   setVis(qs("#rrit-intro"), true); setVis(qs("#step0"), true);
 
   // Restore previous answers by qid
-  let restoreCount = 0;
-  saved.data.forEach(cat =>
-    cat.questions.forEach(q => {
-      const inp = qs(`input[data-qid="${q.qid}"][value="${q.answer}"]`);
-      if (inp && !inp.checked) {
-        inp.click();
-        restoreCount++;
-      }
-    })
-  );
-  if (restoreCount === 0 && saved.data.length > 0) {
-    console.warn("[RRIT] No saved answers restored — question structure may have changed.");
-  }
+restoreScenarioResponses(saved);
   collectCategories();
   setVis(qs("#generateSummaryBtn"), true);
 
@@ -215,19 +205,7 @@ function returnToSummary() {
     return;
   }
 
-  let restoreCount = 0;
-  saved.data.forEach(cat =>
-    cat.questions.forEach(q => {
-      const inp = qs(`input[data-qid="${q.qid}"][value="${q.answer}"]`);
-      if (inp && !inp.checked) {
-        inp.click();
-        restoreCount++;
-      }
-    })
-  );
-  if (restoreCount === 0 && saved.data.length > 0) {
-    console.warn("[RRIT] No saved answers restored — question structure may have changed.");
-  }
+restoreScenarioResponses(saved);
 
   window.collectedResponses = saved.data;
   collectCategories();
