@@ -182,6 +182,7 @@ function generateSummary() {
     if (qList.length) responses.push({ category: categories[cat][lang], questions: qList });
   });
 
+   console.log("[RRIT] Collected responses:", responses);
   window.collectedResponses = responses;
     console.log("[RRIT] generateSummary() called.");
   setVis(qs("#summaryTableContainer"), true);
