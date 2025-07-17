@@ -183,6 +183,7 @@ function generateSummary() {
   });
 
   window.collectedResponses = responses;
+    console.log("[RRIT] generateSummary() called.");
   setVis(qs("#summaryTableContainer"), true);
   setVis(qs("#rrit-intro"), false);
   setVis(qs("#step0"),      false);
