@@ -70,6 +70,36 @@ function saveScenario(responses) {
   }
 }
 
+function collectResponses() {
+  const responses = [];
+
+  qsa("fieldset[data-qid]").forEach(fs => {
+    const qid = fs.dataset.qid;
+    const inputs = qsa('input[type="radio"], input[type="checkbox"]', fs);
+
+    let value = null;
+
+    // Radio: find checked
+    if (inputs.length && inputs[0].type === "radio") {
+      const selected = [...inputs].find(inp => inp.checked);
+      value = selected?.value || null;
+    }
+
+    // Checkbox: gather all checked values
+    else if (inputs.length && inputs[0].type === "checkbox") {
+      const selected = [...inputs].filter(inp => inp.checked);
+      value = selected.map(inp => inp.value);
+    }
+
+    if (qid && value !== null) {
+      responses.push({ qid, value });
+    }
+  });
+
+  return responses;
+}
+
+
 function restoreScenarioResponses(saved) {
   if (!saved || !Array.isArray(saved.data)) {
     console.warn("[RRIT] No saved scenario data available for restoration.");
