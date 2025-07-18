@@ -143,42 +143,6 @@ function collectResponses() {
 }
 
 // Restore responses to the UI based on saved scenario
-function restoreScenarioResponses(saved) {
-  if (!saved || !Array.isArray(saved.data)) {
-    console.warn("[RRIT] No saved scenario data available for restoration.");
-    return;
-  }
-
-  let restoreCount = 0;
-  let errorCount = 0;
-  const missing = [];
-
-  saved.data.forEach(cat => {
-    cat.questions.forEach(q => {
-      // Uncheck all options for this qid
-      qsa(`input[data-qid="${q.qid}"]`).forEach(i => i.checked = false);
-
-      const inp = qs(`input[data-qid="${q.qid}"][value="${q.answer}"]`);
-      if (inp && !inp.checked) {
-        inp.click();
-        restoreCount++;
-      } else if (!inp) {
-        missing.push({ qid: q.qid, value: q.answer });
-        errorCount++;
-      }
-    });
-  });
-
-  if (restoreCount === 0 && saved.data.length > 0) {
-    console.warn("[RRIT] No saved answers restored — questions may have changed.");
-  }
-
-  if (errorCount > 0) {
-    console.warn(`[RRIT] ${errorCount} answers could not be restored. Details:`, missing);
-  }
-
-  
-}
 
 
 
@@ -299,69 +263,7 @@ function placeSummaryBottom() {
    Section 6: Edit/Return Flow (Edit Answers, Return to Summary)
    ========================================================= */
 
-function editAnswersFlow() {
-  const saved = loadScenario();
-  if (!saved || !saved.data) {
-    console.warn("[RRIT] No saved scenario found.");
-    return;
-  }
 
-  console.log("[RRIT] Entering editAnswersFlow()");
-  console.log("[RRIT] Saved answers to restore:", saved.data);
-
-  // Hide summary, show intro and input panels
-  setVis(qs("#summaryTableContainer"), false);
-  setVis(qs("#printSummaryBtn"),      false);
-  setVis(qs("#riskSummaryHelp"),      false);
-  setVis(qs("#postResultActions"),    false);
-  setVis(qs("#rrit-summary"),         false);
-  setVis(qs("#rrit-intro"),           true);
-  setVis(qs("#step0"),                true);
-
-  // Reveal the selected category panels
-  collectCategories(); 
-  console.log("[RRIT] collectCategories() called – visible panels should match previous selection.");
-
-  // Assign data-qid attributes to inputs before restoring
-  reassignQids(); // ✅ critical step before restoration
-
-  // Log visible radio buttons to verify state
-  const visibleRadios = [...document.querySelectorAll('input[type="radio"]')]
-    .filter(el => el.offsetParent !== null && el.dataset.qid);
-  console.log("[RRIT] Visible radio buttons with data-qid:", visibleRadios.map(r => ({
-    name: r.name,
-    value: r.value,
-    qid: r.dataset.qid
-  })));
-
-  // Attempt to restore saved responses
-  restoreScenarioResponses(saved);
-
-  // Show Generate Summary button again
-  setVis(qs("#generateSummaryBtn"), true);
-
-  // Move the summary panel back to bottom if out of place
-  if (qs("#rrit-summary") && qs("#stepK")?.nextElementSibling !== qs("#rrit-summary")) {
-    placeSummaryBottom();
-  }
-
-  // Safely re-bind Back to Summary Button
-  const backBtn = qs("#backToSummary");
-  if (backBtn) {
-    const cleanBackBtn = backBtn.cloneNode(true);
-    backBtn.replaceWith(cleanBackBtn);
-    cleanBackBtn.addEventListener("click", returnToSummary);
-    cleanBackBtn.classList.remove("hidden");
-    cleanBackBtn.removeAttribute("inert");
-    cleanBackBtn.removeAttribute("aria-hidden");
-    console.log("[RRIT] BackToSummary safely re-bound.");
-  }
-
-  // Scroll to top for accessibility
-  qs("#rrit-intro")?.scrollIntoView({ behavior: "smooth" });
-
-  console.log("[RRIT] editAnswersFlow() complete.");
-}
 
 function returnToSummary() {
   const lang = currentLang;
