@@ -102,40 +102,29 @@ function collectCategories() {
     (lang === "en" ? "Categories shown: " : "Catégories affichées : ") + selected.join(", "));
 }
 
-function restoreResponses() {
-  const scenario = JSON.parse(localStorage.getItem(STORAGE_KEY));
-  if (!scenario) return;
+function restoreResponses(saved) {
+  if (!saved || !saved.responses) return;
 
-  // Restore metadata fields
-  qs("#projectName").value = scenario.metadata.name || "";
-  qs("#projectDesc").value = scenario.metadata.desc || "";
-  qs("#assessmentDate").value = scenario.metadata.date || "";
-  qs("#completedBy").value = scenario.metadata.completedBy || "";
+  const responses = saved.responses;
+  Object.keys(responses).forEach(qid => {
+    const qname = qsa(`[data-qid="${qid}"] input`)?.[0]?.name;
+    if (!qname || !responses[qid]) return;
 
-  // Restore category checkboxes
-  const formEN = qs("#categoryFormEN");
-  const formFR = qs("#categoryFormFR");
-  const selectedCats = new Set(scenario.data.map(entry => entry.qid[0]));
-
-  qsa("#categoryFormEN input[type=checkbox], #categoryFormFR input[type=checkbox]").forEach(cb => {
-    if (!cb.disabled) cb.checked = selectedCats.has(cb.value);
+    const inputs = qsa(`[name="${qname}"]`);
+    const input = inputs.find(i => i.value === responses[qid][0]);
+    if (input) input.checked = true;
   });
 
-  // Re-show selected panels
-  collectCategories();
-
-  // Restore responses
-  scenario.data.forEach(entry => {
-    const selector = `input[data-qid="${entry.qid}"]`;
-    qsa(selector).forEach(inp => {
-      if (inp.type === "radio" && inp.value === entry.value) {
-        inp.checked = true;
-      } else if (inp.type === "checkbox" && Array.isArray(entry.value)) {
-        inp.checked = entry.value.includes(inp.value);
-      }
-    });
-  });
+  // Also restore metadata fields if available
+  if (saved.meta) {
+    const { projectName, projectDesc, assessmentDate, completedBy } = saved.meta;
+    if (qs("#projectName")) qs("#projectName").value = projectName || "";
+    if (qs("#projectDesc")) qs("#projectDesc").value = projectDesc || "";
+    if (qs("#assessmentDate")) qs("#assessmentDate").value = assessmentDate || "";
+    if (qs("#completedBy")) qs("#completedBy").value = completedBy || "";
+  }
 }
+
 
 
 /* =========================================================
@@ -287,8 +276,16 @@ function placeSummaryBottom() {
    ========================================================= */
 
 function editAnswersFlow() {
-  restoreResponses();
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  if (!saved) return;
 
+  // Reset all answers first
+  qsa("input[type=radio], input[type=checkbox]").forEach(el => el.checked = false);
+
+  // Restore answers and metadata
+  restoreResponses(saved);
+
+  // Show relevant UI panels
   setVis(qs("#rrit-summary"), false);
   setVis(qs("#generateSummaryBtn"), true);
   setVis(qs("#printSummaryBtn"), false);
@@ -305,58 +302,9 @@ function editAnswersFlow() {
 
   collectCategories(); // Show selected again
   placeSummaryBottom();
-}
 
-
-function returnToSummary() {
-  const lang = currentLang;
-  const updatedRaw = collectResponses(); // [{ qid, value }]
-  window.collectedResponses = []; // Clear previous
-
-  const selected = new Set(["A", "B"]);
-  qsa("#categoryFormEN input:checked, #categoryFormFR input:checked")
-    .forEach(i => selected.add(i.value));
-
-  const categorized = {};
-
-  updatedRaw.forEach(({ qid, value }) => {
-    const fieldset = qs(`fieldset[data-qid="${qid}"]`);
-    if (!fieldset) return;
-
-    const questionText = fieldset.querySelector("legend")?.textContent || "";
-    const categoryMatch = qid.match(/^cat([A-K])/i);
-    const categoryCode = categoryMatch?.[1] || "Unknown";
-    const categoryName = categories[categoryCode]?.[lang] || categoryCode;
-
-    if (!categorized[categoryCode]) {
-      categorized[categoryCode] = {
-        category: categoryName,
-        questions: []
-      };
-    }
-
-    categorized[categoryCode].questions.push({
-      qid,
-      question: questionText,
-      answer: Array.isArray(value) ? value.join(", ") : value
-    });
-  });
-
-  const responseArray = Object.values(categorized);
-  window.collectedResponses = responseArray;
-
-  console.log("[RRIT] Updated responses collected and restructured:", responseArray);
-
-  saveScenario(responseArray);
-  generateSummary();
-
-  // Accessibility: move focus to summary heading
-  const heading = qs("#rrit-summary");
-  if (heading) {
-    heading.setAttribute("tabindex", "-1");
-    heading.focus();
-    setTimeout(() => heading.removeAttribute("tabindex"), 100);
-  }
+  // Scroll to first section
+  document.getElementById("stepA")?.scrollIntoView({ behavior: "smooth" });
 }
 
 /* =========================================================
