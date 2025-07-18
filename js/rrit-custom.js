@@ -380,15 +380,45 @@ function editAnswersFlow() {
 }
 
 function returnToSummary() {
-  // Step 1: Re-collect updated answers
-  const updatedResponses = collectResponses(); // Fresh from UI
-  window.collectedResponses = updatedResponses;
-  console.log("[RRIT] Updated responses collected on return:", updatedResponses);
+  const lang = currentLang;
+  const updatedRaw = collectResponses(); // [{ qid, value }]
+  window.collectedResponses = []; // Clear previous
+  
+  const selected = new Set(["A", "B"]);
+  qsa("#categoryFormEN input:checked, #categoryFormFR input:checked")
+    .forEach(i => selected.add(i.value));
 
-  // Step 2: Save to localStorage
-  saveScenario(updatedResponses);
+  const categorized = {};
 
-  // Step 3: Rebuild the summary table
+  updatedRaw.forEach(({ qid, value }) => {
+    const fieldset = qs(`fieldset[data-qid="${qid}"]`);
+    if (!fieldset) return;
+
+    const questionText = fieldset.querySelector("legend")?.textContent || "";
+    const categoryMatch = qid.match(/^cat([A-K])/i);
+    const categoryCode = categoryMatch?.[1] || "Unknown";
+    const categoryName = categories[categoryCode]?.[lang] || categoryCode;
+
+    if (!categorized[categoryCode]) {
+      categorized[categoryCode] = {
+        category: categoryName,
+        questions: []
+      };
+    }
+
+    categorized[categoryCode].questions.push({
+      qid,
+      question: questionText,
+      answer: Array.isArray(value) ? value.join(", ") : value
+    });
+  });
+
+  const responseArray = Object.values(categorized);
+  window.collectedResponses = responseArray;
+
+  console.log("[RRIT] Updated responses collected and restructured:", responseArray);
+
+  saveScenario(responseArray);
   generateSummary();
 }
 
