@@ -115,7 +115,11 @@ function restoreResponses(scenario) {
   qs("#completedBy").value = scenario.metadata?.completedBy || "";
 
   // Restore category checkboxes
-  const selectedCats = new Set(scenario.data.map(entry => entry.qid?.[0]).filter(Boolean));
+  const selectedCats = new Set(
+  scenario.data
+    .map(entry => typeof entry.qid === "string" ? entry.qid.charAt(0) : null)
+    .filter(Boolean)
+);
   qsa("#categoryFormEN input[type=checkbox], #categoryFormFR input[type=checkbox]").forEach(cb => {
     if (!cb.disabled) cb.checked = selectedCats.has(cb.value);
   });
