@@ -67,16 +67,6 @@ function saveScenario(responses) {
   }
 }
 
-// Load scenario from localStorage
-function loadScenario() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY));
-  } catch (err) {
-    console.warn("[RRIT] Could not parse scenario from storage.");
-    return null;
-  }
-}
-
 // Clear scenario from localStorage
 function clearScenario() {
   try {
@@ -112,6 +102,42 @@ function collectCategories() {
     (lang === "en" ? "Categories shown: " : "Catégories affichées : ") + selected.join(", "));
 }
 
+function restoreResponses() {
+  const scenario = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  if (!scenario) return;
+
+  // Restore metadata fields
+  qs("#projectName").value = scenario.metadata.name || "";
+  qs("#projectDesc").value = scenario.metadata.desc || "";
+  qs("#assessmentDate").value = scenario.metadata.date || "";
+  qs("#completedBy").value = scenario.metadata.completedBy || "";
+
+  // Restore category checkboxes
+  const formEN = qs("#categoryFormEN");
+  const formFR = qs("#categoryFormFR");
+  const selectedCats = new Set(scenario.data.map(entry => entry.qid[0]));
+
+  qsa("#categoryFormEN input[type=checkbox], #categoryFormFR input[type=checkbox]").forEach(cb => {
+    if (!cb.disabled) cb.checked = selectedCats.has(cb.value);
+  });
+
+  // Re-show selected panels
+  collectCategories();
+
+  // Restore responses
+  scenario.data.forEach(entry => {
+    const selector = `input[data-qid="${entry.qid}"]`;
+    qsa(selector).forEach(inp => {
+      if (inp.type === "radio" && inp.value === entry.value) {
+        inp.checked = true;
+      } else if (inp.type === "checkbox" && Array.isArray(entry.value)) {
+        inp.checked = entry.value.includes(inp.value);
+      }
+    });
+  });
+}
+
+
 /* =========================================================
    Section 3: Response Collection and Restoration
    ========================================================= */
@@ -142,9 +168,6 @@ function collectResponses() {
   return responses;
 }
 
-// Restore responses to the UI based on saved scenario
-
-
 
 /* =========================================================
    Section 4: Summary Generation and Risk Logic
@@ -153,7 +176,7 @@ function collectResponses() {
 function generateSummary() {
   const lang = currentLang;
   const body = qs("#summaryTableBody");
-  body.innerHTML = "";
+  body.innerHTML = ""; // Clears old summary on repeat clicks
   const responses = [];
 
   const selected = new Set(["A", "B"]);
@@ -263,6 +286,26 @@ function placeSummaryBottom() {
    Section 6: Edit/Return Flow (Edit Answers, Return to Summary)
    ========================================================= */
 
+function editAnswersFlow() {
+  restoreResponses();
+
+  setVis(qs("#rrit-summary"), false);
+  setVis(qs("#generateSummaryBtn"), true);
+  setVis(qs("#printSummaryBtn"), false);
+  setVis(qs("#postResultActions"), false);
+  setVis(qs("#riskSummaryHelp"), false);
+
+  setVis(qs("#rrit-intro"), false);
+  setVis(qs("#step0"), true);
+
+  qsa('section[id^="step"]').forEach(sec => {
+    if (!sec.id.startsWith("step")) return;
+    setVis(sec, false); // Hide all
+  });
+
+  collectCategories(); // Show selected again
+  placeSummaryBottom();
+}
 
 
 function returnToSummary() {
@@ -401,7 +444,13 @@ document.addEventListener("DOMContentLoaded", () => {
   qs("#backToSummary")?.addEventListener("click", returnToSummary);
 
   // Attempt to restore saved scenario
-  const saved = loadScenario();
+ const savedRaw = localStorage.getItem(STORAGE_KEY);
+let saved = null;
+try {
+  saved = JSON.parse(savedRaw);
+} catch (err) {
+  console.warn("[RRIT] Could not parse scenario from storage.");
+}
   const hasResults = saved && Array.isArray(saved.data) && saved.data.length;
   const summaryVisible = !qs("#summaryTableContainer")?.classList.contains("hidden");
   if (hasResults && summaryVisible) {
