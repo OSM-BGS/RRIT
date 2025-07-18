@@ -306,6 +306,56 @@ function editAnswersFlow() {
   // Scroll to first section
   document.getElementById("stepA")?.scrollIntoView({ behavior: "smooth" });
 }
+function returnToSummary() {
+  const lang = currentLang;
+  const updatedRaw = collectResponses(); // [{ qid, value }]
+  window.collectedResponses = []; // Clear previous
+
+  const selected = new Set(["A", "B"]);
+  qsa("#categoryFormEN input:checked, #categoryFormFR input:checked")
+    .forEach(i => selected.add(i.value));
+
+  const categorized = {};
+
+  updatedRaw.forEach(({ qid, value }) => {
+    const fieldset = qs(`fieldset[data-qid="${qid}"]`);
+    if (!fieldset) return;
+
+    const questionText = fieldset.querySelector("legend")?.textContent || "";
+    const categoryMatch = qid.match(/^cat([A-K])/i);
+    const categoryCode = categoryMatch?.[1] || "Unknown";
+    const categoryName = categories[categoryCode]?.[lang] || categoryCode;
+
+    if (!categorized[categoryCode]) {
+      categorized[categoryCode] = {
+        category: categoryName,
+        questions: []
+      };
+    }
+
+    categorized[categoryCode].questions.push({
+      qid,
+      question: questionText,
+      answer: Array.isArray(value) ? value.join(", ") : value
+    });
+  });
+
+  const responseArray = Object.values(categorized);
+  window.collectedResponses = responseArray;
+
+  console.log("[RRIT] Updated responses collected and restructured:", responseArray);
+
+  saveScenario(responseArray);
+  generateSummary();
+
+  // Accessibility: move focus to summary heading
+  const heading = qs("#rrit-summary");
+  if (heading) {
+    heading.setAttribute("tabindex", "-1");
+    heading.focus();
+    setTimeout(() => heading.removeAttribute("tabindex"), 100);
+  }
+}
 
 /* =========================================================
    Section 7: Language Switching & Scenario Reset
