@@ -297,46 +297,8 @@ function editAnswersFlow() {
     placeSummaryBottom();
   }
 
-  // Re-enable Back to Summary button
-  const backBtn = qs("#backToSummary");
-  if (backBtn) {
-    backBtn.removeAttribute("inert");
-    backBtn.removeAttribute("aria-hidden");
-    backBtn.classList.remove("hidden");
-    backBtn.onclick = returnToSummary;
-    console.log("[RRIT] BackToSummary re-enabled.");
-  }
+  // 🔁 Rebind Back to Summary Button – safely
 
-  // Scroll to top of form for accessibility
-  qs("#rrit-intro")?.scrollIntoView({ behavior: "smooth" });
-
-  console.log("[RRIT] editAnswersFlow() complete.");
-}
-
-function returnToSummary() {
-  // Step 1: Re-collect updated answers
-  const updatedResponses = collectResponses(); // Fresh from UI
-  window.collectedResponses = updatedResponses;
-  console.log("[RRIT] Updated responses collected on return:", updatedResponses);
-
-  // Step 2: Save to localStorage
-  saveScenario(updatedResponses);
-
-  // Step 3: Rebuild the summary table
- generateSummary();
-}
-
-function collectCategories() {
-  const lang     = currentLang;
-  const formId   = lang === "en" ? "categoryFormEN" : "categoryFormFR";
-  const selected = ["A", "B", ...qsa(`#${formId} input:checked`).map(cb => cb.value)];
-  Object.keys(categories).forEach(cat => {
-    const sec = qs(`#step${cat}`);
-    if (sec) setVis(sec, selected.includes(cat));
-  });
-  setTxt(qs("#statusMsg"),
-    (lang === "en" ? "Categories shown: " : "Catégories affichées : ") + selected.join(", "));
-}
 
 function placeSummaryTop() {
   const firstPanel   = qs('section[id^="step"]:not(.hidden)');
