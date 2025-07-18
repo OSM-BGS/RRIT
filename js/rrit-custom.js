@@ -486,7 +486,8 @@ function startNewScenario() {
 document.addEventListener("DOMContentLoaded", () => {
   // Auto-detect and apply language
   const browserLang = (navigator.languages?.[0] || navigator.language || "en").toLowerCase();
-  toggleLanguage(browserLang.startsWith("fr") ? "fr" : "en");
+  currentLang = browserLang.startsWith("fr") ? "fr" : "en";
+  toggleLanguage(currentLang);
 
   // Bind core event listeners
   qsa("#categoryFormEN input, #categoryFormFR input").forEach(cb =>
@@ -509,12 +510,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setVis(qs("#generateSummaryBtn"), true);
   }
 
-document.addEventListener("DOMContentLoaded", () => {
-  toggleLanguage(currentLang);   // Sets initial language and toggles content
-  collectCategories();           // Hides or shows category sections
-
   // Prevent WET auto-scroll on load
   window.preventInitialScroll = true;
   setTimeout(() => { window.preventInitialScroll = false; }, 4000);
 });
-
