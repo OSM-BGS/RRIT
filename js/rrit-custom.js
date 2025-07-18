@@ -177,24 +177,10 @@ function restoreScenarioResponses(saved) {
     console.warn(`[RRIT] ${errorCount} answers could not be restored. Details:`, missing);
   }
 
-  syncResponses(); // Sync between EN/FR
+  
 }
 
-// Sync radio button answers across languages
-function syncResponses() {
-  const map = {
-    Yes: "Oui", No: "Non", Unknown: "Inconnu", "Not Applicable": "Sans objet",
-    Oui: "Yes", Non: "No", Inconnu: "Unknown", "Sans objet": "Not Applicable"
-  };
 
-  qsa('input[type="radio"]:checked').forEach(src => {
-    const twinName = src.name.endsWith("f") ? src.name.slice(0, -1) : src.name + "f";
-    const twinVal = map[src.value] || src.value;
-
-    const twin = qs(`input[name="${twinName}"][value="${twinVal}"][data-qid="${src.dataset.qid}"]`);
-    if (twin && !twin.checked) twin.click();
-  });
-}
 
 /* =========================================================
    Section 4: Summary Generation and Risk Logic
@@ -213,17 +199,15 @@ function generateSummary() {
   selected.forEach(cat => {
     let total = 0, weight = 0, qList = [];
 
-    ["", "f"].forEach(suffix => {
-      qsa(`#step${cat} input[name^="cat${cat}q${suffix}"]:checked`).forEach(input => {
-        const fs = input.closest("fieldset");
-        const qid = input.dataset.qid || fs?.dataset.qid || "";
-        const txt = fs?.querySelector("legend")?.textContent || "";
-        qList.push({ qid, question: txt, answer: input.value });
+   qsa(`#step${cat} input[name^="cat${cat}q"]:checked`).forEach(input => {
+  const fs = input.closest("fieldset");
+  const qid = input.dataset.qid || fs?.dataset.qid || "";
+  const txt = fs?.querySelector("legend")?.textContent || "";
+  qList.push({ qid, question: txt, answer: input.value });
 
-        if (input.value in questionWeights) weight += questionWeights[input.value];
-        total += 1;
-      });
-    });
+  if (input.value in questionWeights) weight += questionWeights[input.value];
+  total += 1;
+});
 
     let status, css;
     if (criticalCategories.includes(cat) && qList.some(q => /^(No|Non|Unknown|Inconnu)$/.test(q.answer))) {
@@ -383,7 +367,7 @@ function returnToSummary() {
   const lang = currentLang;
   const updatedRaw = collectResponses(); // [{ qid, value }]
   window.collectedResponses = []; // Clear previous
-  
+
   const selected = new Set(["A", "B"]);
   qsa("#categoryFormEN input:checked, #categoryFormFR input:checked")
     .forEach(i => selected.add(i.value));
@@ -420,6 +404,14 @@ function returnToSummary() {
 
   saveScenario(responseArray);
   generateSummary();
+
+  // Accessibility: move focus to summary heading
+  const heading = qs("#rrit-summary");
+  if (heading) {
+    heading.setAttribute("tabindex", "-1");
+    heading.focus();
+    setTimeout(() => heading.removeAttribute("tabindex"), 100);
+  }
 }
 
 /* =========================================================
@@ -465,8 +457,7 @@ function toggleLanguage(lang) {
                   : "📘 Comment interpréter le sommaire du profil de risque"
   );
 
-  // Sync radio answers in both languages
-  syncResponses();
+
 
   // If summary is showing, regenerate it in selected language
   if (!qs("#summaryTableContainer")?.classList.contains("hidden")) {
@@ -475,9 +466,6 @@ function toggleLanguage(lang) {
 }
 window.toggleLanguage = toggleLanguage;
 
-function clearScenario() {
-  try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-}
 
 function startNewScenario() {
   clearScenario();
