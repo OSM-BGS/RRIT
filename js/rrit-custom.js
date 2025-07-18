@@ -102,27 +102,38 @@ function collectCategories() {
     (lang === "en" ? "Categories shown: " : "Catégories affichées : ") + selected.join(", "));
 }
 
-function restoreResponses(saved) {
-  if (!saved || !saved.responses) return;
+function restoreResponses(scenario) {
+  if (!scenario || !scenario.data || !Array.isArray(scenario.data)) {
+    console.warn("[RRIT] Invalid scenario data for restoreResponses.");
+    return;
+  }
 
-  const responses = saved.responses;
-  Object.keys(responses).forEach(qid => {
-    const qname = qsa(`[data-qid="${qid}"] input`)?.[0]?.name;
-    if (!qname || !responses[qid]) return;
+  // Restore metadata
+  qs("#projectName").value = scenario.metadata?.name || "";
+  qs("#projectDesc").value = scenario.metadata?.desc || "";
+  qs("#assessmentDate").value = scenario.metadata?.date || "";
+  qs("#completedBy").value = scenario.metadata?.completedBy || "";
 
-    const inputs = qsa(`[name="${qname}"]`);
-    const input = inputs.find(i => i.value === responses[qid][0]);
-    if (input) input.checked = true;
+  // Restore category checkboxes
+  const selectedCats = new Set(scenario.data.map(entry => entry.qid?.[0]).filter(Boolean));
+  qsa("#categoryFormEN input[type=checkbox], #categoryFormFR input[type=checkbox]").forEach(cb => {
+    if (!cb.disabled) cb.checked = selectedCats.has(cb.value);
   });
 
-  // Also restore metadata fields if available
-  if (saved.meta) {
-    const { projectName, projectDesc, assessmentDate, completedBy } = saved.meta;
-    if (qs("#projectName")) qs("#projectName").value = projectName || "";
-    if (qs("#projectDesc")) qs("#projectDesc").value = projectDesc || "";
-    if (qs("#assessmentDate")) qs("#assessmentDate").value = assessmentDate || "";
-    if (qs("#completedBy")) qs("#completedBy").value = completedBy || "";
-  }
+  // Show relevant sections
+  collectCategories();
+
+  // Restore radio/checkbox selections
+  scenario.data.forEach(entry => {
+    const inputs = qsa(`input[data-qid="${entry.qid}"]`);
+    inputs.forEach(inp => {
+      if (inp.type === "radio" && inp.value === entry.value) {
+        inp.checked = true;
+      } else if (inp.type === "checkbox" && Array.isArray(entry.value)) {
+        inp.checked = entry.value.includes(inp.value);
+      }
+    });
+  });
 }
 
 
