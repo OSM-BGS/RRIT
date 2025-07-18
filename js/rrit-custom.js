@@ -303,6 +303,9 @@ function editAnswersFlow() {
   collectCategories(); // Show selected again
   placeSummaryBottom();
 
+     // Show return button
+  setVis(qs("#backToSummary"), true);
+   
   // Scroll to first section
   document.getElementById("stepA")?.scrollIntoView({ behavior: "smooth" });
 }
@@ -355,6 +358,8 @@ function returnToSummary() {
     heading.focus();
     setTimeout(() => heading.removeAttribute("tabindex"), 100);
   }
+   setVis(qs("#backToSummary"), false);
+
 }
 
 /* =========================================================
