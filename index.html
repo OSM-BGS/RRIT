@@ -12,32 +12,40 @@ Top of file through section/category selection
   <link  rel="stylesheet" href="/RRIT/GCWeb/css/theme.min.css">
   <link rel="stylesheet" href="/RRIT/wet-boew/css/wet-boew.min.css">
   <link rel="stylesheet" href="/RRIT/css/form.css">
+  <link rel="stylesheet" href="/RRIT/css/forced-colors.css">
 </head>
 <body vocab="http://schema.org/" typeof="WebPage">
 
 <header id="wb-bnr" class="container-fluid" role="banner">
   <div class="row">
-    <div class="brand col-xs-5 col-md-4">
+    <!-- Language Selection - First Column -->
+    <section id="wb-lng" class="col-xs-3 col-sm-12 pull-right text-right">
+      <h2 class="wb-inv">Language selection</h2>
+      <div class="row">
+        <div class="col-md-12">
+          <!-- Add visual state indicators -->
+          <ul class="list-inline mrgn-bttm-0">
+            <li><a href="#" lang="en" hreflang="en" class="lang-link" data-lang-target="en" onclick="toggleLanguage('en'); return false;">
+              <span class="hidden-xs">English</span>
+              <abbr title="English" class="visible-xs h3 mrgn-tp-sm mrgn-bttm-0 text-uppercase">en</abbr>
+            </a></li>
+            <li><a href="#" lang="fr" hreflang="fr" class="lang-link" data-lang-target="fr" onclick="toggleLanguage('fr'); return false;">
+              <span class="hidden-xs">Français</span>
+              <abbr title="Français" class="visible-xs h3 mrgn-tp-sm mrgn-bttm-0 text-uppercase">fr</abbr>
+            </a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Logo/Brand Section - Second Column (Expanded) -->
+    <div class="brand col-xs-9 col-sm-5 col-md-8" property="publisher" typeof="GovernmentOrganization">
       <div class="rrit-logo" style="display:inline-block; margin-left:1rem;">
         <img src="/RRIT/assets/svg/tbs-logo-en.svg" alt="Treasury Board of Canada Secretariat" data-lang="en">
         <img src="/RRIT/assets/svg/tbs-logo-fr.svg" alt="Secrétariat du Conseil du Trèsor du Canada" data-lang="fr" class="hidden" aria-hidden="true">
       </div>
-    </div>
-    <div class="row">
-      <div id="wb-lng" class="col-xs-12 text-right">
-        <h2 class="wb-inv">
-          <span data-lang="en">Language selection</span>
-          <span data-lang="fr">Sélection de la langue</span>
-        </h2>
-        <ul class="list-inline mrgn-bttm-0" id="lang-switch">
-          <li><a href="#" lang="en" hreflang="en"
-                 aria-label="English – English version of this page"
-                 onclick="toggleLanguage('en'); return false;">English</a></li>
-          <li><a href="#" lang="fr" hreflang="fr"
-                 aria-label="Français – version française de cette page"
-                 onclick="toggleLanguage('fr'); return false;">Français</a></li>
-        </ul>
-      </div>
+      <meta property="name" content="Treasury Board of Canada Secretariat">
+      <meta property="areaServed" typeof="Country" content="Canada">
     </div>
   </div>
 </header>
@@ -140,25 +148,44 @@ Top of file through section/category selection
     <h2 class="panel-title hidden" data-lang="fr">Information sur le projet</h2>
   </header>
   <div class="panel-body">
+    <!-- Project Name -->
     <div class="form-group">
-      <label for="projectName" data-lang="en">Project Name</label>
-      <label for="projectName" data-lang="fr" class="hidden">Nom du projet</label>
-      <input id="projectName" class="form-control" type="text">
+      <fieldset>
+        <legend data-lang="en">Project Name</legend>
+        <legend data-lang="fr">Nom du projet</legend>
+        <input id="projectName" class="form-control" type="text" name="projectName">
+      </fieldset>
     </div>
-    <div class="form-group">
-      <label for="projectDesc" data-lang="en">Project Description</label>
-      <label for="projectDesc" data-lang="fr" class="hidden">Description du projet</label>
-      <textarea id="projectDesc" class="form-control" rows="4" style="width:100%; resize: vertical;"></textarea>
+
+    <!-- Project Description -->
+    <div class="form-group ">
+      <fieldset>
+        <legend data-lang="en">Project Description</legend>
+        <legend data-lang="fr">Description du projet</legend>
+        <textarea id="projectDesc" class="form-control" rows="4" name="projectDesc"></textarea>
+      </fieldset>
     </div>
+
+    <!-- Assessment Date -->
     <div class="form-group">
-      <label for="assessmentDate" data-lang="en">Assessment Date</label>
-      <label for="assessmentDate" data-lang="fr" class="hidden">Date de l'évaluation</label>
-      <input id="assessmentDate" class="form-control" type="date">
+      <fieldset >
+        <legend data-lang="en">Assessment Date</legend>
+        <legend data-lang="fr">Date de l'évaluation</legend>
+        <input id="assessmentDate" class="form-control wb-date" type="date" name="assessmentDate">
+        <p id="assessmentDate-hint" class="help-block">
+          <span data-lang="en">Enter the date this assessment was conducted (YYYY-MM-DD)</span>
+          <span data-lang="fr" class="hidden">Entrez la date à laquelle cette évaluation a été effectuée (AAAA-MM-JJ)</span>
+        </p>
+      </fieldset>
     </div>
+
+    <!-- Completed By -->
     <div class="form-group">
-      <label for="completedBy" data-lang="en">Completed by (name or team)</label>
-      <label for="completedBy" data-lang="fr" class="hidden">Réalisé par (nom ou équipe)</label>
-      <textarea id="completedBy" class="form-control" rows="2" placeholder="e.g., Jane Doe, John Smith – HR Policy Team"></textarea>
+      <fieldset>
+        <legend data-lang="en">Completed by (name or team)</legend>
+        <legend data-lang="fr">Réalisé par (nom ou équipe)</legend>
+        <textarea id="completedBy" class="form-control" rows="2" name="completedBy"></textarea>
+      </fieldset>
     </div>
   </div>
 </section>
@@ -173,8 +200,12 @@ Top of file through section/category selection
     <div data-lang="en">
       <p>Categories A and B are always included.</p>
       <form id="categoryFormEN" class="checkbox">
-        <label><input type="checkbox" value="A" checked disabled> A – Regulatory and Policy Compliance &nbsp;&mdash;&nbsp;<em>mandatory</em></label><br>
-        <label><input type="checkbox" value="B" checked disabled> B – Data Security and Privacy &nbsp;&mdash;&nbsp;<em>mandatory</em></label><br>
+        <div class="checkbox">
+          <label><input type="checkbox" value="A" checked disabled> A – Regulatory and Policy Compliance <em>mandatory</em></label>
+        </div>
+        <div class="checkbox">
+          <label><input type="checkbox" value="B" checked disabled> B – Data Security and Privacy <em>mandatory</em></label>
+        </div>
         <label><input type="checkbox" value="C"> C – HR Technology / Integration</label><br>
         <label><input type="checkbox" value="D"> D – User Adoption and Training</label><br>
         <label><input type="checkbox" value="E"> E – Cost-Benefit Analysis</label><br>
@@ -791,7 +822,7 @@ plus start of summary/results bar
   <details class="wb-accordion">
     <summary>
       <span lang="en"><strong>K. Legal and Policy Compliance</strong></span>
-      <span lang="fr" class="hidden" aria-hidden="true"><strong>K. Conformité légale et stratégique</strong></span>
+      <span lang="fr" class="hidden" aria-hidden="true"><strong> K. Conformité légale et stratégique</strong></span>
     </summary>
     <div>
 
@@ -801,7 +832,7 @@ plus start of summary/results bar
           <span lang="fr" class="hidden" aria-hidden="true"><strong>1. L’initiative est-elle conforme aux lois, politiques et cadres fédéraux pertinents?</strong></span>
         </legend>
         <div class="rrit-responses">
-          <label class="radio-spacing"><input type="radio" name="catKq1" value="Yes" data-qid="K.1"> <span lang="en">Yes</span><span lang="fr" class="hidden">Oui</span></label>
+                   <label class="radio-spacing"><input type="radio" name="catKq1" value="Yes" data-qid="K.1"> <span lang="en">Yes</span><span lang="fr" class="hidden">Oui</span></label>
           <label class="radio-spacing"><input type="radio" name="catKq1" value="No" data-qid="K.1"> <span lang="en">No</span><span lang="fr" class="hidden">Non</span></label>
           <label class="radio-spacing"><input type="radio" name="catKq1" value="Unknown" data-qid="K.1"> <span lang="en">Unknown</span><span lang="fr" class="hidden">Inconnu</span></label>
           <label class="radio-spacing"><input type="radio" name="catKq1" value="Not Applicable" data-qid="K.1"> <span lang="en">Not Applicable</span><span lang="fr" class="hidden">Sans objet</span></label>
@@ -814,7 +845,7 @@ plus start of summary/results bar
 
 
 <!-- ACTION BAR + SUMMARY/RESULTS (Start) -->
-<hr class="brdr-bttm mrgn-tp-xl">
+<hr class="brdr-bttm">
 <br>
   <button id="backToSummary" class="btn btn-link hidden" aria-hidden="true" type="button">
   <span data-lang="en">Back to Summary</span>
@@ -837,8 +868,9 @@ plus start of summary/results bar
               aria-label="Generate summary">
         Generate Summary
       </button>
+      
       <!-- Revealed only after the first summary -->
-      <div id="postResultActions" class="hidden" aria-hidden="true">
+      <div id="postResultActions" class="hidden" data-state="inactive">
         <button id="editAnswersBtn"
                 class="btn btn-primary hidden"
                 aria-hidden="true"
@@ -864,8 +896,7 @@ plus start of summary/results bar
     </div>
     <div id="summaryTableContainer" class="hidden" style="margin-top: 2rem;">
       <table class="table table-striped">
-        <caption data-lang="en">Risk Profile Summary Table</caption>
-        <caption data-lang="fr" class="hidden" aria-hidden="true">Tableau récapitulatif du profil de risque</caption>
+
         <thead>
           <tr>
             <th>
