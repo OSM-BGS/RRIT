@@ -21,22 +21,31 @@
 .hidden{display:none!important;}
 
 /* Form layout -------------------------------------------------- */
-fieldset{border:1px solid #d9d9d9;padding:1rem;margin:0 0 1rem;}
-legend{font-weight:700;}
+fieldset{border:none;}
+legend{font-weight:700; border:none; border-bottom: none;}
 
-.radio-spacing{display:inline-block;margin:0 1.5rem 0.5rem 0;}
-.rrit-responses{margin-bottom:1.5rem;}
-.rrit-status{margin-top:1rem;font-weight:700;}
-
-
-/* Temporarily hide Risk Score column */
-/* @media screen {
-  #summaryTableContainer th:nth-child(2),
-  #summaryTableContainer td:nth-child(2) {
-    display: none;
+/* Form layout - SCREEN ONLY */
+@media screen {
+  .radio-spacing{display:inline-block;margin:0 1.5rem 0.5rem 0;}
+  .rrit-responses{margin-bottom:1.5rem;}
+  .rrit-status{margin-top:1rem;font-weight:700;}
+  
+  /* Remove borders from collapsed accordion summaries */
+  details.wb-accordion > summary,
+  section[id^="step"] details > summary {
+    border: none !important;
+    border-bottom: none !important;
+    border-top: none !important;
+  }
+  
+  /* Remove borders from expanded accordion summaries */
+  details.wb-accordion[open] > summary,
+  section[id^="step"] details[open] > summary {
+    border: none !important;
+    border-bottom: none !important;
+    border-top: none !important;
   }
 }
-*/
 
 /* Panel headings */
 .panel-title{
@@ -52,10 +61,32 @@ legend{font-weight:700;}
 /* Make bilingual intro logo responsive */
 .rrit-logo img{max-width:100%;height:auto;}
 
+/* ---------- RAG COLORS (SCREEN & PRINT) ---------------------- */
+
+/* RAG risk status colors */
+.risk-high {
+  background-color: #ffcccc !important; /* Light red */
+  color: #990000 !important; /* Dark red */
+}
+
+.risk-medium {
+  background-color: #fff2cc !important; /* Light amber */
+  color: #996600 !important; /* Dark amber */
+}
+
+.risk-low {
+  background-color: #ccffcc !important; /* Light green */
+  color: #006600 !important; /* Dark green */
+}
+
+.text-muted {
+  background-color: #f0f0f0 !important; /* Light gray */
+  color: #666666 !important; /* Gray */
+}
+
 /* ---------- 2. MOBILE HOT-FIX  (≤ 767 px) --------------------- */
 
 @media (max-width: 767.98px) {
-
   /* Ensure header leaves room for floating lang-switch */
   #wb-lng {
     position: relative;
@@ -65,9 +96,6 @@ legend{font-weight:700;}
     background: transparent;
     z-index: 100;
   }
-
-
-}
 
   /* Neutralise row/col offsets */
   .row{margin:0!important;}
@@ -82,133 +110,421 @@ legend{font-weight:700;}
     border-left-width:0;
     border-right-width:0;
   }
-}
-/* --- Optional: add 12 px side-padding on very small screens ----- */
-@media (max-width: 767.98px){      /* phones & small tablets */
+
+  /* Add side padding on very small screens */
   body{
-    padding-left : 12px;           /* tweak to taste: 8-16 px is common */
+    padding-left: 12px;
     padding-right: 12px;
   }
 }
-/* ---------- 3. PRINT ----------------------------------------- */
-@media print{
 
+/* ---------- 3. PRINT ----------------------------------------- */
+@media print {
   /* Hide navigation, language switchers, buttons & intro */
   #wb-bnr,#wb-tphp,#wb-lng,#rrit-intro,#step0,
   header,footer,nav,#lang-switch,
-  #generateSummaryBtn,#printSummaryBtn,
+  #generateSummaryBtn,#printSummaryBtn,#editAnswersBtn,#newScenarioBtn,
   button,.btn,.no-print{display:none!important;}
 
-  /* Force hidden items to print */
-  .hidden{display:block!important;}
+  /* Show only current language content */
+  html[data-print-lang="en"] [data-lang="fr"],
+  html[data-print-lang="en"] [lang="fr"],
+  html[data-print-lang="fr"] [data-lang="en"],
+  html[data-print-lang="fr"] [lang="en"] {
+    display: none !important;
+  }
+  
+  html[data-print-lang="en"] [data-lang="en"],
+  html[data-print-lang="en"] [lang="en"],
+  html[data-print-lang="fr"] [data-lang="fr"],
+  html[data-print-lang="fr"] [lang="fr"] {
+    display: block !important;
+  }
 
-  /* Expand accordion help */
-  #riskSummaryHelp{display:block!important;}
-  #riskSummaryHelp summary{display:none!important;}
+  /* Force show essential elements */
+  #rrit-summary,
+  #summaryTableContainer,
+  #projectInfo,
+  #riskSummaryHelp {
+    display: block !important;
+  }
 
   /* Page body */
   html,body{
-    margin:1in;
-    font:12pt/1.4 "Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    margin:0.5in;
+    font:9pt/1.3 "Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
     background:#fff!important;
     color:#000;
+    max-width:none;
+    width:auto;
   }
 
-  h1,h2,h3{page-break-after:avoid;color:#000!important;}
-  h2{font-size:16pt;margin:2rem 0 1rem;font-weight:bold;}
-  h3{font-size:13pt;margin-top:1.5rem;border-bottom:1px solid #ccc;padding-bottom:.3rem;font-weight:bold;}
+  /* Typography */
+  h2{font-size:11pt;margin:1rem 0 0.5rem;font-weight:bold;}
+  h3{font-size:10pt;margin:0.5rem 0 0.3rem;font-weight:bold;}
+
+  /* Page title */
+  html[data-print-lang="en"]:before {
+    content: "Risk Profile Summary";
+    display: block;
+    font-size: 13pt;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.5rem;
+  }
+  
+  html[data-print-lang="fr"]:before {
+    content: "Sommaire du profil de risque";
+    display: block;
+    font-size: 13pt;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Project info - Clean layout with data-content display */
+  #projectInfo {
+    margin-bottom: 1rem;
+    font-size: 8pt;
+    overflow: visible !important;
+    height: auto !important;
+  }
+  
+  #projectInfo fieldset {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0.2rem 0 !important;
+    position: relative;
+  }
+  
+  #projectInfo fieldset legend {
+    font-size: 9pt;
+    font-weight: bold;
+    padding: 0 !important;
+    margin: 0 0 0.1rem 0 !important;
+    border: none !important;
+    color: #000;
+    background: transparent !important;
+  }
+
+  /* Hide form inputs and display content as text */
+  #projectInfo input[type="text"],
+  #projectInfo input[type="date"], 
+  #projectInfo textarea {
+    position: absolute !important;
+    left: -9999px !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* Show project field content as plain text */
+  #projectInfo fieldset[data-content]::after {
+    content: attr(data-content);
+    display: block !important;
+    font-size: 8pt !important;
+    color: #000 !important;
+    white-space: pre-wrap !important;
+    word-wrap: break-word !important;
+    line-height: 1.3 !important;
+    margin: 0 0 0.3rem 0 !important;
+  }
 
   /* Summary table */
-  table.table{
-    width:100%!important;
-    border-collapse:collapse;
-    border:2px solid #000;
-    margin-bottom:1rem;
-    font-size:11pt;
-    table-layout:fixed;
+  #summaryTableContainer {
+    margin: 1rem 0;
+    page-break-inside: avoid;
   }
-  table.table th,
-  table.table td{
-    border:1px solid #000;
-    padding:8px;
-    text-align:left;
-    vertical-align:top;
-    word-break:break-word;
+  
+  table.table,
+  #summaryTableContainer table {
+    border-collapse: collapse;
+    border: 2px solid #000;
+    font-size: 8pt !important;
+    width: 100%;
+    margin: 0;
   }
-  table.table th{background:#f1f1f1;font-weight:bold;}
-  table.table tr{page-break-inside:avoid;}
-  table.table th:nth-child(1),
-  table.table td:nth-child(1){width:40%;}
-  table.table th:nth-child(2),
-  table.table td:nth-child(2){width:20%;}
-  table.table th:nth-child(3),
-  table.table td:nth-child(3){width:40%;}
+  
+  #summaryTableContainer th,
+  #summaryTableContainer td {
+    border: 1px solid #000;
+    padding: 0.3rem;
+    font-size: 8pt !important;
+    vertical-align: top;
+    line-height: 1.2;
+  }
+  
+  #summaryTableContainer th {
+    background: #f0f0f0 !important;
+    font-weight: bold;
+    text-align: left;
+  }
 
-  /* Accent bars */
-  tr.risk-high td{border-left:5px solid #dc3545;}
-  tr.risk-medium td{border-left:5px solid #ffc107;}
-  tr.risk-low td{border-left:5px solid #28a745;}
+  /* Table title for print */
+  #summaryTableContainer::before {
+    content: "";
+    display: block;
+    font-size: 11pt;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #000;
+  }
 
-  /* Footer watermark */
-  .footer-canada img{float:right;width:50px;height:auto;}
+  html[data-print-lang="en"] #summaryTableContainer::before {
+    content: "Risk Profile Summary";
+  }
 
-  /* Avoid splits */
-  .panel,section,fieldset,details{page-break-inside:avoid;}
+  html[data-print-lang="fr"] #summaryTableContainer::before {
+    content: "Sommaire du profil de risque";
+  }
+  
+  /* Category sections - Clean, borderless */
+  .panel {
+    border: none !important;
+    margin-bottom: 1rem;
+    page-break-inside: avoid;
+    background: transparent !important;
+  }
+  
+  .panel-heading {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .panel-body {
+    padding: 0 !important;
+    border: none !important;
+  }
 
-  /* Timestamp */
-  .generated-on{font-size:10pt;text-align:right;margin-top:3rem;color:#666;}
-}
+  /* Accordion categories - Expanded and borderless */
+  details.wb-accordion {
+    display: block !important;
+    margin-bottom: 0.5rem;
+    border: none !important;
+    background: transparent !important;
+  }
+  
+  details.wb-accordion summary {
+    display: block !important;
+    list-style: none !important;
+    font-size: 10pt;
+    font-weight: bold;
+    margin: 0.5rem 0 0.3rem 0;
+    color: #000;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    cursor: default;
+  }
+  
+  details.wb-accordion summary::-webkit-details-marker,
+  details.wb-accordion summary::marker {
+    display: none !important;
+  }
 
-/* ===========================
-   Robust RRIT Summary Table
-   =========================== */
-#summaryTableContainer table {
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 1.75rem;
-  background: #fff;
-}
+  /* Language-specific category titles */
+  details.wb-accordion summary span[lang="en"],
+  details.wb-accordion summary span[lang="fr"] {
+    display: none !important;
+  }
+  
+  html[data-print-lang="en"] details.wb-accordion summary span[lang="en"] {
+    display: block !important;
+    font-size: 10pt;
+    font-weight: bold;
+    color: #000;
+  }
+  
+  html[data-print-lang="fr"] details.wb-accordion summary span[lang="fr"] {
+    display: block !important;
+    font-size: 10pt;
+    font-weight: bold;
+    color: #000;
+  }
 
-/* Existing per-cell borders */
-#summaryTableContainer th,
-#summaryTableContainer td {
-  border: 1.5px solid #333;
-  padding: 1rem;
-  vertical-align: middle;
-}
-#summaryTableContainer th {
-  font-size: 1.8rem;
-}
+  details.wb-accordion > div {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+  }
 
-/* Accent color bars */
-tr.risk-high td   { box-shadow: inset 8px 0 0 #dc3545; }
-tr.risk-medium td { box-shadow: inset 8px 0 0 #ffc107; }
-tr.risk-low td    { box-shadow: inset 8px 0 0 #28a745; }
+  /* Question fieldsets - Keep borders for organization */
+  fieldset {
+    border: none !important;
+    padding: 0.4rem;
+    margin: 0.3rem 0;
+    page-break-inside: avoid;
+  }
+  
+  fieldset legend {
+    font-size: 9pt;
+    font-weight: bold;
+    padding: 0 0.3rem;
+    margin-bottom: 0.2rem;
+    color: #000;
+  }
 
-.risk-high   { background: #f8d7da !important; color: #721c24 !important; font-weight: bold; }
-.risk-medium { background: #fff3cd !important; color: #856404 !important; font-weight: bold; }
-.risk-low    { background: #d4edda !important; color: #155724 !important; font-weight: bold; }
+  /* Radio button layout - Inline with proper alignment */
+  .rrit-responses {
+    display: block !important;
+    margin: 0.3rem 0;
+    font-size: 8pt;
+    line-height: 1.4;
+  }
+  
+  label.radio-spacing {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin-right: 1rem !important;
+    margin-bottom: 0.2rem !important;
+    font-size: 8pt !important;
+    white-space: nowrap !important;
+    gap: 0.2rem !important;
+  }
+  
+  label.radio-spacing input[type="radio"] {
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+  }
+  
+  label.radio-spacing span {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 8pt !important;
+    flex-shrink: 0 !important;
+  }
+  
+  /* Language-specific radio button text */
+  html[data-print-lang="en"] label.radio-spacing span[lang="fr"] {
+    display: none !important;
+  }
+  
+  html[data-print-lang="fr"] label.radio-spacing span[lang="en"] {
+    display: none !important;
+  }
 
-/* ---- OUTLINE HACK: Force the outer border sides ---- */
-#summaryTableContainer tr > td:first-child,
-#summaryTableContainer tr > th:first-child {
-  border-left: 4px solid #000 !important;
-}
-#summaryTableContainer tr > td:last-child,
-#summaryTableContainer tr > th:last-child {
-  border-right: 4px solid #000 !important;
-}
-#summaryTableContainer tr:last-child > td {
-  border-bottom: 4px solid #000 !important;
-}
-#summaryTableContainer tr:first-child > th {
-  border-top: 4px solid #000 !important;
-}
-/* Temporarily hide Risk Score column */
-/* @media screen {
-  #summaryTableContainer th:nth-child(2),
-  #summaryTableContainer td:nth-child(2) {
-    display: none;
+  /* Risk summary help section */
+  #riskSummaryHelp {
+    display: block !important;
+    margin-top: 1rem;
+    page-break-before: avoid;
+  }
+  
+  #riskSummaryHelp summary {
+    display: none !important;
+  }
+  
+  html[data-print-lang="en"] #riskHelpFR,
+  html[data-print-lang="fr"] #riskHelpEN {
+    display: none !important;
+  }
+  
+  html[data-print-lang="en"] #riskHelpEN,
+  html[data-print-lang="fr"] #riskHelpFR {
+    display: block !important;
+    font-size: 7pt;
+    line-height: 1.2;
+    margin-top: 0.5rem;
+  }
+  
+  #riskSummaryHelp h3 {
+    font-size: 9pt;
+    margin: 0.3rem 0;
+  }
+  
+  #riskSummaryHelp ul {
+    margin: 0.2rem 0;
+    padding-left: 1rem;
+  }
+  
+  #riskSummaryHelp li {
+    margin: 0.1rem 0;
+  }
+
+  /* Page break control */
+  .panel, fieldset {
+    page-break-inside: avoid;
+  }
+  
+  h2, h3, .panel-heading {
+    page-break-after: avoid;
+  }
+  
+  .risk-high {
+    background-color: #ffcccc !important; /* Light red */
+    color: #990000 !important; /* Dark red */
+  }
+
+  .risk-medium {
+    background-color: #fff2cc !important; /* Light amber */
+    color: #996600 !important; /* Dark amber */
+  }
+
+  .risk-low {
+    background-color: #ccffcc !important; /* Light green */
+    color: #006600 !important; /* Dark green */
+  }
+
+  .text-muted {
+    background-color: #f0f0f0 !important; /* Light gray */
+    color: #666666 !important; /* Gray */
   }
 }
-*/
+
+/* Language switcher styling */
+.lang-link {
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    display: inline-block;
+}
+
+.lang-link:hover {
+    background-color: #f8f9fa;
+    text-decoration: none;
+}
+
+/* Active language styling */
+.lang-link.active {
+    background-color: #264a88;
+    color: white;
+    font-weight: bold;
+}
+
+.lang-link.active:hover {
+    background-color: #1e3a6f;
+    color: white;
+    text-decoration: none;
+}
+
+/* Ensure both languages always visible */
+#lang-en, #lang-fr {
+    display: inline-block !important;
+    visibility: visible !important;
+}
+
+/* Page load language initialization */
+@media screen {
+  /* Existing rules... */
+  
+  /* Ensure proper language display on page load */
+  html:not([lang="fr"]) [data-lang="fr"]:not(.lang-link),
+  html:not([lang="fr"]) [lang="fr"]:not(.lang-link) {
+    display: none !important;
+  }
+  
+  html[lang="fr"] [data-lang="en"]:not(.lang-link),
+  html[lang="fr"] [lang="en"]:not(.lang-link) {
+    display: none !important;
+  }
+}
