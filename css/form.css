@@ -118,8 +118,24 @@ legend{font-weight:700; border:none; border-bottom: none;}
   }
 }
 
+/* ---------- 2.5. PRINT TOGGLES (SCREEN) ---------------------- */
+
+/* Screen: annex stays hidden */
+#detailedAnnex.hidden { display: none; }
+
 /* ---------- 3. PRINT ----------------------------------------- */
 @media print {
+  /* Summary print mode */
+  .print-summary #summaryTableContainer { display: block !important; }
+  .print-summary #detailedAnnex { display: none !important; }
+
+  /* Annex print mode */
+  .print-annex #summaryTableContainer,
+  .print-annex #postResultActions,
+  .print-annex #rrit-intro,
+  .print-annex #step0 { display: none !important; }
+  .print-annex #detailedAnnex { display: block !important; }
+
   /* Hide navigation, language switchers, buttons & intro */
   #wb-bnr,#wb-tphp,#wb-lng,#rrit-intro,#step0,
   header,footer,nav,#lang-switch,
@@ -152,7 +168,8 @@ legend{font-weight:700; border:none; border-bottom: none;}
   /* Page body */
   html,body{
     margin:0.5in;
-    font:9pt/1.3 "Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: system-ui, Arial, sans-serif;
+    font-size: 11pt;
     background:#fff!important;
     color:#000;
     max-width:none;
@@ -162,6 +179,14 @@ legend{font-weight:700; border:none; border-bottom: none;}
   /* Typography */
   h2{font-size:11pt;margin:1rem 0 0.5rem;font-weight:bold;}
   h3{font-size:10pt;margin:0.5rem 0 0.3rem;font-weight:bold;}
+  h4{font-size:10pt;margin:0.5rem 0 0.3rem;font-weight:bold;}
+  
+  /* Page break control */
+  h2, h3, h4 { page-break-after: avoid; }
+  .annex-category { page-break-before: always; }
+  
+  /* Cleaner print links */
+  a[href]:after { content: ""; }
 
   /* Page title */
   html[data-print-lang="en"]:before {
@@ -453,10 +478,6 @@ legend{font-weight:700; border:none; border-bottom: none;}
   /* Page break control */
   .panel, fieldset {
     page-break-inside: avoid;
-  }
-  
-  h2, h3, .panel-heading {
-    page-break-after: avoid;
   }
   
   .risk-high {
