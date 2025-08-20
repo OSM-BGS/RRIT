@@ -892,6 +892,14 @@ plus start of summary/results bar
                 aria-label="Print or save as PDF">
           Print / Save as PDF
         </button>
+        <button id="generateAnnexBtn"
+                class="btn btn-info hidden"
+                aria-hidden="true"
+                type="button"
+                aria-label="Generate detailed annex">
+          <span data-lang="en">Generate Detailed Annex</span>
+          <span data-lang="fr" class="hidden">Générer l'annexe détaillée</span>
+        </button>
       </div>
     </div>
     <div id="summaryTableContainer" class="hidden" style="margin-top: 2rem;">
@@ -953,6 +961,20 @@ plus start of summary/results bar
     </details>
   </div>
 </section>
+
+<!-- ===== Detailed Annex Section (Bilingual) ===== -->
+<section id="detailedAnnex" class="panel panel-default hidden" aria-hidden="true">
+  <header class="panel-heading">
+    <h2 class="panel-title" data-lang="en">Detailed Risk Analysis - Flagged Items</h2>
+    <h2 class="panel-title hidden" data-lang="fr">Analyse détaillée des risques - Éléments signalés</h2>
+  </header>
+  <div class="panel-body">
+    <p data-lang="en">This section provides detailed mitigation strategies for questions answered with "No" or "Unknown".</p>
+    <p data-lang="fr" class="hidden">Cette section fournit des stratégies d'atténuation détaillées pour les questions répondues par « Non » ou « Inconnu ».</p>
+    <!-- Content will be dynamically populated by renderAnnex() -->
+  </div>
+</section>
+
 <!-- EOF PART 6. Scripts and closing tags in Part 7. -->
 <!-- =========================
 RRIT index.html – PART 7 of 7
