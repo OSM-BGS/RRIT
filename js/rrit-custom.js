@@ -498,37 +498,26 @@ function initializeEventListeners() {
         printSummaryBtn: () => {
             document.documentElement.setAttribute('data-print-lang', currentLang);
             
-            console.log('Setting data-content for project info fields...');
-            
             // Set project info field content as data attributes for CSS display
             qsa('#projectInfo input[type="text"], #projectInfo input[type="date"], #projectInfo textarea').forEach(input => {
                 const fieldset = input.closest('fieldset');
-                console.log('Field:', input.name || input.id, 'Value:', `"${input.value}"`, 'Has fieldset:', !!fieldset);
-                
-                if (fieldset) {
-                    if (input.value && input.value.trim()) {
-                        fieldset.setAttribute('data-content', input.value);
-                        console.log('✓ Set data-content:', input.value);
-                    } else {
-                        console.log('✗ Empty value for field:', input.name || input.id);
-                    }
+                if (fieldset && input.value && input.value.trim()) {
+                    fieldset.setAttribute('data-content', input.value);
                 }
             });
             
-            // Debug output
-            qsa('#projectInfo fieldset[data-content]').forEach(fieldset => {
-                console.log('Fieldset with data-content:', fieldset.getAttribute('data-content'));
-            });
-            
+            document.body.classList.add("print-summary");
             setTimeout(() => {
                 window.print();
                 setTimeout(() => {
+                    document.body.classList.remove("print-summary");
                     document.documentElement.removeAttribute('data-print-lang');
+                    // Clean up data-content attributes
                     qsa('#projectInfo fieldset[data-content]').forEach(fieldset => {
                         fieldset.removeAttribute('data-content');
                     });
-                }, 500);
-            }, 100);
+                }, 300);
+            }, 50);
         },
         langEN: () => toggleLanguage('en'),
         langFR: () => toggleLanguage('fr')
