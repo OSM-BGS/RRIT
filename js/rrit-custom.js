@@ -359,7 +359,8 @@ function handleButtonVisibility(isEditing) {
         generateSummaryBtn: isEditing,
         editAnswersBtn: !isEditing,
         newScenarioBtn: !isEditing,
-        printSummaryBtn: true
+        printSummaryBtn: true,
+        printAnnexBtn: true
     };
 
     const summaryActionRow = qs("#summaryActionRow");
@@ -529,6 +530,11 @@ function initializeEventListeners() {
                     });
                 }, 500);
             }, 100);
+        },
+        printAnnexBtn: () => {
+            // Placeholder functionality for print detailed annex
+            console.log('Print Detailed Annex button clicked');
+            alert(`Print Detailed Annex functionality not yet implemented (Language: ${currentLang})`);
         },
         langEN: () => toggleLanguage('en'),
         langFR: () => toggleLanguage('fr')
@@ -787,13 +793,15 @@ function updateButtonText() {
             generateSummaryBtn: RRITState.isEditing ? "Generate Updated Summary" : "Generate Summary",
             editAnswersBtn: "Edit Answers",
             newScenarioBtn: "Start New Scenario",
-            printSummaryBtn: "Print / Save as PDF"
+            printSummaryBtn: "Print / Save as PDF",
+            printAnnexBtn: "Print Detailed Annex"
         },
         fr: {
             generateSummaryBtn: RRITState.isEditing ? "Générer le sommaire mis à jour" : "Générer le sommaire",
             editAnswersBtn: "Modifier les réponses",
             newScenarioBtn: "Nouveau scénario",
-            printSummaryBtn: "Imprimer / Sauvegarder en PDF"
+            printSummaryBtn: "Imprimer / Sauvegarder en PDF",
+            printAnnexBtn: "Imprimer l'annexe détaillée"
         }
     };
     
