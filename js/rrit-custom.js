@@ -359,7 +359,8 @@ function handleButtonVisibility(isEditing) {
         generateSummaryBtn: isEditing,
         editAnswersBtn: !isEditing,
         newScenarioBtn: !isEditing,
-        printSummaryBtn: true
+        printSummaryBtn: true,
+        generateAnnexBtn: !isEditing
     };
 
     const summaryActionRow = qs("#summaryActionRow");
@@ -529,6 +530,36 @@ function initializeEventListeners() {
                     });
                 }, 500);
             }, 100);
+        },
+        generateAnnexBtn: () => {
+            console.log('[RRIT] Generating detailed annex...');
+            const flagged = getFlaggedQuestions();
+            console.log('[RRIT] Flagged questions:', flagged);
+            
+            if (flagged.length === 0) {
+                alert(currentLang === 'en' ? 
+                    'No flagged questions found. The annex will only show items answered with "No" or "Unknown".' :
+                    'Aucune question signalée trouvée. L\'annexe ne montrera que les éléments répondus par « Non » ou « Inconnu ».');
+                return;
+            }
+            
+            const annexData = buildAnnexData(flagged);
+            console.log('[RRIT] Annex data:', annexData);
+            
+            if (annexData.length === 0) {
+                alert(currentLang === 'en' ? 
+                    'No mitigation information available for flagged questions.' :
+                    'Aucune information d\'atténuation disponible pour les questions signalées.');
+                return;
+            }
+            
+            renderAnnex(annexData);
+            
+            // Scroll to annex
+            const annexElement = qs('#detailedAnnex');
+            if (annexElement) {
+                annexElement.scrollIntoView({ behavior: 'smooth' });
+            }
         },
         langEN: () => toggleLanguage('en'),
         langFR: () => toggleLanguage('fr')
@@ -787,13 +818,15 @@ function updateButtonText() {
             generateSummaryBtn: RRITState.isEditing ? "Generate Updated Summary" : "Generate Summary",
             editAnswersBtn: "Edit Answers",
             newScenarioBtn: "Start New Scenario",
-            printSummaryBtn: "Print / Save as PDF"
+            printSummaryBtn: "Print / Save as PDF",
+            generateAnnexBtn: "Generate Detailed Annex"
         },
         fr: {
             generateSummaryBtn: RRITState.isEditing ? "Générer le sommaire mis à jour" : "Générer le sommaire",
             editAnswersBtn: "Modifier les réponses",
             newScenarioBtn: "Nouveau scénario",
-            printSummaryBtn: "Imprimer / Sauvegarder en PDF"
+            printSummaryBtn: "Imprimer / Sauvegarder en PDF",
+            generateAnnexBtn: "Générer l'annexe détaillée"
         }
     };
     
@@ -837,5 +870,199 @@ function syncCategoryCheckboxes(selectedCategories) {
         console.log(`[RRIT] Synced ${checkbox.value} checkbox: ${shouldBeChecked}`);
       }
     }
+  });
+}
+
+/* =========================================================
+   Section 9: Annex Helper Functions
+   ========================================================= */
+
+// Sample MITIGATION_LIBRARY for testing - should be populated with actual data
+window.MITIGATION_LIBRARY = {
+  "A.1": {
+    riskStatement: {
+      en: "Non-compliance with privacy protection policies creates legal and regulatory risks.",
+      fr: "Le non-respect des politiques de protection de la vie privée crée des risques juridiques et réglementaires."
+    },
+    whyMatters: {
+      en: "Privacy violations can result in penalties, lawsuits, and damage to organizational reputation.",
+      fr: "Les violations de la vie privée peuvent entraîner des sanctions, des poursuites et des dommages à la réputation organisationnelle."
+    },
+    mitigations: {
+      en: [
+        "Conduct a comprehensive privacy impact assessment",
+        "Implement privacy-by-design principles",
+        "Establish clear data governance protocols",
+        "Provide regular privacy training for all staff"
+      ],
+      fr: [
+        "Effectuer une évaluation complète de l'impact sur la vie privée",
+        "Mettre en œuvre les principes de protection de la vie privée dès la conception",
+        "Établir des protocoles clairs de gouvernance des données",
+        "Fournir une formation régulière sur la vie privée à tout le personnel"
+      ]
+    }
+  },
+  "A.2": {
+    riskStatement: {
+      en: "Lack of alignment with Canadian labour laws may result in legal challenges and compliance issues.",
+      fr: "Le manque d'alignement avec les lois du travail canadiennes peut entraîner des défis juridiques et des problèmes de conformité."
+    },
+    whyMatters: {
+      en: "Labour law violations can lead to legal action, financial penalties, and operational disruptions.",
+      fr: "Les violations du droit du travail peuvent entraîner des actions en justice, des sanctions financières et des perturbations opérationnelles."
+    },
+    mitigations: {
+      en: [
+        "Consult with legal experts specializing in Canadian labour law",
+        "Review and update all HR policies to ensure compliance",
+        "Implement regular compliance monitoring processes",
+        "Establish clear grievance and dispute resolution procedures"
+      ],
+      fr: [
+        "Consulter des experts juridiques spécialisés en droit du travail canadien",
+        "Réviser et mettre à jour toutes les politiques RH pour assurer la conformité",
+        "Mettre en place des processus de surveillance de la conformité réguliers",
+        "Établir des procédures claires de griefs et de résolution de conflits"
+      ]
+    }
+  },
+  "B.1": {
+    riskStatement: {
+      en: "Inadequate data security measures expose sensitive employee information to potential breaches.",
+      fr: "Des mesures de sécurité des données inadéquates exposent les informations sensibles des employés à des violations potentielles."
+    },
+    whyMatters: {
+      en: "Data breaches can result in identity theft, financial losses, and severe reputational damage.",
+      fr: "Les violations de données peuvent entraîner un vol d'identité, des pertes financières et des dommages de réputation graves."
+    },
+    mitigations: {
+      en: [
+        "Implement multi-factor authentication for all systems",
+        "Use end-to-end encryption for data transmission and storage",
+        "Conduct regular security audits and penetration testing",
+        "Establish incident response procedures for security breaches"
+      ],
+      fr: [
+        "Mettre en place l'authentification multifactorielle pour tous les systèmes",
+        "Utiliser le chiffrement de bout en bout pour la transmission et le stockage des données",
+        "Effectuer des audits de sécurité réguliers et des tests de pénétration",
+        "Établir des procédures de réponse aux incidents pour les violations de sécurité"
+      ]
+    }
+  }
+};
+
+// Bilingual labels for annex sections
+const annexLabels = {
+  question: { en: "Question", fr: "Question" },
+  answer:   { en: "Answer", fr: "Réponse" },
+  risk:     { en: "Identified Risk", fr: "Risque identifié" },
+  why:      { en: "Why It Matters", fr: "Pourquoi c'est important" },
+  mitig:    { en: "Sample Mitigation Strategies", fr: "Mesures d'atténuation proposées" }
+};
+
+// 4.a Filter only No/Unknown items
+function getFlaggedQuestions({ includeUnknown = true } = {}) {
+  const NEG = new Set(["no", "non"]);
+  const UNK = new Set(["unknown", "inconnu", "inconnue"]);
+
+  const flagged = [];
+  (window.collectedResponses || []).forEach(catBlock => {
+    const cat = catBlock.category; // localized name; we'll map back to code if needed
+    (catBlock.questions || []).forEach(q => {
+      const ans = String(q.answer || "").trim().toLowerCase();
+      const isNo = NEG.has(ans);
+      const isUnk = includeUnknown && UNK.has(ans);
+      if (isNo || isUnk) {
+        // Expect q.qid and q.question present from generateSummaryTable()
+        flagged.push({ categoryLabel: cat, qid: q.qid, questionText: q.question, answer: q.answer });
+      }
+    });
+  });
+  return flagged;
+}
+
+// 4.b Build Annex data; join to mitigation library and map to category codes
+function buildAnnexData(flagged) {
+  const lang = (currentLang || "en").toLowerCase();
+  // categories constant exists: { A:{en,fr}, ... }
+  const labelToCode = Object.fromEntries(
+    Object.entries(categories).flatMap(([code, names]) => [
+      [names.en, code],
+      [names.fr, code]
+    ])
+  );
+
+  const byCat = {};
+  flagged.forEach(item => {
+    const code = labelToCode[item.categoryLabel] || item.categoryLabel; // fallback if already a code
+    const lib = (window.MITIGATION_LIBRARY || {})[item.qid];
+    if (!lib) return;
+
+    (byCat[code] ||= { category: code, items: [] });
+
+    const riskStatement = lib.riskStatement?.[lang] || lib.riskStatement?.en || "";
+    const whyMatters    = lib.whyMatters?.[lang]    || lib.whyMatters?.en    || "";
+    const mitigations   = lib.mitigations?.[lang]   || lib.mitigations?.en   || [];
+
+    byCat[code].items.push({
+      qid: item.qid,
+      questionText: item.questionText,
+      answer: item.answer,
+      riskStatement,
+      whyMatters,
+      mitigations
+    });
+  });
+
+  const order = ["A","B","C","D","E","F","G","H","I","J","K"];
+  return order.filter(c => byCat[c]).map(c => byCat[c]);
+}
+
+// 4.c Render Annex with bilingual headings and bullet list
+function renderAnnex(sections) {
+  const lang = currentLang || "en";
+  const root = document.getElementById("detailedAnnex");
+  if (!root) return;
+  root.innerHTML = "";
+  root.classList.remove("hidden");
+  root.removeAttribute("aria-hidden");
+
+  sections.forEach(sec => {
+    const cat = document.createElement("section");
+    cat.className = "annex-category";
+    cat.id = `annex-cat-${sec.category}`;
+
+    const h3 = document.createElement("h3");
+    h3.textContent = categories[sec.category][lang];
+    cat.appendChild(h3);
+
+    sec.items.forEach(it => {
+      const art = document.createElement("article");
+      art.className = "annex-item";
+
+      art.innerHTML = `
+        <div><strong>${annexLabels.question[lang]} (${it.qid}):</strong> ${it.questionText}</div>
+        <div><strong>${annexLabels.answer[lang]}:</strong> ${it.answer}</div>
+        <h4>${annexLabels.risk[lang]}</h4>
+        <p>${it.riskStatement}</p>
+        <h4>${annexLabels.why[lang]}</h4>
+        <p>${it.whyMatters}</p>
+        <h4>${annexLabels.mitig[lang]}</h4>
+      `;
+
+      const ul = document.createElement("ul");
+      it.mitigations.forEach(m => {
+        const li = document.createElement("li");
+        li.textContent = m;
+        ul.appendChild(li);
+      });
+      art.appendChild(ul);
+
+      cat.appendChild(art);
+    });
+
+    root.appendChild(cat);
   });
 }

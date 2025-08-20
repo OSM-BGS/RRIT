@@ -45,6 +45,49 @@ legend{font-weight:700; border:none; border-bottom: none;}
     border-bottom: none !important;
     border-top: none !important;
   }
+  
+  /* Annex styling */
+  .annex-category {
+    margin-bottom: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+  }
+  
+  .annex-category h3 {
+    color: #264a88;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #264a88;
+  }
+  
+  .annex-item {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-left: 4px solid #264a88;
+  }
+  
+  .annex-item:last-child {
+    margin-bottom: 0;
+  }
+  
+  .annex-item h4 {
+    color: #495057;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .annex-item ul {
+    margin-bottom: 0;
+  }
+  
+  .annex-item li {
+    margin-bottom: 0.25rem;
+  }
+}
 }
 
 /* Panel headings */
@@ -123,7 +166,7 @@ legend{font-weight:700; border:none; border-bottom: none;}
   /* Hide navigation, language switchers, buttons & intro */
   #wb-bnr,#wb-tphp,#wb-lng,#rrit-intro,#step0,
   header,footer,nav,#lang-switch,
-  #generateSummaryBtn,#printSummaryBtn,#editAnswersBtn,#newScenarioBtn,
+  #generateSummaryBtn,#printSummaryBtn,#editAnswersBtn,#newScenarioBtn,#generateAnnexBtn,
   button,.btn,.no-print{display:none!important;}
 
   /* Show only current language content */
@@ -145,7 +188,8 @@ legend{font-weight:700; border:none; border-bottom: none;}
   #rrit-summary,
   #summaryTableContainer,
   #projectInfo,
-  #riskSummaryHelp {
+  #riskSummaryHelp,
+  #detailedAnnex {
     display: block !important;
   }
 
