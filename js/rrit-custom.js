@@ -359,7 +359,8 @@ function handleButtonVisibility(isEditing) {
         generateSummaryBtn: isEditing,
         editAnswersBtn: !isEditing,
         newScenarioBtn: !isEditing,
-        printSummaryBtn: true
+        printSummaryBtn: true,
+        printAnnexBtn: true
     };
 
     const summaryActionRow = qs("#summaryActionRow");
@@ -484,6 +485,126 @@ function editAnswersFlow() {
 }
 
 /* =========================================================
+   Section 6.5: Annex Functions
+   ========================================================= */
+
+function getFlaggedQuestions({ includeUnknown = false } = {}) {
+  if (!window.collectedResponses) {
+    console.warn("[RRIT] No collected responses available for annex");
+    return [];
+  }
+
+  const flagged = [];
+  
+  window.collectedResponses.forEach(categoryData => {
+    const flaggedInCategory = categoryData.questions.filter(q => {
+      const answer = q.answer;
+      const isFlagged = answer === "No" || answer === "Non" || 
+                       (includeUnknown && (answer === "Unknown" || answer === "Inconnu"));
+      return isFlagged;
+    });
+    
+    if (flaggedInCategory.length > 0) {
+      flagged.push({
+        category: categoryData.category,
+        questions: flaggedInCategory
+      });
+    }
+  });
+  
+  console.log("[RRIT] Flagged questions found:", flagged);
+  return flagged;
+}
+
+function buildAnnexData(flagged) {
+  const sections = [];
+  
+  const titles = {
+    en: {
+      heading: "Risk Analysis Annex",
+      subtitle: "Flagged Questions Requiring Attention",
+      noRisks: "No flagged risks identified."
+    },
+    fr: {
+      heading: "Annexe d'analyse des risques", 
+      subtitle: "Questions signalées nécessitant une attention",
+      noRisks: "Aucun risque signalé identifié."
+    }
+  };
+  
+  if (flagged.length === 0) {
+    sections.push({
+      type: 'message',
+      content: titles[currentLang].noRisks
+    });
+  } else {
+    sections.push({
+      type: 'heading',
+      content: titles[currentLang].heading
+    });
+    
+    sections.push({
+      type: 'subtitle', 
+      content: titles[currentLang].subtitle
+    });
+    
+    flagged.forEach(categoryData => {
+      sections.push({
+        type: 'category',
+        content: categoryData.category
+      });
+      
+      categoryData.questions.forEach(q => {
+        sections.push({
+          type: 'question',
+          content: `${q.question} → ${q.answer}`
+        });
+      });
+    });
+  }
+  
+  return sections;
+}
+
+function renderAnnex(sections) {
+  const annexContainer = qs("#detailedAnnex");
+  if (!annexContainer) {
+    console.error("[RRIT] #detailedAnnex container not found");
+    return;
+  }
+  
+  let html = '';
+  
+  sections.forEach(section => {
+    switch (section.type) {
+      case 'heading':
+        html += `<h1>${section.content}</h1>`;
+        break;
+      case 'subtitle':
+        html += `<h2>${section.content}</h2>`;
+        break;
+      case 'category':
+        html += `<h3>${section.content}</h3><ul>`;
+        break;
+      case 'question':
+        html += `<li>${section.content}</li>`;
+        break;
+      case 'message':
+        html += `<p><strong>${section.content}</strong></p>`;
+        break;
+    }
+  });
+  
+  // Close any open lists
+  if (html.includes('<ul>') && !html.includes('</ul>')) {
+    html += '</ul>';
+  }
+  
+  annexContainer.innerHTML = html;
+  console.log("[RRIT] Annex rendered successfully");
+}
+
+/* =========================================================
    Section 7: Event Listeners and Initialization
    ========================================================= */
 
@@ -529,6 +650,31 @@ function initializeEventListeners() {
                     });
                 }, 500);
             }, 100);
+        },
+        printAnnexBtn: () => {
+            // 1) Gather flagged questions from window.collectedResponses.
+            const flagged = getFlaggedQuestions({ includeUnknown: true });
+
+            // 2) Build render data (reads currentLang internally).
+            const sections = buildAnnexData(flagged);
+
+            // 3) Render into the hidden annex container.
+            renderAnnex(sections); // must write headings and bullets in currentLang
+
+            // 4) Print only the annex.
+            document.body.classList.add("print-annex");
+            // Ensure language attribute is respected by print CSS if needed.
+            document.documentElement.setAttribute('data-print-lang', currentLang);
+
+            // Small delay helps some browsers finalize layout before print.
+            setTimeout(() => {
+                window.print();
+                setTimeout(() => {
+                    document.body.classList.remove("print-annex");
+                    document.documentElement.removeAttribute('data-print-lang');
+                    // Optional: qs("#detailedAnnex").innerHTML = "";
+                }, 300);
+            }, 50);
         },
         langEN: () => toggleLanguage('en'),
         langFR: () => toggleLanguage('fr')
@@ -787,13 +933,15 @@ function updateButtonText() {
             generateSummaryBtn: RRITState.isEditing ? "Generate Updated Summary" : "Generate Summary",
             editAnswersBtn: "Edit Answers",
             newScenarioBtn: "Start New Scenario",
-            printSummaryBtn: "Print / Save as PDF"
+            printSummaryBtn: "Print / Save as PDF",
+            printAnnexBtn: "Print Risk Annex"
         },
         fr: {
             generateSummaryBtn: RRITState.isEditing ? "Générer le sommaire mis à jour" : "Générer le sommaire",
             editAnswersBtn: "Modifier les réponses",
             newScenarioBtn: "Nouveau scénario",
-            printSummaryBtn: "Imprimer / Sauvegarder en PDF"
+            printSummaryBtn: "Imprimer / Sauvegarder en PDF",
+            printAnnexBtn: "Imprimer l'annexe des risques"
         }
     };
     
