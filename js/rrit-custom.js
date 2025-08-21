@@ -251,7 +251,13 @@ function generateSummary() {
         delete window.editCategoryHandler;
     }
     
-    generateSummaryTable();
+    // Branch based on feature flag
+    if (window.FEATURES?.useAccordionSummary) {
+        renderSummaryAccordion();
+    } else {
+        generateSummaryTable();
+    }
+    
     updateSummaryMessage(isEditMode);
     
     if (isEditMode) {
@@ -333,6 +339,7 @@ function generateSummaryTable() {
   window.collectedResponses = responses;
 
   setVis(qs("#summaryTableContainer"), true);
+  setVis(qs("#summaryAccordionContainer"), false);
   setVis(qs("#rrit-intro"), false);
   setVis(qs("#step0"), false);
 
@@ -348,6 +355,197 @@ function generateSummaryTable() {
 
   handleButtonVisibility(RRITState.isEditing);
   saveScenario(responses);
+}
+
+function renderSummaryAccordion() {
+  const lang = currentLang;
+  const responses = [];
+
+  // Build selected categories set exactly like generateSummaryTable()
+  const selected = new Set(["A", "B"]);
+  qsa("#categoryFormEN input:checked, #categoryFormFR input:checked")
+    .forEach(i => selected.add(i.value));
+
+  // Collect categories with their risk data
+  const categoryData = [];
+  selected.forEach(cat => {
+    let total = 0, weight = 0, qList = [];
+
+    // Collect questions/answers by scanning fieldsets just like generateSummaryTable()
+    qsa(`#step${cat} input[name^="cat${cat}q"]:checked`).forEach(input => {
+      const fs = input.closest("fieldset");
+      const qid = input.dataset.qid || fs?.dataset.qid || "";
+      const txt = fs?.querySelector("legend")?.textContent || "";
+      qList.push({ qid, question: txt, answer: input.value });
+
+      if (input.value in questionWeights) weight += questionWeights[input.value];
+      total += 1;
+    });
+
+    // Compute risk status using the same constants and logic
+    let status, riskLevel;
+    if (criticalCategories.includes(cat) && qList.some(q => /^(No|Non|Unknown|Inconnu)$/.test(q.answer))) {
+      status = riskLabels.high[lang]; riskLevel = "high";
+    } else if (!total) {
+      status = riskLabels.notReviewed[lang]; riskLevel = "notReviewed";
+    } else {
+      const ratio = weight / total;
+      if (ratio >= riskThresholds.high) {
+        status = riskLabels.high[lang]; riskLevel = "high";
+      } else if (ratio >= riskThresholds.medium) {
+        status = riskLabels.medium[lang]; riskLevel = "medium";
+      } else {
+        status = riskLabels.low[lang]; riskLevel = "low";
+      }
+    }
+
+    categoryData.push({
+      code: cat,
+      name: categories[cat][lang],
+      status,
+      riskLevel,
+      questions: qList
+    });
+
+    if (qList.length) {
+      responses.push({ category: categories[cat][lang], questions: qList });
+    }
+  });
+
+  console.log("[RRIT] Collected responses:", responses);
+  window.collectedResponses = responses;
+
+  // Render overview cards
+  const overviewContainer = qs("#summaryOverview");
+  const riskCounts = { high: 0, medium: 0, low: 0, notReviewed: 0 };
+  categoryData.forEach(cat => riskCounts[cat.riskLevel]++);
+  
+  const totalCategories = categoryData.length;
+  const overviewHTML = `
+    <div class="card">
+      <strong>${totalCategories}</strong><br>
+      <span data-lang="en">Categories</span><span data-lang="fr" class="hidden">Catégories</span>
+    </div>
+    <div class="card">
+      <strong>${riskCounts.high}</strong><br>
+      <span data-lang="en">High Risk</span><span data-lang="fr" class="hidden">Risque élevé</span>
+    </div>
+    <div class="card">
+      <strong>${riskCounts.medium}</strong><br>
+      <span data-lang="en">Medium Risk</span><span data-lang="fr" class="hidden">Risque moyen</span>
+    </div>
+    <div class="card">
+      <strong>${riskCounts.low}</strong><br>
+      <span data-lang="en">Low Risk</span><span data-lang="fr" class="hidden">Risque faible</span>
+    </div>
+  `;
+  overviewContainer.innerHTML = overviewHTML;
+
+  // Render accordion items
+  const accordionContainer = qs("#summaryAccordion");
+  const accordionHTML = categoryData.map((cat, index) => {
+    const panelId = `acc-panel-${cat.code}`;
+    const triggerId = `acc-trigger-${cat.code}`;
+    
+    // Create three-dot traffic light with only one active
+    const dots = ["high", "medium", "low"].map(level => 
+      `<div class="dot ${cat.riskLevel === level ? 'active' : ''}"></div>`
+    ).join('');
+
+    const questionsHTML = cat.questions.map(q => 
+      `<div><strong>${q.question}</strong><br>Answer: ${q.answer}</div>`
+    ).join('');
+
+    return `
+      <div class="acc-item">
+        <button class="acc-trigger" 
+                id="${triggerId}"
+                aria-expanded="false" 
+                aria-controls="${panelId}"
+                data-category="${cat.code}">
+          <div class="acc-left">
+            <span class="cat-pill">${cat.code}</span>
+            <span class="cat-name">${cat.name}</span>
+          </div>
+          <div class="rag">
+            <span>${cat.status}</span>
+            <div class="rag-lights">${dots}</div>
+            <span class="chev">▼</span>
+          </div>
+        </button>
+        <div class="acc-panel" id="${panelId}" role="region" aria-labelledby="${triggerId}" style="display:none;">
+          <div class="panel-grid">
+            <div class="box">
+              <h4 data-lang="en">Questions & Answers</h4>
+              <h4 data-lang="fr" class="hidden">Questions et réponses</h4>
+              ${questionsHTML || '<p data-lang="en">No responses recorded</p><p data-lang="fr" class="hidden">Aucune réponse enregistrée</p>'}
+            </div>
+            <div class="box">
+              <h4 data-lang="en">Risk Statement</h4>
+              <h4 data-lang="fr" class="hidden">Énoncé de risque</h4>
+              <p data-lang="en">Risk statement placeholder (to be wired to annex JSON)</p>
+              <p data-lang="fr" class="hidden">Espace réservé pour l'énoncé de risque (à connecter au JSON de l'annexe)</p>
+              
+              <h4 data-lang="en">Mitigation Strategies</h4>
+              <h4 data-lang="fr" class="hidden">Stratégies d'atténuation</h4>
+              <p data-lang="en">Mitigation strategies placeholder (to be wired to annex JSON)</p>
+              <p data-lang="fr" class="hidden">Espace réservé pour les stratégies d'atténuation (à connecter au JSON de l'annexe)</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  accordionContainer.innerHTML = accordionHTML;
+
+  // Add keyboard interaction
+  qsa('.acc-trigger').forEach(trigger => {
+    trigger.addEventListener('click', toggleAccordionPanel);
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleAccordionPanel.call(trigger);
+      }
+    });
+  });
+
+  // Visibility & UI parity (match the table flow)
+  setVis(qs("#summaryAccordionContainer"), true);
+  setVis(qs("#summaryTableContainer"), false);
+  setVis(qs("#rrit-intro"), false);
+  setVis(qs("#step0"), false);
+
+  placeSummaryTop();
+  setVis(qs("#riskSummaryHelp"), true);
+
+  // Move focus to #rrit-summary heading the same way generateSummaryTable() does
+  const heading = qs("#rrit-summary");
+  if (heading) {
+    heading.setAttribute("tabindex", "-1");
+    heading.focus();
+    setTimeout(() => heading.removeAttribute("tabindex"), 100);
+  }
+
+  handleButtonVisibility(RRITState.isEditing);
+  saveScenario(responses);
+}
+
+function toggleAccordionPanel() {
+  const panel = qs(`#${this.getAttribute('aria-controls')}`);
+  const isExpanded = this.getAttribute('aria-expanded') === 'true';
+  
+  // Close panel
+  if (isExpanded) {
+    this.setAttribute('aria-expanded', 'false');
+    this.querySelector('.chev').textContent = '▼';
+    panel.style.display = 'none';
+  } else {
+    // Open panel
+    this.setAttribute('aria-expanded', 'true');
+    this.querySelector('.chev').textContent = '▲';
+    panel.style.display = 'block';
+  }
 }
 
 /* =========================================================
