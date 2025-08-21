@@ -4,6 +4,27 @@
    ========================================================= */
 
 /* =========================================================
+   Feature Flags and URL Parameter Handling
+   ========================================================= */
+
+// Global feature flags
+window.FEATURES = window.FEATURES || { useAccordionSummary: false };
+
+// URL parameter handling for summary view
+try {
+  const urlParams = new URLSearchParams(window.location.search);
+  const summaryParam = urlParams.get('summary');
+  
+  if (summaryParam === 'acc') {
+    window.FEATURES.useAccordionSummary = true;
+  } else if (summaryParam === 'table') {
+    window.FEATURES.useAccordionSummary = false;
+  }
+} catch (error) {
+  // Silently fail - don't throw errors
+}
+
+/* =========================================================
    Section 1: Configuration and Constants
    ========================================================= */
 
