@@ -3,6 +3,16 @@
    Refactored Version – 2025-07-24
    ========================================================= */
 
+// === Feature flag & URL switch (must run first) ===
+window.FEATURES = window.FEATURES || { useAccordionSummary: false };
+(function () {
+  try {
+    const v = (new URLSearchParams(location.search).get('summary') || '').toLowerCase();
+    if (v === 'acc')   window.FEATURES.useAccordionSummary = true;
+    if (v === 'table') window.FEATURES.useAccordionSummary = false;
+  } catch {}
+})();
+
 /* =========================================================
    Section 1: Configuration and Constants
    ========================================================= */
@@ -30,11 +40,11 @@ const categories = {
   D: { en: "User Adoption and Training",                  fr: "Adoption et formation des utilisateurs" },
   E: { en: "Cost-Benefit Analysis",                       fr: "Analyse coûts-avantages" },
   F: { en: "Vendor Reliability and Support",              fr: "Fiabilité et soutien du fournisseur" },
-  G: { en: "Workforce Planning and Development",          fr: "Planification et développement de la main-d'œuvre" },
+  G: { en: "Workforce Planning and Development",          fr: "Planification et développement de la main-d'oeuvre" },
   H: { en: "Employee Engagement and Culture Change",      fr: "Mobilisation des employés et changement de culture" },
   I: { en: "Diversity and Inclusion Programs",            fr: "Programmes de diversité et d'inclusion" },
   J: { en: "Organizational Restructuring",                fr: "Restructuration organisationnelle" },
-  K: { en: "Policy Development and Implementation",       fr: "Élaboration et mise en œuvre des politiques" }
+  K: { en: "Policy Development and Implementation",       fr: "Élaboration et mise en oeuvre des politiques" }
 };
 
 const STORAGE_KEY = "rrit_savedScenario_v2";
@@ -242,6 +252,113 @@ function validateResponses(responses) {
    Section 4: Summary Generation and Risk Logic
    ========================================================= */
 
+function renderSummaryAccordion() {
+  // 1) Build selected categories: A & B mandatory + any checked
+  const sel = new Set(['A','B']);
+  document.querySelectorAll('#categoryFormEN input[type=checkbox]:checked,[id="categoryFormFR"] input[type=checkbox]:checked')
+    .forEach(cb => sel.add(cb.value || cb.getAttribute('data-cat') || ''));
+  const selected = [...sel].filter(Boolean);
+
+  // 2) Build a tiny model from existing collectedResponses if present, otherwise from DOM
+  const responses = Array.isArray(window.collectedResponses) ? window.collectedResponses : selected.map(id => ({
+    category: id, questions: []
+  }));
+
+  // 3) Placeholder RAG (replace with your thresholds if available in scope)
+  const ragFor = (id, qs=[]) => {
+    const val = s => (s||'').toString().toLowerCase();
+    if (['A','B'].includes(id) && qs.some(q => ['no','unknown'].includes(val(q.answer)))) return 'high';
+    const answered = qs.filter(q => ['yes','no','unknown','n/a','na','not applicable'].includes(val(q.answer)));
+    if (!answered.length) return 'notReviewed';
+    const yes = answered.filter(q => val(q.answer)==='yes').length / answered.length;
+    return yes >= 0.75 ? 'low' : yes >= 0.5 ? 'medium' : 'high';
+  };
+
+  // 4) Overview
+  const counts = {high:0,medium:0,low:0,notReviewed:0};
+  const cats = selected.map(id => {
+    const rec = responses.find(r => (r.category === id || r.category?.startsWith(id))) || {questions:[]};
+    const rag = ragFor(id, rec.questions);
+    counts[rag] = (counts[rag]||0)+1;
+    return { id, rag, rec };
+  });
+  const ov = document.getElementById('summaryOverview');
+  if (ov) ov.innerHTML = `
+    <div class="card"><strong>Categories assessed</strong><div>${cats.length}</div></div>
+    <div class="card"><strong>High risk</strong><div>${counts.high||0}</div></div>
+    <div class="card"><strong>Medium risk</strong><div>${counts.medium||0}</div></div>
+    <div class="card"><strong>Low risk</strong><div>${counts.low||0}</div></div>`;
+
+  // 5) Accordion
+  const names = {
+    A:{en:'Regulatory Compliance', fr:'Conformité réglementaire'},
+    B:{en:'Data Security & Privacy', fr:'Sécurité des données et vie privée'},
+    C:{en:'HR Technology / Integration', fr:'Technologie RH / Intégration'},
+    D:{en:'User Adoption & Training', fr:'Adoption et formation des utilisateurs'},
+    E:{en:'Cost-Benefit Analysis', fr:'Analyse coûts-avantages'},
+    F:{en:'Vendor Reliability & Support', fr:'Fiabilité et soutien du fournisseur'},
+    G:{en:'Workforce Planning & Development', fr:'Planification et développement de la main-d\'oeuvre'},
+    H:{en:'Employee Engagement & Culture Change', fr:'Mobilisation des employés & changement de culture'},
+    I:{en:'Strategic Alignment', fr:'Alignement stratégique'},
+    J:{en:'Accessibility & Inclusion', fr:'Accessibilité et inclusion'},
+    K:{en:'Policy Development & Implementation', fr:'Élaboration & mise en oeuvre des politiques'}
+  };
+  const ragTxt = {high:'High risk', medium:'Medium risk', low:'Low risk', notReviewed:'Not reviewed'};
+  const lights = r => r==='high' ? '<span class="dot active"></span><span class="dot"></span><span class="dot"></span>'
+                     : r==='medium'? '<span class="dot"></span><span class="dot active"></span><span class="dot"></span>'
+                     : r==='low'   ? '<span class="dot"></span><span class="dot"></span><span class="dot active"></span>'
+                     : '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+  const root = document.getElementById('summaryAccordion');
+  if (root) root.innerHTML = cats.map(c => {
+    const nm = names[c.id] || {en:c.id, fr:c.id};
+    const qa = (c.rec.questions||[]).map((q,i)=>`
+      <li><strong>Q${i+1}.</strong> ${q.question?.en || q.question || ''}<div><em>Answer:</em> ${q.answer||''}</div></li>
+    `).join('') || '<li>No answers recorded.</li>';
+    return `
+      <div class="acc-item">
+        <button class="acc-trigger" id="acc-${c.id}" aria-expanded="false" aria-controls="panel-${c.id}">
+          <span class="acc-left">
+            <span class="cat-pill">${c.id}</span>
+            <span class="cat-name"><span lang="en">${nm.en}</span><span lang="fr">${nm.fr}</span></span>
+          </span>
+          <span class="rag"><span class="rag-lights" aria-hidden="true">${lights(c.rag)}</span><span class="rag-text">${ragTxt[c.rag]}</span><span class="chev">▸</span></span>
+        </button>
+        <div id="panel-${c.id}" class="acc-panel" role="region" aria-labelledby="acc-${c.id}" hidden>
+          <div class="panel-grid">
+            <div class="box">
+              <h4><span lang="en">Questions & answers</span><span lang="fr">Questions et réponses</span></h4>
+              <ul>${qa}</ul>
+            </div>
+            <div class="box">
+              <h4><span lang="en">Risk statement</span><span lang="fr">Énoncé du risque</span></h4>
+              <p class="muted">—</p>
+              <h4><span lang="en">Mitigation strategies</span><span lang="fr">Stratégies d'atténuation</span></h4>
+              <ul><li>—</li></ul>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+  root?.querySelectorAll('.acc-trigger').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const open = btn.getAttribute('aria-expanded')==='true';
+      btn.setAttribute('aria-expanded', String(!open));
+      const panel = document.getElementById(btn.getAttribute('aria-controls'));
+      if (panel) panel.hidden = open;
+      const chev = btn.querySelector('.chev'); if (chev) chev.textContent = open ? '▸' : '▾';
+    });
+  });
+
+  // 6) Show accordion, hide legacy table, keep help visible
+  const show = el => el && (el.classList.remove('hidden'), el.style.removeProperty('display'));
+  const hide = el => el && (el.classList.add('hidden'), el.style.setProperty('display','none'));
+  show(document.getElementById('summaryAccordionContainer'));
+  hide(document.getElementById('summaryTableContainer'));
+  show(document.getElementById('riskSummaryHelp'));
+  if (typeof placeSummaryTop === 'function') placeSummaryTop();
+  if (typeof handleButtonVisibility === 'function') handleButtonVisibility(window.RRITState?.isEditing);
+}
+
 function generateSummary() {
     const isEditMode = RRITState.isEditing;
     
@@ -251,7 +368,11 @@ function generateSummary() {
         delete window.editCategoryHandler;
     }
     
-    generateSummaryTable();
+    if (window.FEATURES?.useAccordionSummary) {
+      renderSummaryAccordion();
+    } else {
+      generateSummaryTable();
+    }
     updateSummaryMessage(isEditMode);
     
     if (isEditMode) {

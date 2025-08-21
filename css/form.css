@@ -528,3 +528,16 @@ legend{font-weight:700; border:none; border-bottom: none;}
     display: none !important;
   }
 }
+
+/* === Accordion Summary (wireframe) === */
+.overview-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:8px 0 16px}
+.overview-cards .card{border:1px dashed #c9c9c9;border-radius:10px;padding:10px}
+.accordion{border-top:1px solid #e3e3e3}.acc-item{border-bottom:1px solid #e3e3e3}
+.acc-trigger{display:flex;width:100%;align-items:center;justify-content:space-between;padding:12px 8px;background:#fff;border:0;cursor:pointer;text-align:left}
+.acc-left{display:flex;align-items:center;gap:10px}.cat-pill{border:1px solid #cfcfcf;border-radius:999px;padding:2px 8px;font-weight:600}.cat-name{font-weight:600}
+.rag{display:flex;align-items:center;gap:10px}.rag-lights{display:grid;grid-auto-flow:column;gap:6px}
+.dot{width:12px;height:12px;border-radius:50%;border:2px solid #cfcfcf;background:transparent}.dot.active{background:#bdbdbd}
+.chev{color:#777;margin-left:10px}.acc-panel{padding:10px 8px 14px}
+.panel-grid{display:grid;grid-template-columns:1fr;gap:12px}@media(min-width:900px){.panel-grid{grid-template-columns:1.1fr .9fr}}
+.box{border:1px dashed #d3d3d3;border-radius:8px;padding:10px}
+@media print{#summaryActionRow,#postResultActions{display:none!important}}
