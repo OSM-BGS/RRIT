@@ -48,6 +48,21 @@ const RRITState = {
     }
 };
 
+// Feature flag setup (Step 1: URL toggle)
+window.FEATURES = {};
+const urlParams = new URLSearchParams(window.location.search);
+const summaryParam = urlParams.get('summary');
+if (summaryParam === 'acc') {
+    window.FEATURES.useAccordionSummary = true;
+    console.log('[RRIT] Accordion summary enabled via URL parameter');
+} else if (summaryParam === 'table') {
+    window.FEATURES.useAccordionSummary = false;
+    console.log('[RRIT] Table summary explicitly enabled via URL parameter');
+} else {
+    window.FEATURES.useAccordionSummary = false;
+    console.log('[RRIT] Default table summary enabled');
+}
+
 let currentLang = navigator.language.startsWith("fr") ? "fr" : "en";
 
 // Utility functions
