@@ -9,10 +9,10 @@ Top of file through section/category selection
   <title>RRIT – Rapid Risk Identification Tool</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <!-- GCWeb / WET-BOEW 16.5.0 -->
-  <link  rel="stylesheet" href="/RRIT/GCWeb/css/theme.min.css">
-  <link rel="stylesheet" href="/RRIT/wet-boew/css/wet-boew.min.css">
-  <link rel="stylesheet" href="/RRIT/css/form.css">
-  <link rel="stylesheet" href="/RRIT/css/forced-colors.css">
+  <link  rel="stylesheet" href="GCWeb/css/theme.min.css">
+  <link rel="stylesheet" href="wet-boew/css/wet-boew.min.css">
+  <link rel="stylesheet" href="css/form.css">
+  <link rel="stylesheet" href="css/forced-colors.css">
 </head>
 <body vocab="http://schema.org/" typeof="WebPage">
 
@@ -41,8 +41,8 @@ Top of file through section/category selection
     <!-- Logo/Brand Section - Second Column (Expanded) -->
     <div class="brand col-xs-9 col-sm-5 col-md-8" property="publisher" typeof="GovernmentOrganization">
       <div class="rrit-logo" style="display:inline-block; margin-left:1rem;">
-        <img src="/RRIT/assets/svg/tbs-logo-en.svg" alt="Treasury Board of Canada Secretariat" data-lang="en">
-        <img src="/RRIT/assets/svg/tbs-logo-fr.svg" alt="Secrétariat du Conseil du Trèsor du Canada" data-lang="fr" class="hidden" aria-hidden="true">
+        <img src="assets/svg/tbs-logo-en.svg" alt="Treasury Board of Canada Secretariat" data-lang="en">
+        <img src="assets/svg/tbs-logo-fr.svg" alt="Secrétariat du Conseil du Trèsor du Canada" data-lang="fr" class="hidden" aria-hidden="true">
       </div>
       <meta property="name" content="Treasury Board of Canada Secretariat">
       <meta property="areaServed" typeof="Country" content="Canada">
@@ -894,6 +894,13 @@ plus start of summary/results bar
         </button>
       </div>
     </div>
+    <!-- NEW: Accordion Summary Container (hidden by default) -->
+    <div id="summaryAccordionContainer" class="hidden" style="margin-top:2rem;">
+      <!-- At-a-glance cards -->
+      <div id="summaryOverview" class="overview-cards" aria-label="At-a-glance"></div>
+      <!-- Accessible accordion list -->
+      <div id="summaryAccordion" class="accordion" aria-label="Summary details"></div>
+    </div>
     <div id="summaryTableContainer" class="hidden" style="margin-top: 2rem;">
       <table class="table table-striped">
 
@@ -960,10 +967,10 @@ Footer: JS scripts and HTML end
 ========================= -->
 
 <!-- REQUIRED JS (placed before body close for accessibility and load) -->
-<script src="/RRIT/wet-boew/jquery/2.2.4/jquery.min.js"></script>
-<script src="/RRIT/wet-boew/js/wet-boew.min.js"></script>
-<script src="/RRIT/GCWeb/js/theme.min.js"></script>
-<script src="/RRIT/js/rrit-custom.js"></script>
+<script src="wet-boew/jquery/2.2.4/jquery.min.js"></script>
+<script src="wet-boew/js/wet-boew.min.js"></script>
+<script src="GCWeb/js/theme.min.js"></script>
+<script src="js/rrit-custom.js"></script>
 
     </main>
   </div>
