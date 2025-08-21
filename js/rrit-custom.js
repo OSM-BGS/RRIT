@@ -4,6 +4,27 @@
    ========================================================= */
 
 /* =========================================================
+   Global Feature Flags and URL Parameter Handling
+   ========================================================= */
+try {
+    // Global feature flag initialization
+    window.FEATURES = window.FEATURES || { useAccordionSummary: false };
+    
+    // URL parameter handling for summary view
+    const urlParams = new URLSearchParams(window.location.search);
+    const summaryParam = urlParams.get('summary');
+    
+    if (summaryParam === 'acc') {
+        window.FEATURES.useAccordionSummary = true;
+    } else if (summaryParam === 'table') {
+        window.FEATURES.useAccordionSummary = false;
+    }
+} catch (error) {
+    // Silent failure - do not throw or display errors
+    console.warn('[RRIT] Feature flag initialization failed:', error.message);
+}
+
+/* =========================================================
    Section 1: Configuration and Constants
    ========================================================= */
 
