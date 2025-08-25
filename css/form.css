@@ -544,16 +544,15 @@ legend{font-weight:700; border:none; border-bottom: none;}
 /* Question Cards CSS */
 .qa-cards{list-style:decimal; padding-left:1.25rem; margin:0}
 .q-card{margin:0 0 12px 0; padding:12px; border:1px dashed #d3d3d3; border-radius:8px; background:#fff}
-.q-card .q-head{display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px}
-.q-card .q-title{font-weight:600}
-.q-card .q-meta{color:#555}
-.q-card .q-body{margin-top:8px; display:grid; grid-template-columns:1fr; gap:8px}
-.q-card h5{margin:.25rem 0 .25rem; font-size:1rem}
+.q-head{display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px}
+.q-title{font-weight:600}
+.q-meta{color:#555}
+.q-sec{font-size:1.125rem; line-height:1.35; font-weight:600; margin:.5rem 0 .25rem}
+.q-body{margin-top:8px; display:grid; grid-template-columns:1fr; gap:8px}
+@media (min-width: 900px){ .q-body{grid-template-columns:1fr 1fr} }
 .badge{display:inline-block; border:1px solid #ccc; border-radius:999px; padding:2px 8px; font-size:.85em; margin-left:6px}
 .badge.crit{border-style:solid}
-.badge.sev-high{border-color:#999}
-.badge.sev-medium{border-color:#bbb}
-.badge.sev-low{border-color:#ccc}
+.badge.sev-high{border-color:#999}.badge.sev-medium{border-color:#bbb}.badge.sev-low{border-color:#ccc}
 .muted{color:#777}
 .panel-grid.single-col{grid-template-columns:1fr}
 @media (min-width: 900px){ .q-card .q-body{grid-template-columns:1fr 1fr} }

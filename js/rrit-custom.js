@@ -31,6 +31,27 @@ async function loadAnnex() {
   return window.RISK_ANNEX;
 }
 
+// --- i18n + answer helpers ---
+function getLang() {
+  const raw = (document.documentElement.getAttribute('lang') ||
+               document.documentElement.getAttribute('data-lang') || 'en').toLowerCase();
+  return raw.startsWith('fr') ? 'fr' : 'en';
+}
+function t(en, fr) { return getLang()==='fr' ? (fr || en || '') : (en || fr || ''); }
+function normalizeAnswer(ans) {
+  const s = (ans || '').toString().trim().toLowerCase();
+  if (['yes','oui','y','o'].includes(s)) return 'yes';
+  if (['no','non','n'].includes(s)) return 'no';
+  if (['unknown',"don't know",'inconnu','ne sait pas','ns','n/s'].includes(s)) return 'unknown';
+  if (['n/a','na','not applicable','s.o.','so','sans objet'].includes(s)) return 'na';
+  return s;
+}
+function translateAnswer(ans) {
+  const norm = normalizeAnswer(ans), lang = getLang();
+  const map = { yes:{en:'Yes',fr:'Oui'}, no:{en:'No',fr:'Non'}, unknown:{en:'Unknown',fr:'Inconnu'}, na:{en:'N/A',fr:'S.O.'} };
+  return (map[norm] && map[norm][lang]) ? map[norm][lang] : (ans || '');
+}
+
 /* =========================================================
    Section 1: Configuration and Constants
    ========================================================= */
@@ -349,10 +370,15 @@ function updateSummaryMessage(isEditMode) {
 // Helper function to generate question card markup
 function questionCardMarkup(catId, q, idx) {
   const qid = q.qid || `${catId}-${idx+1}`;
-  const enQ = q.question?.en || q.question || '';
+  const enQ = q.question?.en || q.question || q.question_en || '';
   const frQ = q.question?.fr || q.question_fr || '';
-  const ans = (q.answer || '').toString();
+  const questionText = t(enQ, frQ);
 
+  const rawAnswer = (q.answer || '').toString();
+  const norm = normalizeAnswer(rawAnswer);
+  const answerLabel = translateAnswer(rawAnswer);
+
+  // Merge annex (per-question bilingual content)
   const annex = (window.RISK_ANNEX?.[catId]?.[qid]) || null;
   const riskEn = q.riskStatement?.en || q.riskStatementEn || annex?.risk?.en || '';
   const riskFr = q.riskStatement?.fr || q.riskStatementFr || annex?.risk?.fr || '';
@@ -361,31 +387,35 @@ function questionCardMarkup(catId, q, idx) {
   const sev    = q.severity || annex?.severity || null;
   const crit   = !!(q.critical || annex?.critical);
 
-  const sevBadge = sev ? `<span class="badge sev-${sev}">${sev}</span>` : '';
-  const critBadge = crit ? `<span class="badge crit">Critical</span>` : '';
+  // Show risk details only for No / Unknown
+  const showRisk = (norm === 'no' || norm === 'unknown');
 
-  const mitList = (lang) => {
-    const items = (lang === 'fr' ? mitFr : mitEn) || [];
-    return items.length ? `<ul class="mit-list">${items.map(m => `<li>${m}</li>`).join('')}</ul>`
-                        : `<p class="muted">—</p>`;
-  };
+  // Pick mitigation list for active lang; fallback to the other if empty
+  const isFR = getLang() === 'fr';
+  const mitList = isFR
+    ? (Array.isArray(mitFr) && mitFr.length ? mitFr : (Array.isArray(mitEn) ? mitEn : []))
+    : (Array.isArray(mitEn) && mitEn.length ? mitEn : (Array.isArray(mitFr) ? mitFr : []));
+
+  const sevBadge  = sev ? `<span class="badge sev-${sev}">${sev}</span>` : '';
+  const critBadge = crit ? `<span class="badge crit">${t('Critical','Critique')}</span>` : '';
 
   return `
     <li class="q-card">
       <div class="q-head">
-        <div class="q-title"><strong>Q${idx+1}.</strong> <span lang="en">${enQ}</span><span lang="fr">${frQ}</span></div>
-        <div class="q-meta"><em><span lang="en">Answer</span><span lang="fr">Réponse</span>:</em> ${ans} ${sevBadge} ${critBadge}</div>
+        <div class="q-title"><strong>${t('Q','Q')}${idx+1}.</strong> ${questionText}</div>
+        <div class="q-meta"><em>${t('Answer','Réponse')}:</em> ${answerLabel} ${sevBadge} ${critBadge}</div>
       </div>
+      ${showRisk ? `
       <div class="q-body">
         <div class="q-risk">
-          <h5><span lang="en">Risk statement</span><span lang="fr">Énoncé du risque</span></h5>
-          <p>${(riskEn || riskFr) ? `<span lang="en">${riskEn}</span><span lang="fr">${riskFr}</span>` : '<span class="muted">—</span>'}</p>
+          <h5 class="q-sec">${t('Risk statement','Énoncé du risque')}</h5>
+          <p>${t(riskEn, riskFr) || '<span class="muted">—</span>'}</p>
         </div>
         <div class="q-mit">
-          <h5><span lang="en">Mitigation strategies</span><span lang="fr">Stratégies d'atténuation</span></h5>
-          ${mitList((document.documentElement.getAttribute('data-lang')||'en').toLowerCase())}
+          <h5 class="q-sec">${t('Mitigation strategies',"Stratégies d'atténuation")}</h5>
+          ${mitList.length ? `<ul class="mit-list">${mitList.map(m=>`<li>${m}</li>`).join('')}</ul>` : `<p class="muted">—</p>`}
         </div>
-      </div>
+      </div>` : ``}
     </li>`;
 }
 
@@ -1126,3 +1156,17 @@ function syncCategoryCheckboxes(selectedCategories) {
     }
   });
 }
+
+// === Language change observer for accordion re-rendering ===
+(function observeLangChange(){
+  try {
+    const obs = new MutationObserver(ms=>{
+      if (ms.some(m=>m.attributeName==='lang' || m.attributeName==='data-lang')) {
+        if (window.FEATURES?.useAccordionSummary && typeof renderSummaryAccordion==='function') {
+          renderSummaryAccordion();
+        }
+      }
+    });
+    obs.observe(document.documentElement, { attributes:true, attributeFilter:['lang','data-lang'] });
+  } catch {}
+})();
