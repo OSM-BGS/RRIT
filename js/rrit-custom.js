@@ -52,6 +52,38 @@ function translateAnswer(ans) {
   return (map[norm] && map[norm][lang]) ? map[norm][lang] : (ans || '');
 }
 
+// Extract a single-language question string, with fallback when only a bilingual string exists
+function extractQuestionText(q) {
+  const lang = getLang();
+  const rawEn = q?.question?.en || q?.question_en || (typeof q?.question === 'string' && !q?.question?.fr ? q.question : '');
+  const rawFr = q?.question?.fr || q?.question_fr || '';
+  if (lang === 'fr' && rawFr) return rawFr;
+  if (lang !== 'fr' && rawEn) return rawEn;
+
+  // Heuristic split for bilingual combined strings, e.g., "1. EN ? 1. FR ?" or "EN ? FR ?"
+  let s = (q?.question || '').toString().trim();
+  if (!s) return '';
+  s = s.replace(/^Q\d+\.\s*/i, '').trim();      // drop "Q1. "
+  s = s.replace(/^\d+\.\s*/, '').trim();        // drop leading "1. "
+
+  // Try: capture until first '?' then look for a new numbered segment "1. " for the second language
+  let m = s.match(/^(.+?\?)(?:\s*\d+\.\s*)(.+)$/);
+  if (m) {
+    const partEN = m[1].trim();
+   const partFR = m[2].trim();
+    return lang === 'fr' ? partFR : partEN;
+  }
+  // Fallback: split on separators around a first question mark (handles "EN ? — FR ?" variants)
+  m = s.match(/^(.+?\?)[\s/–-]+(.+)$/);
+  if (m) {
+    const partEN = m[1].trim();
+    const partFR = m[2].trim();
+    return lang === 'fr' ? partFR : partEN;
+  }
+  // Last resort: return string as-is (better to show something than nothing)
+  return s;
+}
+
 /* =========================================================
    Section 1: Configuration and Constants
    ========================================================= */
@@ -371,10 +403,8 @@ function updateSummaryMessage(isEditMode) {
 function questionCardMarkup(catId, q, idx) {
   const qid = q.qid || `${catId}-${idx+1}`;
 
-  // Pick ONE language string for the question, with safe fallback
-  const enQ = q.question?.en || q.question_en || (typeof q.question === 'string' ? q.question : '');
-  const frQ = q.question?.fr || q.question_fr || '';
-  const questionText = t(enQ, frQ); // active language only
+  // ⟵ replace previous language picking with this single line
+  const questionText = extractQuestionText(q);
 
   const rawAnswer = (q.answer || '').toString();
   const norm = normalizeAnswer(rawAnswer);
