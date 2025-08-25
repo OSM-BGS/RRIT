@@ -33,6 +33,32 @@ const riskLabels = {
 
 const riskThresholds = { high: 0.4, medium: 0.2 };
 
+// RISK_ANNEX: per-question risk/mitigation lookup
+const RISK_ANNEX = {
+  A: {
+    'A-1': {
+      severity: 'high', critical: true,
+      risk: { en: 'Personal data processed without DPIA increases compliance risk.', fr: 'Le traitement de données personnelles sans EFVP augmente le risque de conformité.' },
+      mit:  { en: ['Conduct a DPIA before go-live.', 'Limit data fields to essentials.', 'Appoint a privacy contact.'],
+              fr: ['Mener une EFVP avant la mise en service.', 'Limiter les champs de données au strict nécessaire.', 'Désigner un responsable confidentialité.'] }
+    }
+  },
+  B: {
+    'B-1': {
+      severity: 'medium', critical: false,
+      risk: { en: 'Inadequate security controls may expose sensitive HR data.', fr: 'Des contrôles de sécurité inadéquats peuvent exposer des données RH sensibles.' },
+      mit:  { en: ['Implement multi-factor authentication.', 'Regular security audits.', 'Staff security training.'],
+              fr: ['Mettre en place une authentification multi-facteurs.', 'Audits de sécurité réguliers.', 'Formation du personnel en sécurité.'] }
+    },
+    'B-2': {
+      severity: 'high', critical: true,
+      risk: { en: 'Unencrypted data transmission creates data breach risk.', fr: 'La transmission de données non chiffrées crée un risque de violation de données.' },
+      mit:  { en: ['Use TLS encryption for all data transfers.', 'Implement secure API endpoints.', 'Monitor data access logs.'],
+              fr: ['Utiliser le chiffrement TLS pour tous les transferts de données.', 'Mettre en place des points de terminaison API sécurisés.', 'Surveiller les journaux d\'accès aux données.'] }
+    }
+  }
+};
+
 const categories = {
   A: { en: "Regulatory Compliance (Mandatory)",           fr: "Conformité réglementaire (Obligatoire)" },
   B: { en: "Data Security and Privacy (Mandatory)",       fr: "Sécurité des données et confidentialité (Obligatoire)" },
@@ -297,6 +323,49 @@ function updateSummaryMessage(isEditMode) {
     setTxt(qs('#rrit-summary p[data-lang="fr"]'), msg.fr);
 }
 
+// Helper function to generate question card markup
+function questionCardMarkup(catId, q, idx) {
+  const qid = q.qid || `${catId}-${idx+1}`;
+  const enQ = q.question?.en || q.question || '';
+  const frQ = q.question?.fr || q.question_fr || '';
+  const ans = (q.answer || '').toString();
+
+  const fromAnnex = (RISK_ANNEX?.[catId]?.[qid]) || null;
+  const riskEn = q.riskStatement?.en || q.riskStatementEn || fromAnnex?.risk?.en || '';
+  const riskFr = q.riskStatement?.fr || q.riskStatementFr || fromAnnex?.risk?.fr || '';
+  const mitEn  = q.mitigations?.en || q.mitigationsEn || fromAnnex?.mit?.en || [];
+  const mitFr  = q.mitigations?.fr || q.mitigationsFr || fromAnnex?.mit?.fr || [];
+  const sev    = q.severity || fromAnnex?.severity || null;
+  const crit   = !!(q.critical || fromAnnex?.critical);
+
+  const sevBadge = sev ? `<span class="badge sev-${sev}">${sev}</span>` : '';
+  const critBadge = crit ? `<span class="badge crit">Critical</span>` : '';
+
+  const mitList = (lang) => {
+    const items = (lang === 'fr' ? mitFr : mitEn) || [];
+    return items.length ? `<ul class="mit-list">${items.map(m => `<li>${m}</li>`).join('')}</ul>`
+                        : `<p class="muted">—</p>`;
+  };
+
+  return `
+    <li class="q-card">
+      <div class="q-head">
+        <div class="q-title"><strong>Q${idx+1}.</strong> <span lang="en">${enQ}</span><span lang="fr">${frQ}</span></div>
+        <div class="q-meta"><em><span lang="en">Answer</span><span lang="fr">Réponse</span>:</em> ${ans} ${sevBadge} ${critBadge}</div>
+      </div>
+      <div class="q-body">
+        <div class="q-risk">
+          <h5><span lang="en">Risk statement</span><span lang="fr">Énoncé du risque</span></h5>
+          <p>${(riskEn || riskFr) ? `<span lang="en">${riskEn}</span><span lang="fr">${riskFr}</span>` : '<span class="muted">—</span>'}</p>
+        </div>
+        <div class="q-mit">
+          <h5><span lang="en">Mitigation strategies</span><span lang="fr">Stratégies d'atténuation</span></h5>
+          ${mitList((document.documentElement.getAttribute('data-lang')||'en').toLowerCase())}
+        </div>
+      </div>
+    </li>`;
+}
+
 // === New: Accessible accordion summary renderer ===
 function renderSummaryAccordion() {
   // Selected categories: A & B mandatory + any checked in EN/FR forms
@@ -360,9 +429,15 @@ function renderSummaryAccordion() {
   const root = document.getElementById('summaryAccordion');
   if (root) root.innerHTML = cats.map(c => {
     const nm = names[c.id] || {en:c.id, fr:c.id};
-    const qa = (c.rec.questions||[]).map((q,i)=>`
-      <li><strong>Q${i+1}.</strong> ${q.question?.en || q.question || ''}<div><em>Answer:</em> ${q.answer||''}</div></li>
-    `).join('') || '<li>No answers recorded.</li>';
+    const qaCards = (c.rec.questions || []).map((q,i) => questionCardMarkup(c.id, q, i)).join('');
+    const panelHtml = `
+      <div class="panel-grid single-col">
+        <div class="box">
+          <ol class="qa-cards">
+            ${qaCards || `<li class="q-card empty"><span class="muted"><span lang="en">No answers recorded.</span><span lang="fr">Aucune réponse enregistrée.</span></span></li>`}
+          </ol>
+        </div>
+      </div>`;
     return `
       <div class="acc-item">
         <button class="acc-trigger" id="acc-${c.id}" aria-expanded="false" aria-controls="panel-${c.id}">
@@ -374,17 +449,7 @@ function renderSummaryAccordion() {
           <span class="chev">▼</span>
         </button>
         <div class="acc-panel" id="panel-${c.id}" aria-hidden="true" style="display:none;">
-          <div class="panel-grid">
-            <div class="box">
-              <h4>Questions & Answers</h4>
-              <ul>${qa}</ul>
-            </div>
-            <div class="box">
-              <h4>Risk Assessment</h4>
-              <p><strong>Status:</strong> ${ragTxt[c.rag]}</p>
-              <p><strong>Questions answered:</strong> ${c.rec.questions?.length || 0}</p>
-            </div>
-          </div>
+          ${panelHtml}
         </div>
       </div>
     `;
@@ -401,7 +466,7 @@ function renderSummaryAccordion() {
       qList.push({ qid, question: txt, answer: input.value });
     });
     if (qList.length) {
-      allResponses.push({ category: categories[cat][currentLang], questions: qList });
+      allResponses.push({ category: cat, questions: qList });
     }
   });
 
