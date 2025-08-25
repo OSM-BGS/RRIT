@@ -374,6 +374,24 @@ function renderSummaryAccordion() {
     .forEach(cb => sel.add(cb.value || cb.getAttribute('data-cat') || ''));
   const selected = [...sel].filter(Boolean);
 
+  // Collect responses for global storage
+  const allResponses = [];
+  selected.forEach(cat => {
+    let qList = [];
+    qsa(`#step${cat} input[name^="cat${cat}q"]:checked`).forEach(input => {
+      const fs = input.closest("fieldset");
+      const qid = input.dataset.qid || fs?.dataset.qid || "";
+      const txt = fs?.querySelector("legend")?.textContent || "";
+      qList.push({ qid, question: txt, answer: input.value });
+    });
+    if (qList.length) {
+      allResponses.push({ category: cat, questions: qList });
+    }
+  });
+
+  console.log("[RRIT] Collected accordion responses:", allResponses);
+  window.collectedResponses = allResponses;
+
   // Use collectedResponses if present; otherwise stub by category
   const responses = Array.isArray(window.collectedResponses) ? window.collectedResponses
                    : selected.map(id => ({ category: id, questions: [] }));
@@ -454,24 +472,6 @@ function renderSummaryAccordion() {
       </div>
     `;
   }).join('');
-
-  // Collect responses for global storage
-  const allResponses = [];
-  selected.forEach(cat => {
-    let qList = [];
-    qsa(`#step${cat} input[name^="cat${cat}q"]:checked`).forEach(input => {
-      const fs = input.closest("fieldset");
-      const qid = input.dataset.qid || fs?.dataset.qid || "";
-      const txt = fs?.querySelector("legend")?.textContent || "";
-      qList.push({ qid, question: txt, answer: input.value });
-    });
-    if (qList.length) {
-      allResponses.push({ category: cat, questions: qList });
-    }
-  });
-
-  console.log("[RRIT] Collected accordion responses:", allResponses);
-  window.collectedResponses = allResponses;
 
   // Show accordion, hide table and intro
   setVis(qs("#summaryAccordionContainer"), true);
