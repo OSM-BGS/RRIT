@@ -261,7 +261,13 @@ function generateSummary() {
         delete window.editCategoryHandler;
     }
     
-    generateSummaryTable();
+    // Use accordion or table based on feature flag
+    if (window.FEATURES && window.FEATURES.useAccordionSummary) {
+        renderSummaryAccordion();
+    } else {
+        generateSummaryTable();
+    }
+    
     updateSummaryMessage(isEditMode);
     
     if (isEditMode) {
@@ -289,6 +295,179 @@ function updateSummaryMessage(isEditMode) {
     
     setTxt(qs('#rrit-summary p[data-lang="en"]'), msg.en);
     setTxt(qs('#rrit-summary p[data-lang="fr"]'), msg.fr);
+}
+
+// === New: Accessible accordion summary renderer ===
+function renderSummaryAccordion() {
+  // Selected categories: A & B mandatory + any checked in EN/FR forms
+  const sel = new Set(['A','B']);
+  document.querySelectorAll('#categoryFormEN input[type=checkbox]:checked, #categoryFormFR input[type=checkbox]:checked')
+    .forEach(cb => sel.add(cb.value || cb.getAttribute('data-cat') || ''));
+  const selected = [...sel].filter(Boolean);
+
+  // Use collectedResponses if present; otherwise stub by category
+  const responses = Array.isArray(window.collectedResponses) ? window.collectedResponses
+                   : selected.map(id => ({ category: id, questions: [] }));
+
+  // Simple, safe RAG (replace with repo thresholds if available here)
+  const val = s => (s||'').toString().toLowerCase();
+  const ragFor = (id, qs=[]) => {
+    if (['A','B'].includes(id) && qs.some(q => ['no','unknown'].includes(val(q.answer)))) return 'high';
+    const answered = qs.filter(q => ['yes','no','unknown','n/a','na','not applicable'].includes(val(q.answer)));
+    if (!answered.length) return 'notReviewed';
+    const yes = answered.filter(q => val(q.answer)==='yes').length / answered.length;
+    return yes >= 0.75 ? 'low' : yes >= 0.5 ? 'medium' : 'high';
+  };
+
+  // Build list + counts
+  const counts = {high:0,medium:0,low:0,notReviewed:0};
+  const cats = selected.map(id => {
+    const rec = responses.find(r => (r.category === id || r.category?.startsWith(id))) || {questions:[]};
+    const rag = ragFor(id, rec.questions);
+    counts[rag] = (counts[rag]||0)+1;
+    return { id, rag, rec };
+  });
+
+  // Overview cards
+  const ov = document.getElementById('summaryOverview');
+  if (ov) ov.innerHTML = `
+    <div class="card"><strong>Categories assessed</strong><div>${cats.length}</div></div>
+    <div class="card"><strong>High risk</strong><div>${counts.high||0}</div></div>
+    <div class="card"><strong>Medium risk</strong><div>${counts.medium||0}</div></div>
+    <div class="card"><strong>Low risk</strong><div>${counts.low||0}</div></div>`;
+
+  // Category names
+  const names = {
+    A:{en:'Regulatory Compliance', fr:'Conformité réglementaire'},
+    B:{en:'Data Security & Privacy', fr:'Sécurité des données et vie privée'},
+    C:{en:'HR Technology / Integration', fr:'Technologie RH / Intégration'},
+    D:{en:'User Adoption & Training', fr:'Adoption et formation des utilisateurs'},
+    E:{en:'Cost-Benefit Analysis', fr:'Analyse coûts-avantages'},
+    F:{en:'Vendor Reliability & Support', fr:'Fiabilité et soutien du fournisseur'},
+    G:{en:'Workforce Planning & Development', fr:'Planification et développement de la main-d\'œuvre'},
+    H:{en:'Employee Engagement & Culture Change', fr:'Mobilisation des employés & changement de culture'},
+    I:{en:'Strategic Alignment', fr:'Alignement stratégique'},
+    J:{en:'Accessibility & Inclusion', fr:'Accessibilité et inclusion'},
+    K:{en:'Policy Development & Implementation', fr:'Élaboration & mise en œuvre des politiques'}
+  };
+  const ragTxt = {high:'High risk', medium:'Medium risk', low:'Low risk', notReviewed:'Not reviewed'};
+  const lights = r => r==='high' ? '<span class="dot active"></span><span class="dot"></span><span class="dot"></span>'
+                     : r==='medium'? '<span class="dot"></span><span class="dot active"></span><span class="dot"></span>'
+                     : r==='low'   ? '<span class="dot"></span><span class="dot"></span><span class="dot active"></span>'
+                     : '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+
+  // Accordion markup
+  const root = document.getElementById('summaryAccordion');
+  if (root) root.innerHTML = cats.map(c => {
+    const nm = names[c.id] || {en:c.id, fr:c.id};
+    const qa = (c.rec.questions||[]).map((q,i)=>`
+      <li><strong>Q${i+1}.</strong> ${q.question?.en || q.question || ''}<div><em>Answer:</em> ${q.answer||''}</div></li>
+    `).join('') || '<li>No answers recorded.</li>';
+    return `
+      <div class="acc-item">
+        <button class="acc-trigger" id="acc-${c.id}" aria-expanded="false" aria-controls="panel-${c.id}">
+          <span class="acc-left">
+            <span class="cat-pill">${c.id}</span>
+            <span class="cat-name"><span lang="en">${nm.en}</span><span lang="fr">${nm.fr}</span></span>
+          </span>
+          <span class="rag"><span class="rag-lights" aria-hidden="true">${lights(c.rag)}</span><span class="rag-text">${ragTxt[c.rag]}</span></span>
+          <span class="chev">▼</span>
+        </button>
+        <div class="acc-panel" id="panel-${c.id}" aria-hidden="true" style="display:none;">
+          <div class="panel-grid">
+            <div class="box">
+              <h4>Questions & Answers</h4>
+              <ul>${qa}</ul>
+            </div>
+            <div class="box">
+              <h4>Risk Assessment</h4>
+              <p><strong>Status:</strong> ${ragTxt[c.rag]}</p>
+              <p><strong>Questions answered:</strong> ${c.rec.questions?.length || 0}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Collect responses for global storage
+  const allResponses = [];
+  selected.forEach(cat => {
+    let qList = [];
+    qsa(`#step${cat} input[name^="cat${cat}q"]:checked`).forEach(input => {
+      const fs = input.closest("fieldset");
+      const qid = input.dataset.qid || fs?.dataset.qid || "";
+      const txt = fs?.querySelector("legend")?.textContent || "";
+      qList.push({ qid, question: txt, answer: input.value });
+    });
+    if (qList.length) {
+      allResponses.push({ category: categories[cat][currentLang], questions: qList });
+    }
+  });
+
+  console.log("[RRIT] Collected accordion responses:", allResponses);
+  window.collectedResponses = allResponses;
+
+  // Show accordion, hide table and intro
+  setVis(qs("#summaryAccordionContainer"), true);
+  setVis(qs("#summaryTableContainer"), false);
+  setVis(qs("#rrit-intro"), false);
+  setVis(qs("#step0"), false);
+
+  placeSummaryTop();
+  setVis(qs("#riskSummaryHelp"), true);
+
+  const heading = qs("#rrit-summary");
+  if (heading) {
+    heading.setAttribute("tabindex", "-1");
+    heading.focus();
+    setTimeout(() => heading.removeAttribute("tabindex"), 100);
+  }
+
+  // Add accordion interaction handlers
+  addAccordionHandlers();
+  
+  handleButtonVisibility(RRITState.isEditing);
+  saveScenario(allResponses);
+}
+
+function addAccordionHandlers() {
+  // Remove existing listeners to avoid duplicates
+  qsa('.acc-trigger').forEach(btn => {
+    btn.replaceWith(btn.cloneNode(true));
+  });
+  
+  // Add click handlers to all accordion triggers
+  qsa('.acc-trigger').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const panel = document.getElementById(this.getAttribute('aria-controls'));
+      const chev = this.querySelector('.chev');
+      const isExpanded = this.getAttribute('aria-expanded') === 'true';
+      
+      if (isExpanded) {
+        // Collapse
+        this.setAttribute('aria-expanded', 'false');
+        panel.setAttribute('aria-hidden', 'true');
+        panel.style.display = 'none';
+        if (chev) chev.textContent = '▼';
+      } else {
+        // Expand
+        this.setAttribute('aria-expanded', 'true');
+        panel.setAttribute('aria-hidden', 'false');
+        panel.style.display = 'block';
+        if (chev) chev.textContent = '▲';
+      }
+    });
+    
+    // Add keyboard support
+    btn.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        this.click();
+      }
+    });
+  });
 }
 
 function generateSummaryTable() {
@@ -343,6 +522,7 @@ function generateSummaryTable() {
   window.collectedResponses = responses;
 
   setVis(qs("#summaryTableContainer"), true);
+  setVis(qs("#summaryAccordionContainer"), false);
   setVis(qs("#rrit-intro"), false);
   setVis(qs("#step0"), false);
 
@@ -441,7 +621,7 @@ function editAnswersFlow() {
     setVis(qs("#step0"), true);
     restoreResponses(saved);
 
-    const hideElements = ["#summaryTableContainer", "#postResultActions", 
+    const hideElements = ["#summaryTableContainer", "#summaryAccordionContainer", "#postResultActions", 
                          "#riskSummaryHelp", "#rrit-intro"];
     hideElements.forEach(el => setVis(qs(el), false));
 
@@ -774,7 +954,7 @@ function updateLanguageDisplay() {
     updateCategoryStatusMessage();
     updateButtonText();
     
-    if (qs("#summaryTableContainer:not(.hidden)")) {
+    if (qs("#summaryTableContainer:not(.hidden)") || qs("#summaryAccordionContainer:not(.hidden)")) {
         regenerateSummaryTable();
     }
     
@@ -817,7 +997,11 @@ function updateButtonText() {
 
 function regenerateSummaryTable() {
     if (window.collectedResponses && window.collectedResponses.length > 0) {
-        generateSummaryTable();
+        if (window.FEATURES && window.FEATURES.useAccordionSummary) {
+            renderSummaryAccordion();
+        } else {
+            generateSummaryTable();
+        }
     }
 }
 
