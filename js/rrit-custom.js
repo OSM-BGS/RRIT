@@ -3,6 +3,16 @@
    Refactored Version – 2025-07-24
    ========================================================= */
 
+// === Feature flag & URL switch (must run first) ===
+window.FEATURES = window.FEATURES || { useAccordionSummary: false };
+(function () {
+  try {
+    const v = (new URLSearchParams(location.search).get('summary') || '').toLowerCase();
+    if (v === 'acc')   window.FEATURES.useAccordionSummary = true;
+    if (v === 'table') window.FEATURES.useAccordionSummary = false;
+  } catch {}
+})();
+
 /* =========================================================
    Section 1: Configuration and Constants
    ========================================================= */
