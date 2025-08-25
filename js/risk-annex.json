@@ -1,476 +1,474 @@
-// === Per-question bilingual annex ===
-// Keyed by category letter -> question id "X-#"
-window.RISK_ANNEX = {
-  A: {
-    "A-1": {
-      risk: {
-        en: "There is a risk that the HR solution does not comply with the Policy on Privacy Protection and other pertinent privacy regulations, leading to legal penalties and reputational damage.",
-        fr: "Il existe un risque que la solution RH ne respecte pas la Politique sur la protection de la vie privée et d’autres règlements pertinents, ce qui pourrait entraîner des sanctions juridiques et nuire à la réputation."
+{
+  "A": {
+    "A.1": {
+      "risk": {
+        "en": "There is a risk that the HR solution does not comply with the Policy on Privacy Protection and other pertinent privacy regulations, leading to legal penalties and reputational damage.",
+        "fr": "Il existe un risque que la solution RH ne respecte pas la Politique sur la protection de la vie priv\u00e9e et d\u2019autres r\u00e8glements pertinents, ce qui pourrait entra\u00eener des sanctions juridiques et nuire \u00e0 la r\u00e9putation."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Conduct a privacy compliance review.",
           "Engage a privacy expert to validate compliance.",
           "Implement privacy-by-design principles."
         ],
-        fr: [
-          "Effectuer une évaluation de conformité en matière de vie privée.",
-          "Solliciter un·e expert·e en protection des renseignements personnels pour valider la conformité.",
-          "Appliquer les principes de protection de la vie privée dès la conception."
+        "fr": [
+          "Effectuer une \u00e9valuation de conformit\u00e9 en mati\u00e8re de vie priv\u00e9e.",
+          "Solliciter un\u00b7e expert\u00b7e en protection des renseignements personnels pour valider la conformit\u00e9.",
+          "Appliquer les principes de protection de la vie priv\u00e9e d\u00e8s la conception."
         ]
       }
     },
-    "A-2": {
-      risk: {
-        en: "There is a risk that the solution is not aligned with Canadian labour laws, potentially resulting in inequitable treatment, discrimination claims, or legal challenges.",
-        fr: "Il existe un risque que la solution ne soit pas alignée sur les lois canadiennes du travail, ce qui pourrait entraîner un traitement inéquitable, des plaintes pour discrimination ou des contestations juridiques."
+    "A.2": {
+      "risk": {
+        "en": "There is a risk that the solution is not aligned with Canadian labour laws, potentially resulting in inequitable treatment, discrimination claims, or legal challenges.",
+        "fr": "Il existe un risque que la solution ne soit pas align\u00e9e sur les lois canadiennes du travail, ce qui pourrait entra\u00eener un traitement in\u00e9quitable, des plaintes pour discrimination ou des contestations juridiques."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Review the solution against current labour laws.",
           "Consult legal advisors for compliance.",
           "Ensure review by HR staff versed in legal requirements."
         ],
-        fr: [
+        "fr": [
           "Examiner la solution au regard des lois du travail en vigueur.",
-          "Consulter des conseillers juridiques pour valider la conformité.",
-          "Faire réviser la solution par des spécialistes RH maîtrisant les exigences légales."
+          "Consulter des conseillers juridiques pour valider la conformit\u00e9.",
+          "Faire r\u00e9viser la solution par des sp\u00e9cialistes RH ma\u00eetrisant les exigences l\u00e9gales."
         ]
       }
     },
-    "A-3": {
-      risk: {
-        en: "There is a risk that the system fails to conform to public-sector guidelines for data management and employee information, compromising compliance and operational integrity.",
-        fr: "Il existe un risque que le système ne respecte pas les lignes directrices du secteur public sur la gestion des données et des renseignements des employés, ce qui compromettrait la conformité et l’intégrité opérationnelle."
+    "A.3": {
+      "risk": {
+        "en": "There is a risk that the system fails to conform to public-sector guidelines for data management and employee information, compromising compliance and operational integrity.",
+        "fr": "Il existe un risque que le syst\u00e8me ne respecte pas les lignes directrices du secteur public sur la gestion des donn\u00e9es et des renseignements des employ\u00e9s, ce qui compromettrait la conformit\u00e9 et l\u2019int\u00e9grit\u00e9 op\u00e9rationnelle."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Align system design with public-sector standards.",
           "Conduct a system audit.",
           "Engage stakeholders in system validation."
         ],
-        fr: [
-          "Aligner la conception du système sur les normes du secteur public.",
-          "Réaliser un audit du système.",
-          "Mobiliser les parties prenantes pour valider le système."
+        "fr": [
+          "Aligner la conception du syst\u00e8me sur les normes du secteur public.",
+          "R\u00e9aliser un audit du syst\u00e8me.",
+          "Mobiliser les parties prenantes pour valider le syst\u00e8me."
         ]
       }
     },
-    "A-4": {
-      risk: {
-        en: "There is a risk that the organization lacks proactive measures to maintain compliance with evolving legal and regulatory frameworks, increasing exposure to non-compliance.",
-        fr: "Il existe un risque que l’organisation ne mette pas en place de mesures proactives pour demeurer conforme aux cadres juridiques et réglementaires en évolution, ce qui augmente l’exposition à la non-conformité."
+    "A.4": {
+      "risk": {
+        "en": "There is a risk that the organization lacks proactive measures to maintain compliance with evolving legal and regulatory frameworks, increasing exposure to non-compliance.",
+        "fr": "Il existe un risque que l\u2019organisation ne mette pas en place de mesures proactives pour demeurer conforme aux cadres juridiques et r\u00e9glementaires en \u00e9volution, ce qui augmente l\u2019exposition \u00e0 la non-conformit\u00e9."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Establish a regulatory watch process.",
           "Update policies regularly.",
           "Provide ongoing compliance training."
         ],
-        fr: [
-          "Mettre en place une veille réglementaire.",
-          "Mettre les politiques à jour régulièrement.",
-          "Offrir une formation continue en conformité."
+        "fr": [
+          "Mettre en place une veille r\u00e9glementaire.",
+          "Mettre les politiques \u00e0 jour r\u00e9guli\u00e8rement.",
+          "Offrir une formation continue en conformit\u00e9."
         ]
       }
     },
-    "A-5": {
-      risk: {
-        en: "There is a risk that the absence of a structured process for regular compliance audits and checks could lead to undetected violations and regulatory breaches.",
-        fr: "Il existe un risque que l’absence d’un processus structuré d’audits et de vérifications réguliers entraîne des infractions non détectées et des manquements réglementaires."
+    "A.5": {
+      "risk": {
+        "en": "There is a risk that the absence of a structured process for regular compliance audits and checks could lead to undetected violations and regulatory breaches.",
+        "fr": "Il existe un risque que l\u2019absence d\u2019un processus structur\u00e9 d\u2019audits et de v\u00e9rifications r\u00e9guliers entra\u00eene des infractions non d\u00e9tect\u00e9es et des manquements r\u00e9glementaires."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Implement a compliance audit schedule.",
           "Use automated compliance tools.",
           "Assign compliance officers."
         ],
-        fr: [
-          "Mettre en place un calendrier d’audits de conformité.",
-          "Utiliser des outils automatisés de conformité.",
-          "Désigner des responsables de la conformité."
+        "fr": [
+          "Mettre en place un calendrier d\u2019audits de conformit\u00e9.",
+          "Utiliser des outils automatis\u00e9s de conformit\u00e9.",
+          "D\u00e9signer des responsables de la conformit\u00e9."
         ]
       }
     }
   },
-  B: {
-    "B-1": {
-      risk: {
-        en: "There is a risk that the solution does not implement strong encryption for data at rest and in transit, exposing sensitive employee information to unauthorized access.",
-        fr: "Il existe un risque que la solution n’applique pas un chiffrement robuste des données au repos et en transit, exposant des renseignements sensibles des employés à un accès non autorisé."
+  "B": {
+    "B.1": {
+      "risk": {
+        "en": "There is a risk that the solution does not implement strong encryption for data at rest and in transit, exposing sensitive employee information to unauthorized access.",
+        "fr": "Il existe un risque que la solution n\u2019applique pas un chiffrement robuste des donn\u00e9es au repos et en transit, exposant des renseignements sensibles des employ\u00e9s \u00e0 un acc\u00e8s non autoris\u00e9."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Use industry-standard encryption protocols.",
           "Conduct an encryption audit.",
           "Ensure encryption is enabled by default."
         ],
-        fr: [
+        "fr": [
           "Utiliser des protocoles de chiffrement conformes aux normes du secteur.",
           "Effectuer un audit du chiffrement.",
-          "S’assurer que le chiffrement est activé par défaut."
+          "S\u2019assurer que le chiffrement est activ\u00e9 par d\u00e9faut."
         ]
       }
     },
-    "B-2": {
-      risk: {
-        en: "There is a risk that user authentication and access controls are inadequate, leading to potential breaches and non-compliance with security standards.",
-        fr: "Il existe un risque que l’authentification des utilisateurs et les contrôles d’accès soient insuffisants, ce qui pourrait entraîner des atteintes à la sécurité et la non-conformité aux normes."
+    "B.2": {
+      "risk": {
+        "en": "There is a risk that user authentication and access controls are inadequate, leading to potential breaches and non-compliance with security standards.",
+        "fr": "Il existe un risque que l\u2019authentification des utilisateurs et les contr\u00f4les d\u2019acc\u00e8s soient insuffisants, ce qui pourrait entra\u00eener des atteintes \u00e0 la s\u00e9curit\u00e9 et la non-conformit\u00e9 aux normes."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Implement multi-factor authentication.",
           "Review access controls with IT.",
           "Include access-control testing in the plan."
         ],
-        fr: [
-          "Mettre en œuvre l’authentification multifacteur.",
-          "Réviser les contrôles d’accès avec les TI.",
-          "Inclure des tests de contrôles d’accès dans le plan."
+        "fr": [
+          "Mettre en \u0153uvre l\u2019authentification multifacteur.",
+          "R\u00e9viser les contr\u00f4les d\u2019acc\u00e8s avec les TI.",
+          "Inclure des tests de contr\u00f4les d\u2019acc\u00e8s dans le plan."
         ]
       }
     },
-    "B-3": {
-      risk: {
-        en: "There is a risk that the data retention and deletion policy is not comprehensive or compliant with Canadian privacy laws, resulting in over-retention or premature deletion.",
-        fr: "Il existe un risque que la politique de conservation et de suppression des données ne soit pas exhaustive ni conforme aux lois canadiennes sur la protection des renseignements personnels, entraînant une sur-conservation ou des suppressions prématurées."
+    "B.3": {
+      "risk": {
+        "en": "There is a risk that the data retention and deletion policy is not comprehensive or compliant with Canadian privacy laws, resulting in over-retention or premature deletion.",
+        "fr": "Il existe un risque que la politique de conservation et de suppression des donn\u00e9es ne soit pas exhaustive ni conforme aux lois canadiennes sur la protection des renseignements personnels, entra\u00eenant une sur-conservation ou des suppressions pr\u00e9matur\u00e9es."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Develop a compliant data lifecycle policy.",
           "Automate retention and deletion.",
           "Include data-handling policies in training."
         ],
-        fr: [
-          "Élaborer une politique du cycle de vie des données conforme.",
+        "fr": [
+          "\u00c9laborer une politique du cycle de vie des donn\u00e9es conforme.",
           "Automatiser la conservation et la suppression.",
-          "Inclure les politiques de gestion des données dans la formation."
+          "Inclure les politiques de gestion des donn\u00e9es dans la formation."
         ]
       }
     },
-    "B-4": {
-      risk: {
-        en: "There is a risk that the system does not undergo regular security audits and vulnerability assessments, leaving it exposed to undetected threats.",
-        fr: "Il existe un risque que le système ne fasse pas l’objet d’audits de sécurité et d’analyses de vulnérabilités réguliers, ce qui le laisse exposé à des menaces non détectées."
+    "B.4": {
+      "risk": {
+        "en": "There is a risk that the system does not undergo regular security audits and vulnerability assessments, leaving it exposed to undetected threats.",
+        "fr": "Il existe un risque que le syst\u00e8me ne fasse pas l\u2019objet d\u2019audits de s\u00e9curit\u00e9 et d\u2019analyses de vuln\u00e9rabilit\u00e9s r\u00e9guliers, ce qui le laisse expos\u00e9 \u00e0 des menaces non d\u00e9tect\u00e9es."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Schedule periodic security audits.",
           "Use third-party security assessments.",
           "Implement continuous monitoring tools."
         ],
-        fr: [
-          "Planifier des audits de sécurité périodiques.",
-          "Recourir à des évaluations de sécurité indépendantes.",
+        "fr": [
+          "Planifier des audits de s\u00e9curit\u00e9 p\u00e9riodiques.",
+          "Recourir \u00e0 des \u00e9valuations de s\u00e9curit\u00e9 ind\u00e9pendantes.",
           "Mettre en place des outils de surveillance continue."
         ]
       }
     },
-    "B-5": {
-      risk: {
-        en: "There is a risk that the absence of incident response plans and breach notification mechanisms could delay mitigation and violate Canadian requirements.",
-        fr: "Il existe un risque qu’en l’absence de plans d’intervention et de mécanismes d’avis d’atteinte à la protection des renseignements, l’atténuation soit retardée et les exigences canadiennes ne soient pas respectées."
+    "B.5": {
+      "risk": {
+        "en": "There is a risk that the absence of incident response plans and breach notification mechanisms could delay mitigation and violate Canadian requirements.",
+        "fr": "Il existe un risque qu\u2019en l\u2019absence de plans d\u2019intervention et de m\u00e9canismes d\u2019avis d\u2019atteinte \u00e0 la protection des renseignements, l\u2019att\u00e9nuation soit retard\u00e9e et les exigences canadiennes ne soient pas respect\u00e9es."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Develop and test incident response plans.",
           "Define breach-notification protocols.",
           "Train staff on incident handling."
         ],
-        fr: [
-          "Élaborer et tester des plans d’intervention en cas d’incident.",
-          "Définir des protocoles d’avis d’atteinte.",
-          "Former le personnel à la gestion des incidents."
+        "fr": [
+          "\u00c9laborer et tester des plans d\u2019intervention en cas d\u2019incident.",
+          "D\u00e9finir des protocoles d\u2019avis d\u2019atteinte.",
+          "Former le personnel \u00e0 la gestion des incidents."
         ]
       }
     }
   },
-  C: {
-    "C-1": {
-      risk: {
-        en: "There is a risk that the HR solution does not integrate with existing IT infrastructure or meet data-exchange standards, causing inefficiencies and higher customization costs.",
-        fr: "Il existe un risque que la solution RH ne s’intègre pas à l’infrastructure TI existante ni aux normes d’échange de données, entraînant des inefficacités et des coûts de personnalisation plus élevés."
+  "C": {
+    "C.1": {
+      "risk": {
+        "en": "There is a risk that the HR solution does not integrate with existing IT infrastructure or meet data-exchange standards, causing inefficiencies and higher customization costs.",
+        "fr": "Il existe un risque que la solution RH ne s\u2019int\u00e8gre pas \u00e0 l\u2019infrastructure TI existante ni aux normes d\u2019\u00e9change de donn\u00e9es, entra\u00eenant des inefficacit\u00e9s et des co\u00fbts de personnalisation plus \u00e9lev\u00e9s."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Engage IT early in the process.",
           "Conduct integration testing.",
           "Use standard APIs and protocols."
         ],
-        fr: [
-          "Mobiliser les TI dès le début.",
-          "Effectuer des essais d’intégration.",
-          "Utiliser des API et des protocoles normalisés."
+        "fr": [
+          "Mobiliser les TI d\u00e8s le d\u00e9but.",
+          "Effectuer des essais d\u2019int\u00e9gration.",
+          "Utiliser des API et des protocoles normalis\u00e9s."
         ]
       }
     },
-    "C-2": {
-      risk: {
-        en: "There is a risk that the technology does not support the digital strategy or enhance analytics, limiting value for decision-making.",
-        fr: "Il existe un risque que la technologie ne soutienne pas la stratégie numérique ni l’analytique, limitant sa valeur pour la prise de décision."
+    "C.2": {
+      "risk": {
+        "en": "There is a risk that the technology does not support the digital strategy or enhance analytics, limiting value for decision-making.",
+        "fr": "Il existe un risque que la technologie ne soutienne pas la strat\u00e9gie num\u00e9rique ni l\u2019analytique, limitant sa valeur pour la prise de d\u00e9cision."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Align technology with the digital roadmap.",
           "Include analytics capabilities in the design.",
           "Review strategic alignment regularly."
         ],
-        fr: [
-          "Arrimer la technologie à la feuille de route numérique.",
-          "Inclure des capacités d’analyse dès la conception.",
-          "Réviser régulièrement l’alignement stratégique."
+        "fr": [
+          "Arrimer la technologie \u00e0 la feuille de route num\u00e9rique.",
+          "Inclure des capacit\u00e9s d\u2019analyse d\u00e8s la conception.",
+          "R\u00e9viser r\u00e9guli\u00e8rement l\u2019alignement strat\u00e9gique."
         ]
       }
     },
-    "C-3": {
-      risk: {
-        en: "There is a risk that insufficient training, scaling, and monitoring plans hinder implementation and long-term adoption.",
-        fr: "Il existe un risque que l’absence de plans suffisants de formation, de mise à l’échelle et de suivi nuise à la mise en œuvre et à l’adoption à long terme."
+    "C.3": {
+      "risk": {
+        "en": "There is a risk that insufficient training, scaling, and monitoring plans hinder implementation and long-term adoption.",
+        "fr": "Il existe un risque que l\u2019absence de plans suffisants de formation, de mise \u00e0 l\u2019\u00e9chelle et de suivi nuise \u00e0 la mise en \u0153uvre et \u00e0 l\u2019adoption \u00e0 long terme."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Develop a detailed training plan.",
           "Monitor adoption metrics.",
           "Provide ongoing support."
         ],
-        fr: [
-          "Élaborer un plan de formation détaillé.",
-          "Suivre des indicateurs d’adoption.",
+        "fr": [
+          "\u00c9laborer un plan de formation d\u00e9taill\u00e9.",
+          "Suivre des indicateurs d\u2019adoption.",
           "Offrir un soutien continu."
         ]
       }
     }
   },
-  D: {
-    "D-1": {
-      risk: {
-        en: "There is a risk that the HR solution lacks an intuitive interface or sufficient training resources, reducing user adoption and effectiveness across diverse groups.",
-        fr: "Il existe un risque que la solution RH manque d’une interface intuitive ou de ressources de formation suffisantes, ce qui réduit l’adoption et l’efficacité auprès de divers groupes d’utilisateurs."
+  "D": {
+    "D.1": {
+      "risk": {
+        "en": "There is a risk that the HR solution lacks an intuitive interface or sufficient training resources, reducing user adoption and effectiveness across diverse groups.",
+        "fr": "Il existe un risque que la solution RH manque d\u2019une interface intuitive ou de ressources de formation suffisantes, ce qui r\u00e9duit l\u2019adoption et l\u2019efficacit\u00e9 aupr\u00e8s de divers groupes d\u2019utilisateurs."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Conduct user-experience testing.",
           "Provide multilingual training materials.",
           "Plan for responsive user support channels."
         ],
-        fr: [
-          "Réaliser des tests d’expérience utilisateur.",
-          "Fournir du matériel de formation multilingue.",
-          "Prévoir des canaux de soutien aux utilisateurs."
+        "fr": [
+          "R\u00e9aliser des tests d\u2019exp\u00e9rience utilisateur.",
+          "Fournir du mat\u00e9riel de formation multilingue.",
+          "Pr\u00e9voir des canaux de soutien aux utilisateurs."
         ]
       }
     },
-    "D-2": {
-      risk: {
-        en: "There is a risk that training programs are not comprehensive or inclusive, failing to support skill development and accommodate diverse needs.",
-        fr: "Il existe un risque que les programmes de formation ne soient pas complets ni inclusifs, ne soutenant pas le développement des compétences ni l’accommodement de divers besoins."
+    "D.2": {
+      "risk": {
+        "en": "There is a risk that training programs are not comprehensive or inclusive, failing to support skill development and accommodate diverse needs.",
+        "fr": "Il existe un risque que les programmes de formation ne soient pas complets ni inclusifs, ne soutenant pas le d\u00e9veloppement des comp\u00e9tences ni l\u2019accommodement de divers besoins."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Design inclusive training programs.",
           "Align training with skill-development goals.",
           "Evaluate training effectiveness."
         ],
-        fr: [
+        "fr": [
           "Concevoir des programmes de formation inclusifs.",
-          "Arrimer la formation aux objectifs de développement des compétences.",
-          "Évaluer l’efficacité de la formation."
+          "Arrimer la formation aux objectifs de d\u00e9veloppement des comp\u00e9tences.",
+          "\u00c9valuer l\u2019efficacit\u00e9 de la formation."
         ]
       }
     }
   },
-  E: {
-    "E-1": {
-      risk: {
-        en: "There is a risk that the HR solution does not demonstrate a clear financial advantage, potentially exceeding budget constraints without delivering expected efficiency gains.",
-        fr: "Il existe un risque que la solution RH ne démontre pas un avantage financier clair, dépassant possiblement les contraintes budgétaires sans offrir les gains d’efficacité attendus."
+  "E": {
+    "E.1": {
+      "risk": {
+        "en": "There is a risk that the HR solution does not demonstrate a clear financial advantage, potentially exceeding budget constraints without delivering expected efficiency gains.",
+        "fr": "Il existe un risque que la solution RH ne d\u00e9montre pas un avantage financier clair, d\u00e9passant possiblement les contraintes budg\u00e9taires sans offrir les gains d\u2019efficacit\u00e9 attendus."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Perform a cost-benefit analysis.",
           "Monitor ROI metrics.",
           "Optimize resource allocation."
         ],
-        fr: [
-          "Effectuer une analyse coûts-avantages.",
+        "fr": [
+          "Effectuer une analyse co\u00fbts-avantages.",
           "Suivre les indicateurs de RSI.",
-          "Optimiser l’allocation des ressources."
+          "Optimiser l\u2019allocation des ressources."
         ]
       }
     },
-    "E-2": {
-      risk: {
-        en: "There is a risk that the solution fails to provide long-term savings or operational improvements, undermining ROI.",
-        fr: "Il existe un risque que la solution n’apporte pas d’économies à long terme ni d’améliorations opérationnelles, ce qui compromet le RSI."
+    "E.2": {
+      "risk": {
+        "en": "There is a risk that the solution fails to provide long-term savings or operational improvements, undermining ROI.",
+        "fr": "Il existe un risque que la solution n\u2019apporte pas d\u2019\u00e9conomies \u00e0 long terme ni d\u2019am\u00e9liorations op\u00e9rationnelles, ce qui compromet le RSI."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Track performance indicators.",
           "Review operational efficiency.",
           "Adjust the implementation strategy."
         ],
-        fr: [
+        "fr": [
           "Suivre les indicateurs de performance.",
-          "Réviser l’efficacité opérationnelle.",
-          "Ajuster la stratégie de mise en œuvre."
+          "R\u00e9viser l\u2019efficacit\u00e9 op\u00e9rationnelle.",
+          "Ajuster la strat\u00e9gie de mise en \u0153uvre."
         ]
       }
     }
   },
-  F: {
-    "F-1": {
-      risk: {
-        en: "There is a risk that the vendor lacks a proven track record of reliability and stability, increasing the likelihood of service disruptions or unmet expectations.",
-        fr: "Il existe un risque que le fournisseur n’ait pas fait preuve de fiabilité et de stabilité, ce qui augmente la probabilité d’interruptions de service ou d’attentes non satisfaites."
+  "F": {
+    "F.1": {
+      "risk": {
+        "en": "There is a risk that the vendor lacks a proven track record of reliability and stability, increasing the likelihood of service disruptions or unmet expectations.",
+        "fr": "Il existe un risque que le fournisseur n\u2019ait pas fait preuve de fiabilit\u00e9 et de stabilit\u00e9, ce qui augmente la probabilit\u00e9 d\u2019interruptions de service ou d\u2019attentes non satisfaites."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Review vendor history and references.",
           "Include performance clauses in contracts.",
           "Monitor vendor performance."
         ],
-        fr: [
-          "Examiner l’historique et les références du fournisseur.",
+        "fr": [
+          "Examiner l\u2019historique et les r\u00e9f\u00e9rences du fournisseur.",
           "Inclure des clauses de performance dans les contrats.",
           "Surveiller le rendement du fournisseur."
         ]
       }
     },
-    "F-2": {
-      risk: {
-        en: "There is a risk that vendor support and maintenance are ineffective or delayed, impacting system performance and user satisfaction.",
-        fr: "Il existe un risque que le soutien et la maintenance du fournisseur soient inefficaces ou tardifs, ce qui nuit au rendement du système et à la satisfaction des utilisateurs."
+    "F.2": {
+      "risk": {
+        "en": "There is a risk that vendor support and maintenance are ineffective or delayed, impacting system performance and user satisfaction.",
+        "fr": "Il existe un risque que le soutien et la maintenance du fournisseur soient inefficaces ou tardifs, ce qui nuit au rendement du syst\u00e8me et \u00e0 la satisfaction des utilisateurs."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Define SLAs in contracts.",
           "Evaluate support responsiveness.",
           "Maintain escalation procedures."
         ],
-        fr: [
-          "Définir des ANS (SLA) dans les contrats.",
-          "Évaluer la réactivité du soutien.",
-          "Maintenir des procédures d’escalade."
+        "fr": [
+          "D\u00e9finir des ANS (SLA) dans les contrats.",
+          "\u00c9valuer la r\u00e9activit\u00e9 du soutien.",
+          "Maintenir des proc\u00e9dures d\u2019escalade."
         ]
       }
     }
   },
-  G: {
-    "G-1": {
-      risk: {
-        en: "There is a risk that the initiative lacks a comprehensive workforce strategy aligned with strategic goals, leading to skill gaps and weak succession planning.",
-        fr: "Il existe un risque que l’initiative n’ait pas de stratégie de main-d’œuvre complète alignée sur les objectifs stratégiques, entraînant des lacunes de compétences et une planification de la relève insuffisante."
+  "G": {
+    "G.1": {
+      "risk": {
+        "en": "There is a risk that the initiative lacks a comprehensive workforce strategy aligned with strategic goals, leading to skill gaps and weak succession planning.",
+        "fr": "Il existe un risque que l\u2019initiative n\u2019ait pas de strat\u00e9gie de main-d\u2019\u0153uvre compl\u00e8te align\u00e9e sur les objectifs strat\u00e9giques, entra\u00eenant des lacunes de comp\u00e9tences et une planification de la rel\u00e8ve insuffisante."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Develop a workforce strategy.",
           "Conduct a skills-gap analysis.",
           "Implement succession planning for key roles."
         ],
-        fr: [
-          "Élaborer une stratégie de main-d’œuvre.",
-          "Effectuer une analyse des écarts de compétences.",
-          "Mettre en place une planification de la relève pour les rôles clés."
+        "fr": [
+          "\u00c9laborer une strat\u00e9gie de main-d\u2019\u0153uvre.",
+          "Effectuer une analyse des \u00e9carts de comp\u00e9tences.",
+          "Mettre en place une planification de la rel\u00e8ve pour les r\u00f4les cl\u00e9s."
         ]
       }
     },
-    "G-2": {
-      risk: {
-        en: "There is a risk that workforce planning does not systematically assess capabilities or promote diversity and inclusion, resulting in misaligned talent strategies.",
-        fr: "Il existe un risque que la planification de la main-d’œuvre n’évalue pas systématiquement les capacités ni ne favorise la diversité et l’inclusion, ce qui mène à des stratégies de talents mal alignées."
+    "G.2": {
+      "risk": {
+        "en": "There is a risk that workforce planning does not systematically assess capabilities or promote diversity and inclusion, resulting in misaligned talent strategies.",
+        "fr": "Il existe un risque que la planification de la main-d\u2019\u0153uvre n\u2019\u00e9value pas syst\u00e9matiquement les capacit\u00e9s ni ne favorise la diversit\u00e9 et l\u2019inclusion, ce qui m\u00e8ne \u00e0 des strat\u00e9gies de talents mal align\u00e9es."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Use workforce analytics tools.",
           "Incorporate D&I goals in planning.",
           "Review workforce plans regularly."
         ],
-        fr: [
-          "Utiliser des outils d’analytique de la main-d’œuvre.",
-          "Intégrer des objectifs de D&I dans la planification.",
-          "Réviser régulièrement les plans de main-d’œuvre."
+        "fr": [
+          "Utiliser des outils d\u2019analytique de la main-d\u2019\u0153uvre.",
+          "Int\u00e9grer des objectifs de D&I dans la planification.",
+          "R\u00e9viser r\u00e9guli\u00e8rement les plans de main-d\u2019\u0153uvre."
         ]
       }
     }
   },
-  H: {
-    "H-1": {
-      risk: {
-        en: "There is a risk that the initiative does not effectively foster a positive workplace culture, potentially reducing well-being, engagement, and collaboration.",
-        fr: "Il existe un risque que l’initiative ne favorise pas efficacement une culture de travail positive, ce qui pourrait réduire le bien-être, l’engagement et la collaboration."
+  "H": {
+    "H.1": {
+      "risk": {
+        "en": "There is a risk that the initiative does not effectively foster a positive workplace culture, potentially reducing well-being, engagement, and collaboration.",
+        "fr": "Il existe un risque que l\u2019initiative ne favorise pas efficacement une culture de travail positive, ce qui pourrait r\u00e9duire le bien-\u00eatre, l\u2019engagement et la collaboration."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Promote employee feedback channels.",
           "Recognize contributions.",
           "Support work-life balance initiatives."
         ],
-        fr: [
-          "Promouvoir les mécanismes de rétroaction des employés.",
-          "Reconnaître les contributions.",
-          "Soutenir les initiatives d’équilibre travail-vie personnelle."
+        "fr": [
+          "Promouvoir les m\u00e9canismes de r\u00e9troaction des employ\u00e9s.",
+          "Reconna\u00eetre les contributions.",
+          "Soutenir les initiatives d\u2019\u00e9quilibre travail-vie personnelle."
         ]
       }
     }
   },
-  I: {
-    "I-1": {
-      risk: {
-        en: "There is a risk that the program lacks clear diversity and inclusion goals, effective strategies, or regular evaluation, limiting impact on equitable treatment and cultural competence.",
-        fr: "Il existe un risque que le programme manque d’objectifs clairs en matière de diversité et d’inclusion, de stratégies efficaces ou d’évaluations régulières, ce qui limite son impact sur l’équité et la compétence culturelle."
+  "I": {
+    "I.1": {
+      "risk": {
+        "en": "There is a risk that the program lacks clear diversity and inclusion goals, effective strategies, or regular evaluation, limiting impact on equitable treatment and cultural competence.",
+        "fr": "Il existe un risque que le programme manque d\u2019objectifs clairs en mati\u00e8re de diversit\u00e9 et d\u2019inclusion, de strat\u00e9gies efficaces ou d\u2019\u00e9valuations r\u00e9guli\u00e8res, ce qui limite son impact sur l\u2019\u00e9quit\u00e9 et la comp\u00e9tence culturelle."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Set measurable D&I goals.",
           "Provide inclusivity training and address bias.",
           "Evaluate program outcomes regularly."
         ],
-        fr: [
-          "Fixer des objectifs mesurables en matière de D&I.",
-          "Offrir une formation à l’inclusion et traiter les biais.",
-          "Évaluer régulièrement les résultats du programme."
+        "fr": [
+          "Fixer des objectifs mesurables en mati\u00e8re de D&I.",
+          "Offrir une formation \u00e0 l\u2019inclusion et traiter les biais.",
+          "\u00c9valuer r\u00e9guli\u00e8rement les r\u00e9sultats du programme."
         ]
       }
     }
   },
-  J: {
-    "J-1": {
-      risk: {
-        en: "There is a risk that restructuring is misaligned with strategic objectives or poorly communicated, leading to confusion, reduced morale, and workload disruptions.",
-        fr: "Il existe un risque que la restructuration soit mal alignée sur les objectifs stratégiques ou mal communiquée, entraînant confusion, baisse du moral et perturbations des charges de travail."
+  "J": {
+    "J.1": {
+      "risk": {
+        "en": "There is a risk that restructuring is misaligned with strategic objectives or poorly communicated, leading to confusion, reduced morale, and workload disruptions.",
+        "fr": "Il existe un risque que la restructuration soit mal align\u00e9e sur les objectifs strat\u00e9giques ou mal communiqu\u00e9e, entra\u00eenant confusion, baisse du moral et perturbations des charges de travail."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Align restructuring with strategy.",
           "Develop clear communication and transition plans.",
           "Monitor employee engagement during change."
         ],
-        fr: [
-          "Arrimer la restructuration à la stratégie.",
-          "Élaborer des plans clairs de communication et de transition.",
-          "Surveiller l’engagement des employés pendant le changement."
+        "fr": [
+          "Arrimer la restructuration \u00e0 la strat\u00e9gie.",
+          "\u00c9laborer des plans clairs de communication et de transition.",
+          "Surveiller l\u2019engagement des employ\u00e9s pendant le changement."
         ]
       }
     }
   },
-  K: {
-    "K-1": {
-      risk: {
-        en: "There is a risk that new policies are not aligned with strategic goals or compliance requirements, and lack effective communication, training, or monitoring.",
-        fr: "Il existe un risque que les nouvelles politiques ne soient pas alignées sur les objectifs stratégiques ni les exigences de conformité, et qu’elles manquent de communication, de formation ou de suivi efficaces."
+  "K": {
+    "K.1": {
+      "risk": {
+        "en": "There is a risk that new policies are not aligned with strategic goals or compliance requirements, and lack effective communication, training, or monitoring.",
+        "fr": "Il existe un risque que les nouvelles politiques ne soient pas align\u00e9es sur les objectifs strat\u00e9giques ni les exigences de conformit\u00e9, et qu\u2019elles manquent de communication, de formation ou de suivi efficaces."
       },
-      mit: {
-        en: [
+      "mit": {
+        "en": [
           "Align policies with strategy and standards.",
           "Communicate policies clearly.",
           "Monitor policy implementation and effectiveness."
         ],
-        fr: [
-          "Arrimer les politiques à la stratégie et aux normes.",
+        "fr": [
+          "Arrimer les politiques \u00e0 la strat\u00e9gie et aux normes.",
           "Communiquer clairement les politiques.",
-          "Suivre la mise en œuvre et l’efficacité des politiques."
+          "Suivre la mise en \u0153uvre et l\u2019efficacit\u00e9 des politiques."
         ]
       }
     }
   }
-};
+}
