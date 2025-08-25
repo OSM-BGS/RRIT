@@ -370,9 +370,11 @@ function updateSummaryMessage(isEditMode) {
 // Helper function to generate question card markup
 function questionCardMarkup(catId, q, idx) {
   const qid = q.qid || `${catId}-${idx+1}`;
-  const enQ = q.question?.en || q.question || q.question_en || '';
+
+  // Pick ONE language string for the question, with safe fallback
+  const enQ = q.question?.en || q.question_en || (typeof q.question === 'string' ? q.question : '');
   const frQ = q.question?.fr || q.question_fr || '';
-  const questionText = t(enQ, frQ);
+  const questionText = t(enQ, frQ); // active language only
 
   const rawAnswer = (q.answer || '').toString();
   const norm = normalizeAnswer(rawAnswer);
@@ -402,7 +404,7 @@ function questionCardMarkup(catId, q, idx) {
   return `
     <li class="q-card">
       <div class="q-head">
-        <div class="q-title"><strong>${t('Q','Q')}${idx+1}.</strong> ${questionText}</div>
+        <div class="q-title">${questionText}</div>
         <div class="q-meta"><em>${t('Answer','Réponse')}:</em> ${answerLabel} ${sevBadge} ${critBadge}</div>
       </div>
       ${showRisk ? `
