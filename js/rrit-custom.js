@@ -13,6 +13,24 @@ window.FEATURES = window.FEATURES || { useAccordionSummary: false };
   } catch {}
 })();
 
+// === Load per-question annex (bilingual) ===
+async function loadAnnex() {
+  if (window.RISK_ANNEX) return window.RISK_ANNEX;
+  const base = document.querySelector('base')?.getAttribute('href') || '';
+  // Adjust automatically if site serves from /docs
+  const likelyDocs = location.pathname.includes('/docs/');
+  const url = (likelyDocs ? 'js/risk-annex.json' : 'js/risk-annex.json') + '?v=1';
+  try {
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Annex HTTP ' + res.status);
+    window.RISK_ANNEX = await res.json();
+  } catch (e) {
+    console.warn('Annex load failed; proceeding without annex.', e);
+    window.RISK_ANNEX = window.RISK_ANNEX || {};
+  }
+  return window.RISK_ANNEX;
+}
+
 /* =========================================================
    Section 1: Configuration and Constants
    ========================================================= */
@@ -289,7 +307,12 @@ function generateSummary() {
     
     // Use accordion or table based on feature flag
     if (window.FEATURES && window.FEATURES.useAccordionSummary) {
-        renderSummaryAccordion();
+        loadAnnex().then(() => {
+            renderSummaryAccordion();
+        }).catch(() => {
+            // Fail open: render without annex if fetch fails
+            renderSummaryAccordion();
+        });
     } else {
         generateSummaryTable();
     }
@@ -330,13 +353,13 @@ function questionCardMarkup(catId, q, idx) {
   const frQ = q.question?.fr || q.question_fr || '';
   const ans = (q.answer || '').toString();
 
-  const fromAnnex = (RISK_ANNEX?.[catId]?.[qid]) || null;
-  const riskEn = q.riskStatement?.en || q.riskStatementEn || fromAnnex?.risk?.en || '';
-  const riskFr = q.riskStatement?.fr || q.riskStatementFr || fromAnnex?.risk?.fr || '';
-  const mitEn  = q.mitigations?.en || q.mitigationsEn || fromAnnex?.mit?.en || [];
-  const mitFr  = q.mitigations?.fr || q.mitigationsFr || fromAnnex?.mit?.fr || [];
-  const sev    = q.severity || fromAnnex?.severity || null;
-  const crit   = !!(q.critical || fromAnnex?.critical);
+  const annex = (window.RISK_ANNEX?.[catId]?.[qid]) || null;
+  const riskEn = q.riskStatement?.en || q.riskStatementEn || annex?.risk?.en || '';
+  const riskFr = q.riskStatement?.fr || q.riskStatementFr || annex?.risk?.fr || '';
+  const mitEn  = q.mitigations?.en || q.mitigationsEn || annex?.mit?.en || [];
+  const mitFr  = q.mitigations?.fr || q.mitigationsFr || annex?.mit?.fr || [];
+  const sev    = q.severity || annex?.severity || null;
+  const crit   = !!(q.critical || annex?.critical);
 
   const sevBadge = sev ? `<span class="badge sev-${sev}">${sev}</span>` : '';
   const critBadge = crit ? `<span class="badge crit">Critical</span>` : '';
@@ -1063,7 +1086,12 @@ function updateButtonText() {
 function regenerateSummaryTable() {
     if (window.collectedResponses && window.collectedResponses.length > 0) {
         if (window.FEATURES && window.FEATURES.useAccordionSummary) {
-            renderSummaryAccordion();
+            loadAnnex().then(() => {
+                renderSummaryAccordion();
+            }).catch(() => {
+                // Fail open: render without annex if fetch fails
+                renderSummaryAccordion();
+            });
         } else {
             generateSummaryTable();
         }
