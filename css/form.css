@@ -541,14 +541,18 @@ legend{font-weight:700; border:none; border-bottom: none;}
 .panel-grid{display:grid;grid-template-columns:1fr;gap:12px}@media(min-width:900px){.panel-grid{grid-template-columns:1.1fr .9fr}}
 .box{border:1px dashed #d3d3d3;border-radius:8px;padding:10px}
 
-/* Question Cards CSS */
+/* Question cards */
 .qa-cards{list-style:decimal; padding-left:1.25rem; margin:0}
-.q-card{margin:0 0 12px 0; padding:12px; border:1px dashed #d3d3d3; border-radius:8px; background:#fff}
+.q-card{margin:0 0 12px; padding:12px; border:1px dashed #d9d9d9; border-radius:10px; background:#fff}
 .q-head{display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px}
-.q-title{font-weight:600}
+.q-title{font-weight:700; font-size:1.05rem; line-height:1.4}
 .q-meta{color:#555}
-.q-sec{font-size:1.125rem; line-height:1.35; font-weight:600; margin:.5rem 0 .25rem}
-.q-body{margin-top:8px; display:grid; grid-template-columns:1fr; gap:8px}
+
+/* Bigger, bolder section titles */
+.q-card .q-sec{font-size:1.25rem; line-height:1.35; font-weight:700; margin:.6rem 0 .35rem}
+
+/* Two-up layout for details on desktop */
+.q-body{margin-top:8px; display:grid; grid-template-columns:1fr; gap:10px}
 @media (min-width: 900px){ .q-body{grid-template-columns:1fr 1fr} }
 .badge{display:inline-block; border:1px solid #ccc; border-radius:999px; padding:2px 8px; font-size:.85em; margin-left:6px}
 .badge.crit{border-style:solid}
