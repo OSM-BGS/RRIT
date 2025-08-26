@@ -503,10 +503,10 @@ function renderSummaryAccordion() {
   // Overview cards
   const ov = document.getElementById('summaryOverview');
   if (ov) ov.innerHTML = `
-    <div class="card"><strong>Categories assessed</strong><div>${cats.length}</div></div>
-    <div class="card"><strong>High risk</strong><div>${counts.high||0}</div></div>
-    <div class="card"><strong>Medium risk</strong><div>${counts.medium||0}</div></div>
-    <div class="card"><strong>Low risk</strong><div>${counts.low||0}</div></div>`;
+    <div class="card"><strong>${t('Categories assessed', 'Catégories évaluées')}</strong><div>${cats.length}</div></div>
+    <div class="card"><strong>${t('High risk', 'Risque élevé')}</strong><div>${counts.high||0}</div></div>
+    <div class="card"><strong>${t('Medium risk', 'Risque moyen')}</strong><div>${counts.medium||0}</div></div>
+    <div class="card"><strong>${t('Low risk', 'Faible risque')}</strong><div>${counts.low||0}</div></div>`;
 
   // Category names
   const names = {
@@ -522,7 +522,12 @@ function renderSummaryAccordion() {
     J:{en:'Accessibility & Inclusion', fr:'Accessibilité et inclusion'},
     K:{en:'Policy Development & Implementation', fr:'Élaboration & mise en œuvre des politiques'}
   };
-  const ragTxt = {high:'High risk', medium:'Medium risk', low:'Low risk', notReviewed:'Not reviewed'};
+  const ragTxt = {
+    high: t('High risk', 'Risque élevé'), 
+    medium: t('Medium risk', 'Risque moyen'), 
+    low: t('Low risk', 'Faible risque'), 
+    notReviewed: t('Not reviewed', 'Non examiné')
+  };
   const lights = r => r==='high' ? '<span class="dot active"></span><span class="dot"></span><span class="dot"></span>'
                      : r==='medium'? '<span class="dot"></span><span class="dot active"></span><span class="dot"></span>'
                      : r==='low'   ? '<span class="dot"></span><span class="dot"></span><span class="dot active"></span>'
@@ -548,7 +553,11 @@ function renderSummaryAccordion() {
             <span class="cat-pill">${c.id}</span>
             <span class="cat-name"><span lang="en">${nm.en}</span><span lang="fr">${nm.fr}</span></span>
           </span>
-          <span class="rag"><span class="rag-lights" aria-hidden="true">${lights(c.rag)}</span><span class="rag-text">${ragTxt[c.rag]}</span></span>
+          <span class="rag">
+            <span class="rag-lights" aria-hidden="true">${lights(c.rag)}</span>
+            <span class="rag-text">${ragTxt[c.rag]}</span>
+            <span class="sr-only">${t('Risk level:', 'Niveau de risque:')} ${ragTxt[c.rag]}</span>
+          </span>
           <span class="chev">▼</span>
         </button>
         <div class="acc-panel" id="panel-${c.id}" aria-hidden="true" style="display:none;">

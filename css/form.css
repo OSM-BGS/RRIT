@@ -20,6 +20,20 @@
 /* Generic helpers */
 .hidden{display:none!important;}
 
+/* Screen reader only content */
+.sr-only, .wb-inv {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  border: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap !important;
+  clip-path: inset(100%) !important;
+  clip: rect(0 0 0 0) !important;
+  overflow: hidden !important;
+}
+
 /* Form layout -------------------------------------------------- */
 fieldset{border:none;}
 legend{font-weight:700; border:none; border-bottom: none;}
