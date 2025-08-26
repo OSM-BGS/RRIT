@@ -52,36 +52,42 @@ function translateAnswer(ans) {
   return (map[norm] && map[norm][lang]) ? map[norm][lang] : (ans || '');
 }
 
+// Remove leading numbering like "Q1.", "Question 2:", "3)", "4 -", "5 —", etc.
+function stripNumPrefix(s) {
+  return (s || '')
+    .toString()
+    .trim()
+    // Drop "Q1", "Question 1", optionally with punctuation
+    .replace(/^(?:q(?:uestion)?\s*)?\d+\s*[:.\)\-–—]\s*/i, '')
+    // Also handle plain "1." or "1 - " at start
+    .replace(/^\d+\s*[:.\)\-–—]\s*/, '')
+    .trim();
+}
+
 // Extract a single-language question string, with fallback when only a bilingual string exists
 function extractQuestionText(q) {
-  const lang = getLang();
+  const lang = getLang(); // assumes you already have getLang(): 'en'|'fr'
   const rawEn = q?.question?.en || q?.question_en || (typeof q?.question === 'string' && !q?.question?.fr ? q.question : '');
   const rawFr = q?.question?.fr || q?.question_fr || '';
-  if (lang === 'fr' && rawFr) return rawFr;
-  if (lang !== 'fr' && rawEn) return rawEn;
 
-  // Heuristic split for bilingual combined strings, e.g., "1. EN ? 1. FR ?" or "EN ? FR ?"
+  // Prefer explicit language fields
+  if (lang === 'fr' && rawFr) return stripNumPrefix(rawFr);
+  if (lang !== 'fr' && rawEn) return stripNumPrefix(rawEn);
+
+  // Fallback: combined bilingual strings → split heuristically, then strip
   let s = (q?.question || '').toString().trim();
   if (!s) return '';
-  s = s.replace(/^Q\d+\.\s*/i, '').trim();      // drop "Q1. "
-  s = s.replace(/^\d+\.\s*/, '').trim();        // drop leading "1. "
 
-  // Try: capture until first '?' then look for a new numbered segment "1. " for the second language
+  // Pattern 1: "EN ?   2. FR ?" (numbered second part)
   let m = s.match(/^(.+?\?)(?:\s*\d+\.\s*)(.+)$/);
-  if (m) {
-    const partEN = m[1].trim();
-   const partFR = m[2].trim();
-    return lang === 'fr' ? partFR : partEN;
-  }
-  // Fallback: split on separators around a first question mark (handles "EN ? — FR ?" variants)
+  if (m) return stripNumPrefix(lang === 'fr' ? m[2] : m[1]);
+
+  // Pattern 2: "EN ? — FR ?" or "EN ? / FR ?" or "EN ? - FR ?"
   m = s.match(/^(.+?\?)[\s/–-]+(.+)$/);
-  if (m) {
-    const partEN = m[1].trim();
-    const partFR = m[2].trim();
-    return lang === 'fr' ? partFR : partEN;
-  }
-  // Last resort: return string as-is (better to show something than nothing)
-  return s;
+  if (m) return stripNumPrefix(lang === 'fr' ? m[2] : m[1]);
+
+  // Last resort: show as-is, but without numbering
+  return stripNumPrefix(s);
 }
 
 /* =========================================================

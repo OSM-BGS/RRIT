@@ -542,8 +542,12 @@ legend{font-weight:700; border:none; border-bottom: none;}
 .box{border:1px dashed #d3d3d3;border-radius:8px;padding:10px}
 
 /* Question cards */
-.qa-cards{list-style:decimal; padding-left:1.25rem; margin:0}
-.qa-cards>li::marker{font-weight:700}
+.qa-cards { list-style: decimal; padding-left: 1.25rem; margin: 0; }
+.qa-cards > li::marker { font-weight: 700; }
+
+/* (optional) tighten title + meta */
+.q-card .q-title { font-weight: 700; font-size: 1.15rem; line-height: 1.45; }
+.q-card .q-meta  { font-size: 1.0625rem; line-height: 1.45; }
 .q-card{margin:0 0 12px; padding:12px; border:1px dashed #d9d9d9; border-radius:10px; background:#fff; font-size:1rem}
 .q-head{display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px}
 .q-title{font-weight:700; font-size:1.15rem; line-height:1.45}  /* ↑ bigger question text */
