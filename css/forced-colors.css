@@ -1,0 +1,50 @@
+/* =============================================================
+   FORCED COLORS SUPPORT (Windows High Contrast Mode)
+   Ensures the application works with system color themes
+   ============================================================= */
+
+@media (forced-colors: active) {
+  /* Ensure borders remain visible in high contrast mode */
+  .acc-trigger {
+    border: 1px solid !important;
+  }
+  
+  .acc-panel {
+    border: 1px solid !important;
+  }
+  
+  /* Ensure RAG indicators remain distinguishable */
+  .dot {
+    border: 2px solid !important;
+    forced-color-adjust: none;
+  }
+  
+  .dot.active {
+    background: CanvasText !important;
+  }
+  
+  /* Ensure form elements remain visible */
+  .panel {
+    border: 1px solid !important;
+  }
+  
+  /* Maintain focus indicators */
+  button:focus,
+  input:focus,
+  textarea:focus,
+  select:focus,
+  a:focus {
+    outline: 2px solid !important;
+    outline-offset: 2px !important;
+  }
+  
+  /* Ensure text remains readable */
+  .risk-high,
+  .risk-medium,
+  .risk-low,
+  .text-muted {
+    background: Canvas !important;
+    color: CanvasText !important;
+    border: 1px solid !important;
+  }
+}
