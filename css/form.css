@@ -552,6 +552,23 @@ legend{font-weight:700; border:none; border-bottom: none;}
 /* Bigger, bolder section titles inside cards */
 .q-card .q-sec{font-size:1.25rem; line-height:1.35; font-weight:700; margin:.6rem 0 .35rem}
 
+/* Make the meta line bigger */
+.q-card .q-meta {
+  font-size: 1.0625rem;   /* ~17px; try 1.125rem (~18px) if you want larger */
+  line-height: 1.45;
+}
+
+/* Make all body text inside the card bigger */
+.q-card .q-body,
+.q-card .q-body p,
+.q-card .q-body li {
+  font-size: 1.0625rem;   /* match q-meta; bump to 1.125rem if desired */
+  line-height: 1.55;
+}
+
+/* Optional: add a touch more spacing in the mitigation list */
+.q-card .q-body .mit-list li { margin-bottom: 4px; }
+
 /* Two-up layout for risk/mitigation on desktop */
 .q-body{margin-top:8px; display:grid; grid-template-columns:1fr; gap:10px}
 @media (min-width: 900px){ .q-body{grid-template-columns:1fr 1fr} }
@@ -564,4 +581,5 @@ legend{font-weight:700; border:none; border-bottom: none;}
 @media (min-width: 900px){ .q-card .q-body{grid-template-columns:1fr 1fr} }
 
 @media print{#summaryActionRow,#postResultActions{display:none!important}}
+
 
