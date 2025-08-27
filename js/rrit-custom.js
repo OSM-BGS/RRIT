@@ -228,26 +228,7 @@ function syncExecPrintVisibility() {
   pr.style.display = on ? '' : 'none';
 }
 
-// Wire the Generate Summary button
-(function wireGenerateSummary(){
-  const gen = document.getElementById('btnGenerateSummary');
-  if (!gen) return;
-
-  gen.addEventListener('click', async () => {
-    // disable while running
-    gen.disabled = true;
-    gen.setAttribute('aria-busy', 'true');
-    try {
-      // existing guard will hide/show as needed
-      await Promise.resolve(typeof generateSummary === 'function' ? generateSummary() : null);
-      // after generate, ensure summary shows (guard handles not-ready state)
-      syncExecPrintVisibility();
-    } finally {
-      gen.disabled = false;
-      gen.removeAttribute('aria-busy');
-    }
-  });
-})();
+// Note: Button event listeners are now handled in initializeEventListeners() to avoid conflicts
 
 /* =========================================================
    Section 2: Local Storage and Data Handling
@@ -923,6 +904,23 @@ function editAnswersFlow() {
 function initializeEventListeners() {
     const buttonHandlers = {
         generateSummaryBtn: generateSummary,
+        btnGenerateSummary: async () => {
+            const btn = qs('#btnGenerateSummary');
+            if (!btn) return;
+            
+            // disable while running
+            btn.disabled = true;
+            btn.setAttribute('aria-busy', 'true');
+            try {
+                // existing guard will hide/show as needed
+                await Promise.resolve(typeof generateSummary === 'function' ? generateSummary() : null);
+                // after generate, ensure summary shows (guard handles not-ready state)
+                syncExecPrintVisibility();
+            } finally {
+                btn.disabled = false;
+                btn.removeAttribute('aria-busy');
+            }
+        },
         editAnswersBtn: editAnswersFlow,
         newScenarioBtn: () => { 
             setSummaryVisibility(false);
