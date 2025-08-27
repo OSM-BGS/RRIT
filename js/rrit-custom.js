@@ -281,7 +281,7 @@ function collectCategories() {
   
   // Combine selections from both forms (union of both sets)
   const allSelected = new Set([...enChecked, ...frChecked]);
-  const selected = ["A", "B", ...Array.from(allSelected)];
+  const selected = Array.from(new Set(["A", "B", ...Array.from(allSelected)]));
   
   console.log(`[RRIT] EN form selections: ${enChecked.join(', ')}`);
   console.log(`[RRIT] FR form selections: ${frChecked.join(', ')}`);
@@ -299,6 +299,35 @@ function collectCategories() {
 
   // CRITICAL: Sync checkbox states between both forms
   syncCategoryCheckboxes(selected);
+
+  // Initialize window.collectedResponses with selected categories and their questions
+  const responses = [];
+  selected.forEach(catCode => {
+    // Find all fieldsets for this category
+    const categoryQuestions = [];
+    qsa(`fieldset[data-qid^="${catCode}."]`).forEach(fs => {
+      const qid = fs.dataset.qid;
+      const question = fs.querySelector('legend')?.textContent?.trim() || '';
+      // Look for any answered inputs in this fieldset
+      const answeredInput = fs.querySelector('input[type="radio"]:checked, input[type="checkbox"]:checked');
+      const answer = answeredInput ? answeredInput.value : '';
+      
+      if (qid && question) {
+        categoryQuestions.push({ qid, question, answer });
+      }
+    });
+    
+    if (categoryQuestions.length > 0) {
+      responses.push({ 
+        category: catCode, 
+        questions: categoryQuestions,
+        selected: true 
+      });
+    }
+  });
+  
+  window.collectedResponses = responses;
+  console.log(`[RRIT] Initialized collectedResponses:`, responses);
 
   // Force language display update for newly shown sections
   setTimeout(() => {
@@ -1042,6 +1071,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize event listeners
     initializeEventListeners();
     initializeCategoryListeners();
+    
+    // Initialize categories and responses data structure
+    collectCategories();
     
     // On load, hide summary until a valid generate occurs
     setSummaryVisibility(summaryIsReady() && !!document.getElementById('riskProfileSummarySection') && false);
