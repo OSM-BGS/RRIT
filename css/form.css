@@ -616,5 +616,9 @@ legend{font-weight:700; border:none; border-bottom: none;}
   .dot.active { border-color: ButtonText; }
 }
 
+/* Summary visibility states */
+#riskProfileSummarySection { display: none; }
+body.summary-ready #riskProfileSummarySection { display: block; }
+body.summary-ready #summaryEmptyState { display: none; }
 
 

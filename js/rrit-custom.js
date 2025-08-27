@@ -180,6 +180,34 @@ const setVis = (el, show = true) => {
   }
 };
 
+// --- Summary readiness check ---
+function summaryIsReady() {
+  try {
+    const recs = Array.isArray(window.collectedResponses) ? window.collectedResponses : [];
+    const selectedCats = recs.filter(r => r && (r.selected !== false) && Array.isArray(r.questions) && r.questions.length).length;
+    const answered = recs.reduce((n, c) =>
+      n + (Array.isArray(c.questions) ? c.questions.filter(q => (q && String(q.answer || '').trim() !== '')).length : 0), 0);
+    return selectedCats > 0 && answered > 0;
+  } catch (e) {
+    return false;
+  }
+}
+
+// --- Show/Hide whole summary section ---
+function setSummaryVisibility(show) {
+  document.body.classList.toggle('summary-ready', !!show);
+  const sec = document.getElementById('riskProfileSummarySection');
+  if (sec) sec.style.display = show ? '' : 'none';
+  const empty = document.getElementById('summaryEmptyState');
+  if (empty) empty.style.display = show ? 'none' : '';
+}
+
+// Optional inline nudge (uses your styles if present)
+function showSummaryNudge(msg) {
+  const empty = document.getElementById('summaryEmptyState');
+  if (empty) empty.textContent = msg || 'Select categories, answer questions, then click Generate Summary.';
+}
+
 /* =========================================================
    Section 2: Local Storage and Data Handling
    ========================================================= */
@@ -362,6 +390,13 @@ function validateResponses(responses) {
 function generateSummary() {
     const isEditMode = RRITState.isEditing;
     
+    // Guard: only render a summary when user has provided input
+    if (!summaryIsReady()) {
+        setSummaryVisibility(false);
+        showSummaryNudge('Please select at least one category and answer at least one question, then generate the summary.');
+        return; // stop here; nothing to render yet
+    }
+    
     if (isEditMode && window.editModeCleanup) {
         window.editModeCleanup();
         delete window.editModeCleanup;
@@ -372,12 +407,15 @@ function generateSummary() {
     if (window.FEATURES && window.FEATURES.useAccordionSummary) {
         loadAnnex().then(() => {
             renderSummaryAccordion();
+            setSummaryVisibility(true);
         }).catch(() => {
             // Fail open: render without annex if fetch fails
             renderSummaryAccordion();
+            setSummaryVisibility(true);
         });
     } else {
         generateSummaryTable();
+        setSummaryVisibility(true);
     }
     
     updateSummaryMessage(isEditMode);
@@ -846,6 +884,8 @@ function initializeEventListeners() {
         generateSummaryBtn: generateSummary,
         editAnswersBtn: editAnswersFlow,
         newScenarioBtn: () => { 
+            setSummaryVisibility(false);
+            showSummaryNudge('Answer the questions and click Generate Summary to view results.');
             clearScenario();
             window.location.reload();
         },
@@ -898,6 +938,17 @@ function initializeEventListeners() {
         }
     });
 }
+
+// Hide summary again when answers are reset
+document.addEventListener('click', (ev) => {
+    const btn = ev.target.closest('button, a');
+    if (!btn) return;
+    const txt = (btn.textContent || '').trim().toLowerCase();
+    if (/start new scenario|edit answers|clear|reset/.test(txt)) {
+        setSummaryVisibility(false);
+        showSummaryNudge('Answer the questions and click Generate Summary to view results.');
+    }
+});
 
 function initializeCategoryListeners() {
     console.log('[RRIT] Initializing category listeners...');
@@ -952,6 +1003,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize event listeners
     initializeEventListeners();
     initializeCategoryListeners();
+    
+    // On load, hide summary until a valid generate occurs
+    setSummaryVisibility(summaryIsReady() && !!document.getElementById('riskProfileSummarySection') && false);
     
     console.log('[RRIT] Application initialized successfully');
 });
@@ -1160,7 +1214,8 @@ function updateButtonText() {
 }
 
 function regenerateSummaryTable() {
-    if (window.collectedResponses && window.collectedResponses.length > 0) {
+    // Only regenerate if summary is ready and visible
+    if (window.collectedResponses && window.collectedResponses.length > 0 && summaryIsReady() && document.body.classList.contains('summary-ready')) {
         if (window.FEATURES && window.FEATURES.useAccordionSummary) {
             loadAnnex().then(() => {
                 renderSummaryAccordion();
@@ -1209,7 +1264,10 @@ function syncCategoryCheckboxes(selectedCategories) {
     const obs = new MutationObserver(ms=>{
       if (ms.some(m=>m.attributeName==='lang' || m.attributeName==='data-lang')) {
         if (window.FEATURES?.useAccordionSummary && typeof renderSummaryAccordion==='function') {
-          renderSummaryAccordion();
+          // Only re-render if summary is currently ready and visible
+          if (summaryIsReady() && document.body.classList.contains('summary-ready')) {
+            renderSummaryAccordion();
+          }
         }
       }
     });
