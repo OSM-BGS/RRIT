@@ -621,4 +621,12 @@ legend{font-weight:700; border:none; border-bottom: none;}
 body.summary-ready #riskProfileSummarySection { display: block; }
 body.summary-ready #summaryEmptyState { display: none; }
 
+/* Summary controls row styling */
+#summaryControls { 
+  display: flex; 
+  gap: 8px; 
+  align-items: center; 
+  margin-top: .5rem; 
+}
+
 
