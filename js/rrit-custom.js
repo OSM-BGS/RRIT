@@ -529,10 +529,14 @@ function renderSummaryAccordion() {
     K:{en:'Policy Development & Implementation', fr:'Élaboration & mise en œuvre des politiques'}
   };
   const ragTxt = {high:'High risk', medium:'Medium risk', low:'Low risk', notReviewed:'Not reviewed'};
-  const lights = r => r==='high' ? '<span class="dot active"></span><span class="dot"></span><span class="dot"></span>'
-                     : r==='medium'? '<span class="dot"></span><span class="dot active"></span><span class="dot"></span>'
-                     : r==='low'   ? '<span class="dot"></span><span class="dot"></span><span class="dot active"></span>'
-                     : '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+  // Renders three dots; only the current risk level is "active"
+  function lights(r){
+    return [
+      `<span class="dot dot-high   ${r==='high'   ? 'active' : ''}"></span>`,
+      `<span class="dot dot-medium ${r==='medium' ? 'active' : ''}"></span>`,
+      `<span class="dot dot-low    ${r==='low'    ? 'active' : ''}"></span>`
+    ].join('');
+  }
 
   // Accordion markup
   const root = document.getElementById('summaryAccordion');
