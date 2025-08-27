@@ -200,6 +200,9 @@ function setSummaryVisibility(show) {
   if (sec) sec.style.display = show ? '' : 'none';
   const empty = document.getElementById('summaryEmptyState');
   if (empty) empty.style.display = show ? 'none' : '';
+  
+  // Hook: sync exec print visibility after any setSummaryVisibility call
+  syncExecPrintVisibility();
 }
 
 // Optional inline nudge (uses your styles if present)
@@ -207,6 +210,44 @@ function showSummaryNudge(msg) {
   const empty = document.getElementById('summaryEmptyState');
   if (empty) empty.textContent = msg || 'Select categories, answer questions, then click Generate Summary.';
 }
+
+// Label helper (we already use getLang/t)
+function syncSummaryControlLabels() {
+  const gen = document.getElementById('btnGenerateSummary');
+  if (gen) gen.textContent = t('Generate Summary', 'Générer le résumé');
+
+  const pr = document.getElementById('btnPrintExec');
+  if (pr) pr.textContent = t('Print Executive Summary (Table)', 'Imprimer le sommaire exécutif (tableau)');
+}
+
+// Show/hide Exec-print button based on summary visibility
+function syncExecPrintVisibility() {
+  const pr = document.getElementById('btnPrintExec');
+  if (!pr) return;
+  const on = document.body.classList.contains('summary-ready');
+  pr.style.display = on ? '' : 'none';
+}
+
+// Wire the Generate Summary button
+(function wireGenerateSummary(){
+  const gen = document.getElementById('btnGenerateSummary');
+  if (!gen) return;
+
+  gen.addEventListener('click', async () => {
+    // disable while running
+    gen.disabled = true;
+    gen.setAttribute('aria-busy', 'true');
+    try {
+      // existing guard will hide/show as needed
+      await Promise.resolve(typeof generateSummary === 'function' ? generateSummary() : null);
+      // after generate, ensure summary shows (guard handles not-ready state)
+      syncExecPrintVisibility();
+    } finally {
+      gen.disabled = false;
+      gen.removeAttribute('aria-busy');
+    }
+  });
+})();
 
 /* =========================================================
    Section 2: Local Storage and Data Handling
@@ -1007,6 +1048,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // On load, hide summary until a valid generate occurs
     setSummaryVisibility(summaryIsReady() && !!document.getElementById('riskProfileSummarySection') && false);
     
+    // Initialize summary control labels and visibility on load
+    syncSummaryControlLabels();
+    syncExecPrintVisibility();
+    
     console.log('[RRIT] Application initialized successfully');
 });
 
@@ -1269,6 +1314,8 @@ function syncCategoryCheckboxes(selectedCategories) {
             renderSummaryAccordion();
           }
         }
+        // Hook: update summary control labels on language change
+        syncSummaryControlLabels();
       }
     });
     obs.observe(document.documentElement, { attributes:true, attributeFilter:['lang','data-lang'] });
