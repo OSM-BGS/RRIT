@@ -11,11 +11,9 @@ Top of file through section/category selection
   <!-- GCWeb / WET-BOEW 16.5.0 -->
   <link  rel="stylesheet" href="/RRIT/GCWeb/css/theme.min.css">
   <link rel="stylesheet" href="/RRIT/wet-boew/css/wet-boew.min.css">
-  <link rel="stylesheet" href="/RRIT/css/form.css">
   <link rel="stylesheet" href="/RRIT/css/forced-colors.css">
-  <link rel="stylesheet" href="css/form.css?v=ragdots1">
-  <l
-<script src="js/rrit-custom.js?v=ragdots1"></script>
+  <link rel="stylesheet" href="css/form.css">
+  <script src="js/rrit-custom.js"></script>
 </head>
 <body vocab="http://schema.org/" typeof="WebPage">
 
@@ -973,8 +971,14 @@ Footer: JS scripts and HTML end
 <script src="/RRIT/wet-boew/jquery/2.2.4/jquery.min.js"></script>
 <script src="/RRIT/wet-boew/js/wet-boew.min.js"></script>
 <script src="/RRIT/GCWeb/js/theme.min.js"></script>
-<script src="js/rrit-custom.js?v=ragdots1"></script>
 
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(console.error);
+  });
+}
+</script>
     </main>
   </div>
 </div>
