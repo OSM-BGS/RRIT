@@ -3,29 +3,33 @@
    Refactored Version – 2025-07-24
    ========================================================= */
 
-// === Feature flag & URL switch (must run first) ===
-window.FEATURES = window.FEATURES || { useAccordionSummary: false };
+// === Summary view selection (accordion is default) ===
+window.FEATURES = window.FEATURES || {};
 (function () {
-  try {
-    const v = (new URLSearchParams(location.search).get('summary') || '').toLowerCase();
-    if (v === 'acc')   window.FEATURES.useAccordionSummary = true;
-    if (v === 'table') window.FEATURES.useAccordionSummary = false;
-  } catch {}
+  const qs = new URLSearchParams(location.search);
+  const param = (qs.get('summary') || '').toLowerCase();
+  const saved = (localStorage.getItem('rrit_summary_view') || '').toLowerCase();
+
+  let useAcc = true;                     // default = accordion
+  if (param === 'acc')   useAcc = true;  // explicit override
+  if (param === 'table') useAcc = false;
+
+  if (!param && (saved === 'acc' || saved === 'table')) {
+    useAcc = saved === 'acc';
+  }
+
+  window.FEATURES.useAccordionSummary = useAcc;
+  if (param) localStorage.setItem('rrit_summary_view', useAcc ? 'acc' : 'table');
 })();
 
 // === Load per-question annex (bilingual) ===
 async function loadAnnex() {
   if (window.RISK_ANNEX) return window.RISK_ANNEX;
-  const base = document.querySelector('base')?.getAttribute('href') || '';
-  // Adjust automatically if site serves from /docs
-  const likelyDocs = location.pathname.includes('/docs/');
-  const url = (likelyDocs ? 'js/risk-annex.json' : 'js/risk-annex.json') + '?v=1';
   try {
-    const res = await fetch(url, { cache: 'no-store' });
+    const res = await fetch('js/risk-annex.json', { cache: 'no-store' });
     if (!res.ok) throw new Error('Annex HTTP ' + res.status);
     window.RISK_ANNEX = await res.json();
-  } catch (e) {
-    console.warn('Annex load failed; proceeding without annex.', e);
+  } catch {
     window.RISK_ANNEX = window.RISK_ANNEX || {};
   }
   return window.RISK_ANNEX;
