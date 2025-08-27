@@ -409,8 +409,8 @@ function updateSummaryMessage(isEditMode) {
 function questionCardMarkup(catId, q, idx) {
   const qid = q.qid || `${catId}-${idx+1}`;
 
-  // ⟵ replace previous language picking with this single line
-  const questionText = extractQuestionText(q);
+  // Title in one language, with fallback; no <span lang> duplicates, no "Q1." prefix
+  const questionText = extractQuestionText(q).replace(/<\/?span\b[^>]*>/g,'');
 
   const rawAnswer = (q.answer || '').toString();
   const norm = normalizeAnswer(rawAnswer);
