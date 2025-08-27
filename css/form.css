@@ -536,7 +536,25 @@ legend{font-weight:700; border:none; border-bottom: none;}
 .acc-trigger{display:flex;width:100%;align-items:center;justify-content:space-between;padding:12px 8px;background:#fff;border:0;cursor:pointer;text-align:left}
 .acc-left{display:flex;align-items:center;gap:10px}.cat-pill{border:1px solid #cfcfcf;border-radius:999px;padding:2px 8px;font-weight:600}.cat-name{font-weight:600}
 .rag{display:flex;align-items:center;gap:10px}.rag-lights{display:grid;grid-auto-flow:column;gap:6px}
-.dot{width:12px;height:12px;border-radius:50%;border:2px solid #cfcfcf;background:transparent}.dot.active{background:#bdbdbd}
+.dot{
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #cfcfcf;          /* neutral outline for inactive dots */
+  background: #f7f7f7;                 /* neutral fill for inactive dots */
+  display: inline-block;
+}
+
+/* High-contrast ring for the active dot (works even if color not perceived) */
+.dot.active{
+  border-width: 3px;                   /* thicker ring */
+  border-color: #111;                  /* dark, high-contrast border */
+}
+
+/* Color fill is applied ONLY when that level is active; others stay neutral */
+.dot-high.active   { background: #c62828; } /* red (High)   */
+.dot-medium.active { background: #d97706; } /* amber (Med)  */
+.dot-low.active    { background: #2e7d32; } /* green (Low)  */
 .chev{color:#777;margin-left:10px}.acc-panel{padding:10px 8px 14px}
 .panel-grid{display:grid;grid-template-columns:1fr;gap:12px}@media(min-width:900px){.panel-grid{grid-template-columns:1.1fr .9fr}}
 .box{border:1px dashed #d3d3d3;border-radius:8px;padding:10px}
@@ -585,5 +603,17 @@ legend{font-weight:700; border:none; border-bottom: none;}
 @media (min-width: 900px){ .q-card .q-body{grid-template-columns:1fr 1fr} }
 
 @media print{#summaryActionRow,#postResultActions{display:none!important}}
+
+/* === RAG feedback dots (accessible) === */
+/* Optional: slightly bigger dots on larger screens for readability */
+@media (min-width: 900px){
+  .dot { width: 14px; height: 14px; }
+}
+
+/* Windows forced-colors mode: keep visible ring even if colors are overridden */
+@media (forced-colors: active){
+  .dot { forced-color-adjust: auto; }
+  .dot.active { border-color: ButtonText; }
+}
 
 
