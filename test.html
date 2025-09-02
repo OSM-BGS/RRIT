@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RRIT Test</title>
+</head>
+<body>
+    <h1>RRIT Test Page</h1>
+    <div id="questionsList"></div>
+    <script>
+        console.log('Test page loaded');
+        
+        // Simple test of the questions loading
+        async function loadQuestions() {
+            try {
+                const res = await fetch('data/rrit_questions_bilingual.json');
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+                console.log('Questions loaded:', data.questions.length);
+                document.getElementById('questionsList').innerHTML = '<p>Successfully loaded ' + data.questions.length + ' questions!</p>';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('questionsList').innerHTML = '<p>Error: ' + error.message + '</p>';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', loadQuestions);
+    </script>
+</body>
+</html>
