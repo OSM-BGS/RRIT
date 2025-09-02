@@ -20,7 +20,7 @@ async function loadQuestions() {
     const res = await fetch('data/rrit_questions_bilingual.json', { cache: 'no-store' });
     if (!res.ok) throw new Error('Questions HTTP ' + res.status);
     const data = await res.json();
-    window.RRIT_QUESTIONS = data.questions;
+    window.RRIT_QUESTIONS = Array.isArray(data) ? data : data.questions;
   } catch (error) {
     console.error('[RRIT] Failed to load questions:', error);
     window.RRIT_QUESTIONS = [];
@@ -66,29 +66,29 @@ function translateAnswer(ans) {
 // Render a single question
 function renderQuestion(question, index) {
   const lang = getLang();
-  const qText = question.question[lang] || question.question.en || '';
-  const whyText = question.whyMatters[lang] || question.whyMatters.en || '';
+  const qText = (question.text && question.text[lang]) || (question.question && question.question[lang]) || '';
+  const whyText = (question.why && question.why[lang]) || (question.whyMatters && question.whyMatters[lang]) || '';
   
   return `
-    <fieldset data-qid="${question.qid}" class="question-fieldset">
+    <fieldset data-qid="${question.id}" class="question-fieldset">
       <legend>
         <strong>${index + 1}. ${qText}</strong>
       </legend>
       <div class="rrit-responses">
         <label class="radio-spacing">
-          <input type="radio" name="q${question.qid}" value="Yes" data-qid="${question.qid}"> 
+          <input type="radio" name="q${question.id}" value="Yes" data-qid="${question.id}"> 
           <span data-lang="en">Yes</span><span data-lang="fr" class="hidden">Oui</span>
         </label>
         <label class="radio-spacing">
-          <input type="radio" name="q${question.qid}" value="No" data-qid="${question.qid}"> 
+          <input type="radio" name="q${question.id}" value="No" data-qid="${question.id}"> 
           <span data-lang="en">No</span><span data-lang="fr" class="hidden">Non</span>
         </label>
         <label class="radio-spacing">
-          <input type="radio" name="q${question.qid}" value="Unknown" data-qid="${question.qid}"> 
+          <input type="radio" name="q${question.id}" value="Unknown" data-qid="${question.id}"> 
           <span data-lang="en">Unknown</span><span data-lang="fr" class="hidden">Inconnu</span>
         </label>
         <label class="radio-spacing">
-          <input type="radio" name="q${question.qid}" value="Not Applicable" data-qid="${question.qid}"> 
+          <input type="radio" name="q${question.id}" value="Not Applicable" data-qid="${question.id}"> 
           <span data-lang="en">N/A</span><span data-lang="fr" class="hidden">S.O.</span>
         </label>
       </div>
