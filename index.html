@@ -13,7 +13,7 @@ Top of file through section/category selection
   <link rel="stylesheet" href="/RRIT/wet-boew/css/wet-boew.min.css">
   <link rel="stylesheet" href="/RRIT/css/forced-colors.css">
   <link rel="stylesheet" href="css/form.css">
-  <script src="js/rrit-simple.js"></script>
+  <script src="js/rrit-custom.js"></script>
 </head>
 <body vocab="http://schema.org/" typeof="WebPage">
 
@@ -68,11 +68,10 @@ Top of file through section/category selection
       <details class="wb-accordion"><summary><strong>Purpose – Early-warning system</strong></summary>
         <p>The tool systematically flags risks in areas such as regulatory compliance, workforce planning and technology adoption <em>before</em> you commit significant resources. Use it alongside your existing enterprise risk-management (ERM) processes for identification, assessment, response, communication and monitoring.</p>
       </details>
-      <details class="wb-accordion"><summary><strong>Usage – Four simple steps</strong></summary>
+      <details class="wb-accordion"><summary><strong>Usage – Three simple steps</strong></summary>
         <ol class="lst-num">
-          <li><strong>Review</strong> each relevant category.</li>
-          <li><strong>Answer</strong> every question (<em>Yes / No / Unknown / N A</em>).</li>
-          <li><strong>Analyse</strong> the outcome to locate high-risk areas.</li>
+          <li><strong>Answer</strong> all 24 questions (<em>Yes / No / Unknown / N A</em>).</li>
+          <li><strong>Analyse</strong> the risk summary to identify issues.</li>
           <li><strong>Decide</strong> next steps or mitigations.</li>
         </ol>
       </details>
@@ -84,21 +83,8 @@ Top of file through section/category selection
           <li><strong>N/A</strong> – not relevant to this initiative.</li>
         </ul>
       </details>
-      <details class="wb-accordion"><summary><strong>Structure – 11 HR-specific categories</strong></summary>
-        <p>Categories A and B are mandatory; select any of C–K that apply.</p>
-        <ul class="lst-spcd">
-          <li><strong>A. Regulatory Compliance</strong> – Ensures HR initiatives comply with Canadian labour laws, privacy regulations (e.g. PIPEDA) and other relevant guidelines. <em>(mandatory)</em></li>
-          <li><strong>B. Data Security &amp; Privacy</strong> – Protects sensitive employee information against unauthorized access, reinforcing trust through robust data-security measures. <em>(mandatory)</em></li>
-          <li><strong>C. HR Technology / Integration</strong> – Assesses new HR technologies for integration challenges, compatibility and alignment with your digital strategy.</li>
-          <li><strong>D. User Adoption &amp; Training</strong> – Focuses on user-friendliness and training effectiveness to promote smooth transitions and broad adoption.</li>
-          <li><strong>E. Cost-Benefit Analysis</strong> – Evaluates financial implications and ROI, ensuring initiatives are cost-effective and sustainable.</li>
-          <li><strong>F. Vendor Reliability &amp; Support</strong> – Examines vendor reputation, stability and support quality for long-term service effectiveness.</li>
-          <li><strong>G. Workforce Planning &amp; Development</strong> – Aligns workforce capabilities with future needs, supporting talent-management strategies.</li>
-          <li><strong>H. Employee Engagement &amp; Culture Change</strong> – Reviews initiatives aimed at enhancing workplace culture and employee well-being.</li>
-          <li><strong>I. Diversity &amp; Inclusion Programs</strong> – Assesses the effectiveness of diversity and inclusivity strategies.</li>
-          <li><strong>J. Organizational Restructuring</strong> – Evaluates the impact of organizational changes on strategic alignment and communication.</li>
-          <li><strong>K. Policy Development &amp; Implementation</strong> – Ensures new HR policies align with goals and compliance requirements.</li>
-        </ul>
+      <details class="wb-accordion"><summary><strong>Structure – 24 comprehensive questions</strong></summary>
+        <p>The RRIT covers key areas including regulatory compliance, data security, technology integration, user adoption, cost-benefit analysis, vendor reliability, workforce planning, performance metrics, strategic alignment, and accessibility. All questions are mandatory for a complete risk assessment.</p>
       </details>
     </div>
     <div data-lang="fr" class="hidden" aria-hidden="true">
@@ -106,11 +92,10 @@ Top of file through section/category selection
       <details class="wb-accordion"><summary><strong>Objectif – Système d’alerte précoce</strong></summary>
         <p>L’outil signale systématiquement les risques (conformité, planification de la main-d’œuvre, adoption technologique, etc.) <em>avant</em> l’engagement de ressources importantes. Il complète vos processus existants de gestion des risques (IGR) pour l’identification, l’évaluation, la réponse, la communication et le suivi.</p>
       </details>
-      <details class="wb-accordion"><summary><strong>Utilisation – Quatre étapes</strong></summary>
+      <details class="wb-accordion"><summary><strong>Utilisation – Trois étapes</strong></summary>
         <ol class="lst-num">
-          <li><strong>Examiner</strong> chaque catégorie pertinente.</li>
-          <li><strong>Répondre</strong> aux questions (<em>Oui / Non / Inconnu/ N A</em>).</li>
-          <li><strong>Analyser</strong> les résultats pour repérer les zones à haut risque.</li>
+          <li><strong>Répondre</strong> aux 24 questions (<em>Oui / Non / Inconnu/ N A</em>).</li>
+          <li><strong>Analyser</strong> le résumé des risques pour identifier les problèmes.</li>
           <li><strong>Décider</strong> des mesures ou projets subséquents.</li>
         </ol>
       </details>
@@ -211,51 +196,20 @@ Top of file through section/category selection
     </div>
     
     <p id="statusMsg" class="wb-inv"></p>
-  </div>
-</section>
 
-<!-- ACTION BAR + SUMMARY/RESULTS (Start) -->
-<hr class="brdr-bttm">
-<br>
-  <button id="backToSummary" class="btn btn-link hidden" aria-hidden="true" type="button">
-  <span data-lang="en">Back to Summary</span>
-  <span data-lang="fr" class="hidden">Retour au résumé</span>
-</button>
-
-<!-- Questions Section -->
-<section id="questionsSection" class="wb-frmvld">
-  <div id="questionsHeader">
-    <p id="progressText" class="mrgn-bttm-sm"></p>
-  </div>
-  <div id="questionsContainer"></div>
-  <div class="mrgn-tp-lg">
-    <button id="generateSummaryBtn" class="btn btn-primary" disabled>Generate summary</button>
-  </div>
-</section>
-
-<!-- Empty state message -->
-<div id="summaryEmptyState" class="well well-sm" role="status" aria-live="polite">
-  <span data-lang="en">Answer all 24 questions, then click <strong>Generate Summary</strong> to view your risk profile.</span>
-  <span data-lang="fr" class="hidden">Répondez aux 24 questions, puis cliquez sur <strong>Générer le résumé</strong> pour voir votre profil de risque.</span>
-</div>
-
-<div id="summaryControls" class="mrgn-bttm-sm" role="region" aria-label="Summary controls">
-  <button id="btnGenerateSummary" class="btn btn-primary btn-sm" type="button">
-    Generate Summary
-  </button>
-</div>
-
-<!-- ===== Risk Summary Section (Bilingual) ===== -->
-<section id="riskProfileSummarySection">
+<!-- ===== Risk Summary Section ===== -->
 <section id="rrit-summary" class="panel panel-default">
   <header class="panel-heading">
-    <h2 class="panel-title" data-lang="en">Risk Profile Summary</h2>
-    <h2 class="panel-title hidden" data-lang="fr">Résumé du profil de risque</h2>
+    <h2 class="panel-title" data-lang="en">Risk Summary</h2>
+    <h2 class="panel-title hidden" data-lang="fr">Résumé des risques</h2>
   </header>
   <div class="panel-body">
-    <p data-lang="en">After completing the questions, click below to generate a category summary.</p>
-    <p data-lang="fr" class="hidden">Après avoir répondu aux questions, cliquez ci-dessous pour générer un résumé par catégorie.</p>
+    <p data-lang="en">After completing the questions, click below to generate a risk summary.</p>
+    <p data-lang="fr" class="hidden">Après avoir répondu aux questions, cliquez ci-dessous pour générer un résumé des risques.</p>
     <div id="summaryActionRow" class="d-flex flex-wrap gap-2 mt-3">
+      <button id="btnGenerateSummary" class="btn btn-primary btn-sm" type="button">
+        Generate Summary
+      </button>
       <!-- Revealed only after the first summary -->
       <div id="postResultActions" class="hidden" data-state="inactive">
         <button id="editAnswersBtn"
@@ -281,10 +235,7 @@ Top of file through section/category selection
         </button>
       </div>
     </div>
-
-
   </div>
-</section>
 </section>
 <!-- EOF PART 6. Scripts and closing tags in Part 7. -->
 <!-- =========================
