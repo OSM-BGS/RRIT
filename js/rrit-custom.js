@@ -270,12 +270,27 @@ function generateSummary() {
     ? items
     : `<div class="alert alert-success"><strong>${currentLang==="fr" ? "Aucun risque identifié" : "No risks identified"}</strong></div>`;
 
+  // Show summary section
+  const sum = qs("#summarySection");
+  if (sum) sum.style.display = "block";
+
   // Hide questions section to focus attention (optional)
   const qsec = qs("#questionsSection");
   if (qsec) qsec.style.display = "none";
 
   // Persist
   saveScenario();
+}
+
+/* =========================
+   Summary visibility helper
+   ========================= */
+
+function renderSummaryIfVisible() {
+  const sum = qs("#summarySection");
+  if (sum && sum.offsetParent !== null) {
+    generateSummary(); // re-renders with the current language
+  }
 }
 
 /* =========================
@@ -287,12 +302,22 @@ function toggleLanguage(lang, noRecurse=false) {
   document.documentElement.lang = currentLang;
   localStorage.setItem("rrit_lang", currentLang);
 
+  // Save current responses before re-rendering questions
+  const savedResponses = collectResponses();
+  
   renderQuestions();
-  // If summary exists, rebuild header/texts with current language
-  const sum = qs("#summarySection");
-  if (sum && sum.offsetParent !== null) {
-    generateSummary(); // re-renders with the new language
-  }
+  
+  // Restore responses after re-rendering
+  savedResponses.forEach(({ qid, answer }) => {
+    const inp = qs(`input[name="${qid}"][value="${normalizeAnswer(answer)}"]`);
+    if (inp && !inp.checked) inp.checked = true;
+  });
+  
+  // Trigger progress update after restoring responses
+  const onChange = qs("#questionsList")?._rritOnChange;
+  if (onChange) onChange();
+  
+  renderSummaryIfVisible();
 
   // Update button labels if present
   const gen = qs("#btnGenerateSummary");
