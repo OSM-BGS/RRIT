@@ -197,6 +197,7 @@ function ensureSummaryScaffold() {
   if (!sec) {
     sec = document.createElement("section");
     sec.id = "summarySection";
+    sec.className = "hidden";
     document.body.appendChild(sec);
   }
   if (!qs("#summaryTitle", sec)) {
@@ -204,14 +205,15 @@ function ensureSummaryScaffold() {
     h.id = "summaryTitle";
     sec.appendChild(h);
   }
-  if (!qs("#riskCount", sec)) {
+  if (!qs("#riskCountLine", sec)) {
     const p = document.createElement("p");
-    p.innerHTML = (currentLang==="fr" ? "Nombre total de risques identifiés : " : "Total risks identified: ") + `<strong id="riskCount">0</strong>`;
+    p.id = "riskCountLine";
     sec.appendChild(p);
   }
   if (!qs("#riskList", sec)) {
     const d = document.createElement("div");
     d.id = "riskList";
+    d.className = "panel-group";
     sec.appendChild(d);
   }
 }
@@ -226,6 +228,12 @@ function generateSummary() {
     return;
   }
   ensureSummaryScaffold();
+  
+  // Clean up any old elements that might conflict
+  const oldRiskCount = qs("#riskCount");
+  if (oldRiskCount && oldRiskCount.parentElement) {
+    oldRiskCount.parentElement.remove();
+  }
 
   const responses = collectResponses();
   const risks = responses.filter(r => {
@@ -233,46 +241,55 @@ function generateSummary() {
     return n === "no" || n === "unknown";
   });
 
-  // Header
-  setTxt(qs("#summaryTitle"), currentLang==="fr" ? "Résumé des risques" : "Risk Summary");
-  setTxt(qs("#riskCount"), String(risks.length));
+  // Header - using t() for bilingual support
+  setTxt(qs("#summaryTitle"), t(currentLang==="fr" ? "Résumé des risques" : "Risk Summary"));
+  
+  // Count line - bilingual format as specified
+  const riskCountLine = qs("#riskCountLine");
+  if (riskCountLine) {
+    riskCountLine.textContent = currentLang==="fr" 
+      ? `Nombre total de risques identifiés : ${risks.length}`
+      : `Total risks identified: ${risks.length}`;
+  }
 
   // List
   const list = qs("#riskList");
   const items = risks.map(r => {
     const q = window.QUESTIONS.find(x => x.id === r.qid) || {};
     const qText = t(q.text);
-    const why   = t(q.why);
     const riskS = t(q.risk_statement);
-    const mits  = (q.mitigations && q.mitigations[currentLang]) || q.mitigations?.en || [];
+    const mits  = t(q.mitigations);
+    const mitsList = Array.isArray(mits) ? mits : (mits && typeof mits === 'object' ? (mits[currentLang] || mits.en || []) : []);
 
     return `
-      <article class="panel panel-default risk-card">
+      <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title">
+          <h4 class="panel-title">
             ${qText}
             <small>(${ansLabel(normalizeAnswer(r.answer))})</small>
-          </h3>
+          </h4>
         </div>
         <div class="panel-body">
-          ${why ? `<p class="why-matters"><em>${why}</em></p>` : ""}
           ${riskS ? `<h4>${currentLang==="fr" ? "Énoncé de risque" : "Risk statement"}</h4><p>${riskS}</p>` : ""}
-          ${Array.isArray(mits) && mits.length ? `
+          ${Array.isArray(mitsList) && mitsList.length ? `
             <h4>${currentLang==="fr" ? "Mesures d’atténuation" : "Mitigation actions"}</h4>
-            <ul>${mits.map(m => `<li>${m}</li>`).join("")}</ul>
+            <ul>${mitsList.map(m => `<li>${m}</li>`).join("")}</ul>
           ` : ""}
         </div>
-      </article>
+      </div>
     `;
   }).join("");
 
-  list.innerHTML = risks.length
-    ? items
-    : `<div class="alert alert-success"><strong>${currentLang==="fr" ? "Aucun risque identifié" : "No risks identified"}</strong></div>`;
+  list.innerHTML = risks.length === 0
+    ? `<p><strong>${currentLang==="fr" ? "Aucun risque identifié" : "No risks identified"}</strong></p>`
+    : items;
 
   // Show summary section
   const sum = qs("#summarySection");
-  if (sum) sum.style.display = "block";
+  if (sum) {
+    sum.classList.remove("hidden");
+    sum.style.display = "block";
+  }
 
   // Hide questions section to focus attention (optional)
   const qsec = qs("#questionsSection");

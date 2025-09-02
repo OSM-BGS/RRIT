@@ -178,74 +178,94 @@ async function renderRisksOnlySummary() {
         const riskCount = risks.length;
         const lang = getLang();
         
-        // Update summary header with total risk count
-        const summaryTitle = document.querySelector('#rrit-summary .panel-title');
-        if (summaryTitle) {
-            const titleText = lang === 'fr' ? 'Résumé du profil de risque' : 'Risk Profile Summary';
-            summaryTitle.innerHTML = `${titleText} — <span class="risk-count">Total risks identified: ${riskCount}</span>`;
+        // Create or find the required section structure
+        let summarySection = document.getElementById('summarySection');
+        if (!summarySection) {
+            summarySection = document.createElement('section');
+            summarySection.id = 'summarySection';
+            summarySection.className = 'hidden';
+            document.body.appendChild(summarySection);
         }
         
-        // Clear existing summary containers
-        const tableContainer = document.getElementById('summaryTableContainer');
-        const accordionContainer = document.getElementById('summaryAccordionContainer');
-        
-        if (tableContainer) tableContainer.style.display = 'none';
-        if (accordionContainer) accordionContainer.style.display = 'none';
-        
-        // Create or update risks container
-        let risksContainer = document.getElementById('risksContainer');
-        if (!risksContainer) {
-            risksContainer = document.createElement('div');
-            risksContainer.id = 'risksContainer';
-            risksContainer.style.marginTop = '2rem';
-            
-            const summaryPanel = document.getElementById('rrit-summary');
-            if (summaryPanel) {
-                summaryPanel.appendChild(risksContainer);
-            }
+        // Create title element
+        let summaryTitle = document.getElementById('summaryTitle');
+        if (!summaryTitle) {
+            summaryTitle = document.createElement('h2');
+            summaryTitle.id = 'summaryTitle';
+            summarySection.appendChild(summaryTitle);
         }
+        
+        // Create risk count line
+        let riskCountLine = document.getElementById('riskCountLine');
+        if (!riskCountLine) {
+            riskCountLine = document.createElement('p');
+            riskCountLine.id = 'riskCountLine';
+            summarySection.appendChild(riskCountLine);
+        }
+        
+        // Create risk list with panel-group class
+        let riskList = document.getElementById('riskList');
+        if (!riskList) {
+            riskList = document.createElement('div');
+            riskList.id = 'riskList';
+            riskList.className = 'panel-group';
+            summarySection.appendChild(riskList);
+        }
+        
+        // Set title
+        summaryTitle.textContent = lang === 'fr' ? 'Résumé des risques' : 'Risk Summary';
+        
+        // Set count line
+        riskCountLine.textContent = lang === 'fr' 
+            ? `Nombre total de risques identifiés : ${riskCount}`
+            : `Total risks identified: ${riskCount}`;
         
         // Generate risk cards HTML
         if (riskCount === 0) {
-            risksContainer.innerHTML = `
-                <div class="alert alert-success">
-                    <strong>${lang === 'fr' ? 'Aucun risque identifié' : 'No risks identified'}</strong>
-                    <p>${lang === 'fr' ? 'Toutes les questions ont reçu des réponses Oui ou S.O.' : 'All questions received Yes or N/A answers.'}</p>
-                </div>
-            `;
+            riskList.innerHTML = `<p><strong>${lang === 'fr' ? 'Aucun risque identifié' : 'No risks identified'}</strong></p>`;
         } else {
             const riskCardsHtml = await Promise.all(risks.map(async (risk) => {
                 const question = questions.find(q => q.qid === risk.qid);
                 const questionText = question ? (question.question[lang] || question.question.en) : risk.question;
-                const whyMatters = question ? (question.whyMatters[lang] || question.whyMatters.en) : '';
+                const riskStatement = question ? (question.risk_statement ? (question.risk_statement[lang] || question.risk_statement.en) : '') : '';
+                const mitigations = question ? (question.mitigations ? (question.mitigations[lang] || question.mitigations.en || []) : []) : [];
                 
                 const answerLabel = translateAnswer(risk.answer);
-                const answerClass = normalizeAnswer(risk.answer) === 'no' ? 'badge-danger' : 'badge-warning';
                 
                 return `
-                    <div class="risk-card panel panel-default">
+                    <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title">
                                 ${questionText}
-                                <span class="badge ${answerClass}">${answerLabel}</span>
+                                <small>(${answerLabel})</small>
                             </h4>
                         </div>
                         <div class="panel-body">
-                            ${whyMatters ? `<p class="why-matters"><em>${whyMatters}</em></p>` : ''}
+                            ${riskStatement ? `<h4>${lang === 'fr' ? 'Énoncé de risque' : 'Risk statement'}</h4><p>${riskStatement}</p>` : ''}
+                            ${Array.isArray(mitigations) && mitigations.length ? `
+                                <h4>${lang === 'fr' ? 'Mesures d\'atténuation' : 'Mitigation actions'}</h4>
+                                <ul>${mitigations.map(m => `<li>${m}</li>`).join('')}</ul>
+                            ` : ''}
                         </div>
                     </div>
                 `;
             }));
             
-            risksContainer.innerHTML = riskCardsHtml.join('\n');
+            riskList.innerHTML = riskCardsHtml.join('\n');
         }
         
-        // Hide intro and questions sections
+        // Show summary section
+        summarySection.classList.remove('hidden');
+        summarySection.style.display = 'block';
+        
+        // Hide other sections to focus on risks
         const intro = document.getElementById('rrit-intro');
         const questionsSection = document.getElementById('questionsSection');
+        const existingSummary = document.getElementById('rrit-summary');
         
         if (intro) intro.style.display = 'none';
         if (questionsSection) questionsSection.style.display = 'none';
+        if (existingSummary) existingSummary.style.display = 'none';
         
         console.log(`[RRIT] Generated risks-only summary with ${riskCount} risks`);
         
