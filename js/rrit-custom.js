@@ -68,6 +68,25 @@ function stripNumPrefix(s) {
     .trim();
 }
 
+// Extract language-appropriate text from legend element containing bilingual spans
+function extractLegendText(legendElement) {
+  if (!legendElement) return '';
+  
+  const lang = getLang();
+  const targetLang = lang === 'fr' ? 'fr' : 'en';
+  
+  // Try to find the span for the current language
+  const langSpan = legendElement.querySelector(`span[lang="${targetLang}"]`);
+  if (langSpan) {
+    return langSpan.textContent.trim();
+  }
+  
+  // Fallback: if no language-specific span found, use the existing extractQuestionText logic
+  // with a mock question object based on the legend's textContent
+  const fallbackText = legendElement.textContent || '';
+  return extractQuestionText({ question: fallbackText });
+}
+
 // Extract a single-language question string, with fallback when only a bilingual string exists
 function extractQuestionText(q) {
   const lang = getLang(); // assumes you already have getLang(): 'en'|'fr'
@@ -450,7 +469,7 @@ function collectAndUpdateResponses() {
         qsa(`#step${cat} input[name^="cat${cat}q"]:checked`).forEach(input => {
             const fs = input.closest("fieldset");
             const qid = input.dataset.qid || fs?.dataset.qid || "";
-            const txt = fs?.querySelector("legend")?.textContent || "";
+            const txt = extractLegendText(fs?.querySelector("legend"));
             if (qid && txt && input.value) {
                 questions.push({ qid, question: txt, answer: input.value });
             }
@@ -596,7 +615,7 @@ function renderSummaryAccordion() {
     qsa(`#step${cat} input[name^="cat${cat}q"]:checked`).forEach(input => {
       const fs = input.closest("fieldset");
       const qid = input.dataset.qid || fs?.dataset.qid || "";
-      const txt = fs?.querySelector("legend")?.textContent || "";
+      const txt = extractLegendText(fs?.querySelector("legend"));
       qList.push({ qid, question: txt, answer: input.value });
     });
     if (qList.length) {
@@ -770,7 +789,7 @@ function generateSummaryTable() {
     qsa(`#step${cat} input[name^="cat${cat}q"]:checked`).forEach(input => {
       const fs = input.closest("fieldset");
       const qid = input.dataset.qid || fs?.dataset.qid || "";
-      const txt = fs?.querySelector("legend")?.textContent || "";
+      const txt = extractLegendText(fs?.querySelector("legend"));
       qList.push({ qid, question: txt, answer: input.value });
 
       if (input.value in questionWeights) weight += questionWeights[input.value];
