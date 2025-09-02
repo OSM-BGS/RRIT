@@ -22,6 +22,35 @@ window.FEATURES = window.FEATURES || {};
   if (param) localStorage.setItem('rrit_summary_view', useAcc ? 'acc' : 'table');
 })();
 
+// === Global questions storage ===
+window.QUESTIONS = [];
+
+// === Load bilingual questions ===
+async function loadQuestions() {
+  if (window.QUESTIONS.length > 0) return window.QUESTIONS;
+  try {
+    console.log('[RRIT] Loading questions from /RRIT/data/rrit_questions_bilingual.json');
+    const res = await fetch('/RRIT/data/rrit_questions_bilingual.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('Questions HTTP ' + res.status);
+    window.QUESTIONS = await res.json();
+    console.log('[RRIT] Questions loaded successfully:', window.QUESTIONS.length, 'questions');
+    return window.QUESTIONS;
+  } catch (error) {
+    console.error('[RRIT] Failed to load questions:', error);
+    window.QUESTIONS = [];
+    
+    // Disable Generate Summary button
+    const genBtn = document.getElementById('btnGenerateSummary');
+    if (genBtn) {
+      genBtn.disabled = true;
+      genBtn.textContent = 'Cannot Generate Summary (Questions Failed to Load)';
+      genBtn.style.opacity = '0.5';
+    }
+    
+    return window.QUESTIONS;
+  }
+}
+
 // === Load per-question annex (bilingual) ===
 async function loadAnnex() {
   if (window.RISK_ANNEX) return window.RISK_ANNEX;
@@ -111,6 +140,13 @@ function extractQuestionText(q) {
 
   // Last resort: show as-is, but without numbering
   return stripNumPrefix(s);
+}
+
+// === Render questions based on current language ===
+function renderQuestions() {
+  // Stub function for future implementation
+  // This will be called after language changes to re-render question content
+  console.log('[RRIT] renderQuestions() called - stub implementation');
 }
 
 /* =========================================================
@@ -1094,17 +1130,31 @@ function initializeCategoryListeners() {
     console.log('[RRIT] Category listeners initialized for both forms');
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     console.log('[RRIT] Initializing RRIT application...');
     
+    // Load questions first
+    await loadQuestions();
+    
+    // Determine initial language: stored preference or browser default
+    const storedLang = localStorage.getItem('rrit_language');
+    const browserLang = navigator.language.startsWith('fr') ? 'fr' : 'en';
+    const initialLang = storedLang || browserLang;
+    
+    console.log('[RRIT] Initial language determined:', initialLang, '(stored:', storedLang, 'browser:', browserLang, ')');
+    
     // Set default language and apply display rules immediately
-    currentLang = 'en';
+    currentLang = initialLang;
     document.documentElement.lang = currentLang;
     
     // Apply language display immediately
-    setTimeout(() => {
+    setTimeout(async () => {
         updateLanguageDisplay();
         console.log('[RRIT] Initial language display applied');
+        
+        // Call toggleLanguage and renderQuestions as required
+        toggleLanguage(initialLang);
+        renderQuestions();
     }, 10);
     
     // Initialize event listeners
@@ -1133,6 +1183,9 @@ function toggleLanguage(lang) {
     
     // Update current language FIRST
     currentLang = lang;
+    
+    // Save language preference
+    localStorage.setItem('rrit_language', lang);
     
     // Get all content elements (EXCLUDE language switcher buttons)
     const enElements = document.querySelectorAll('[data-lang="en"]:not(.lang-link):not(#wb-lng [data-lang="en"])');
