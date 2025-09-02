@@ -163,6 +163,7 @@ legend{font-weight:700; border:none; border-bottom: none;}
   #wb-bnr,#wb-tphp,#wb-lng,#rrit-intro,#step0,
   header,footer,nav,#lang-switch,
   #generateSummaryBtn,#printSummaryBtn,#editAnswersBtn,#newScenarioBtn,
+  #questionsSection,#summaryActionRow,#postResultActions,#summaryControls,
   button,.btn,.no-print{display:none!important;}
 
   /* Show only current language content */
@@ -182,6 +183,7 @@ legend{font-weight:700; border:none; border-bottom: none;}
 
   /* Force show essential elements */
   #rrit-summary,
+  #summarySection,
   #projectInfo {
     display: block !important;
   }

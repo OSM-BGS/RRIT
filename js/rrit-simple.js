@@ -269,6 +269,14 @@ async function renderRisksOnlySummary() {
         
         console.log(`[RRIT] Generated risks-only summary with ${riskCount} risks`);
         
+        // Show print button when summary is ready
+        const printBtn = document.getElementById('printSummaryBtn');
+        if (printBtn) {
+            printBtn.classList.remove('hidden');
+            printBtn.removeAttribute('aria-hidden');
+            printBtn.style.display = '';
+        }
+        
     } catch (error) {
         console.error('[RRIT] Error generating risks summary:', error);
     }
@@ -311,6 +319,16 @@ function toggleLanguage(lang) {
     
     // Update language display
     updateLanguageDisplay();
+}
+
+// Print function for summary
+function printSummary() {
+    // Ensure language attribute is set correctly for the print
+    document.documentElement.setAttribute("data-print-lang", currentLang);
+    setTimeout(() => {
+        window.print();
+        setTimeout(() => document.documentElement.removeAttribute("data-print-lang"), 250);
+    }, 50);
 }
 
 function updateLanguageDisplay() {
@@ -361,6 +379,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (generateBtn) {
         generateBtn.addEventListener('click', generateSummary);
         console.log('[RRIT] Generate Summary button initialized');
+    }
+    
+    // Initialize Print Summary button
+    const printBtn = document.getElementById('printSummaryBtn');
+    if (printBtn) {
+        printBtn.addEventListener('click', printSummary);
+        console.log('[RRIT] Print Summary button initialized');
     }
     
     // Load and render questions
