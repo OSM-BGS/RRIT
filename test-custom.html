@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>RRIT Custom Test</title>
+    <style>
+        .hidden { display: none !important; }
+        .question-fieldset { margin: 1rem 0; padding: 1rem; border: 1px solid #ddd; }
+        .radio-spacing { margin-right: 1rem; }
+        .why-matters { font-style: italic; color: #666; }
+        .panel { border: 1px solid #ddd; margin: 1rem 0; }
+        .panel-heading { background: #f5f5f5; padding: 0.5rem; }
+        .panel-body { padding: 1rem; }
+        .panel-title { margin: 0; }
+    </style>
+</head>
+<body>
+    <div id="lang-switcher">
+        <a href="#" data-action="lang-en">English</a> | 
+        <a href="#" data-action="lang-fr">Français</a>
+    </div>
+    
+    <h1 data-lang="en">RRIT Questions (Custom)</h1>
+    <h1 data-lang="fr" class="hidden">Questions OIRR (Personnalisé)</h1>
+    
+    <div id="questionsSection">
+        <div id="questionsList"></div>
+    </div>
+    
+    <button id="btnGenerateSummary">Generate Summary</button>
+    
+    <div id="summarySection" style="display: none;">
+        <h2 id="summaryTitle">Summary</h2>
+        <p>Total risks identified: <strong id="riskCount">0</strong></p>
+        <div id="riskList"></div>
+    </div>
+    
+    <script src="js/rrit-custom.js"></script>
+</body>
+</html>
