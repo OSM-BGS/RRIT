@@ -35,13 +35,46 @@ async function loadAnnex() {
   return window.RISK_ANNEX;
 }
 
+// === Load bilingual questions ===
+async function loadQuestions() {
+  if (window.QUESTIONS && window.QUESTIONS.length > 0) return window.QUESTIONS;
+  try {
+    console.log('[RRIT] Loading questions from data/rrit_questions_bilingual.json');
+    const res = await fetch('data/rrit_questions_bilingual.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('Questions HTTP ' + res.status);
+    window.QUESTIONS = await res.json();
+    console.log('[RRIT] Questions loaded successfully:', window.QUESTIONS.length, 'questions');
+    return window.QUESTIONS;
+  } catch (error) {
+    console.error('[RRIT] Failed to load questions:', error);
+    window.QUESTIONS = [];
+    
+    // Disable Generate Summary button
+    const genBtn = document.getElementById('generateSummaryBtn');
+    if (genBtn) {
+      genBtn.disabled = true;
+      genBtn.textContent = 'Cannot Generate Summary (Questions Failed to Load)';
+      genBtn.style.opacity = '0.5';
+    }
+    return [];
+  }
+}
+
 // --- i18n + answer helpers ---
 function getLang() {
   const raw = (document.documentElement.getAttribute('lang') ||
                document.documentElement.getAttribute('data-lang') || 'en').toLowerCase();
   return raw.startsWith('fr') ? 'fr' : 'en';
 }
-function t(en, fr) { return getLang()==='fr' ? (fr || en || '') : (en || fr || ''); }
+function t(en, fr) { 
+  // Handle object format: t(obj) where obj has lang properties
+  if (typeof en === 'object' && en !== null && fr === undefined) {
+    const lang = getLang();
+    return en[lang] || en.en || '';
+  }
+  // Handle traditional format: t(en, fr)
+  return getLang() === 'fr' ? (fr || en || '') : (en || fr || ''); 
+}
 function normalizeAnswer(ans) {
   const s = (ans || '').toString().trim().toLowerCase();
   if (['yes','oui','y','o'].includes(s)) return 'yes';
@@ -111,6 +144,100 @@ function extractQuestionText(q) {
 
   // Last resort: show as-is, but without numbering
   return stripNumPrefix(s);
+}
+
+// === Render questions based on current language ===
+async function renderQuestions() {
+  console.log('[RRIT] renderQuestions() called');
+  
+  const questionsContainer = document.getElementById('questionsContainer');
+  const progressText = document.getElementById('progressText');
+  const generateBtn = document.getElementById('generateSummaryBtn');
+  
+  if (!questionsContainer) {
+    console.error('[RRIT] questionsContainer not found');
+    return;
+  }
+  
+  // Clear container
+  questionsContainer.innerHTML = '';
+  
+  // Load questions
+  const questions = await loadQuestions();
+  if (!questions || questions.length === 0) {
+    questionsContainer.innerHTML = '<p>No questions available.</p>';
+    return;
+  }
+  
+  // Render 24 fieldsets with radio groups
+  questions.slice(0, 24).forEach((q, index) => {
+    const fieldset = document.createElement('fieldset');
+    fieldset.setAttribute('data-qid', q.id);
+    
+    // Create legend with question text
+    const legend = document.createElement('legend');
+    legend.innerHTML = `<strong>${t(q.text)}</strong>`;
+    fieldset.appendChild(legend);
+    
+    // Create radio group container
+    const radioGroup = document.createElement('div');
+    radioGroup.className = 'rrit-responses';
+    
+    // Radio options: Yes/No/Unknown/N/A
+    const options = [
+      { value: 'yes', en: 'Yes', fr: 'Oui' },
+      { value: 'no', en: 'No', fr: 'Non' },
+      { value: 'unknown', en: 'Unknown', fr: 'Inconnu' },
+      { value: 'na', en: 'N/A', fr: 'S.O.' }
+    ];
+    
+    options.forEach(option => {
+      const label = document.createElement('label');
+      label.className = 'radio-spacing';
+      
+      const input = document.createElement('input');
+      input.type = 'radio';
+      input.name = q.id;
+      input.value = option.value;
+      input.setAttribute('data-qid', q.id);
+      input.required = true;
+      
+      const span = document.createElement('span');
+      span.textContent = ` ${currentLang === 'fr' ? option.fr : option.en}`;
+      
+      label.appendChild(input);
+      label.appendChild(span);
+      radioGroup.appendChild(label);
+    });
+    
+    fieldset.appendChild(radioGroup);
+    
+    // Add "why" explanation if available
+    if (q.why) {
+      const whyP = document.createElement('p');
+      whyP.className = 'why';
+      whyP.innerHTML = `<em>${t(q.why)}</em>`;
+      fieldset.appendChild(whyP);
+    }
+    
+    questionsContainer.appendChild(fieldset);
+  });
+  
+  updateProgress();
+}
+
+// Update progress and button state
+function updateProgress() {
+  const progressText = document.getElementById('progressText');
+  const generateBtn = document.getElementById('generateSummaryBtn');
+  
+  if (!progressText || !generateBtn) return;
+  
+  const totalQuestions = 24;
+  const answeredQuestions = document.querySelectorAll('#questionsContainer input[type="radio"]:checked').length;
+  
+  progressText.textContent = `Answered ${answeredQuestions}/24`;
+  generateBtn.disabled = answeredQuestions < totalQuestions;
 }
 
 /* =========================================================
@@ -1094,8 +1221,11 @@ function initializeCategoryListeners() {
     console.log('[RRIT] Category listeners initialized for both forms');
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     console.log('[RRIT] Initializing RRIT application...');
+    
+    // Load questions first
+    await loadQuestions();
     
     // Set default language and apply display rules immediately
     currentLang = 'en';
@@ -1111,8 +1241,27 @@ document.addEventListener("DOMContentLoaded", () => {
     initializeEventListeners();
     initializeCategoryListeners();
     
+    // Initialize questions
+    await renderQuestions();
+    
+    // Add change listener to questions container for progress tracking
+    const questionsContainer = document.getElementById('questionsContainer');
+    if (questionsContainer) {
+        questionsContainer.addEventListener('change', (event) => {
+            if (event.target.type === 'radio') {
+                updateProgress();
+            }
+        });
+    }
+    
     // Initialize categories and responses data structure
     collectCategories();
+    
+    // Hide legacy category selection UI
+    const categorySection = document.getElementById('step0');
+    if (categorySection) {
+        categorySection.style.display = 'none';
+    }
     
     // On load, hide summary until a valid generate occurs
     setSummaryVisibility(summaryIsReady() && !!document.getElementById('riskProfileSummarySection') && false);
@@ -1195,6 +1344,8 @@ function toggleLanguage(lang) {
         updateLanguageDisplay();
         updateButtonText();
         updateCategoryStatusMessage();
+        // Re-render questions in new language
+        renderQuestions();
     }, 50);
     
     // Announce language change
