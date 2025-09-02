@@ -6,8 +6,8 @@
 // === Summary view selection (accordion is default) ===
 window.FEATURES = window.FEATURES || {};
 (function () {
-  const qs = new URLSearchParams(location.search);
-  const param = (qs.get('summary') || '').toLowerCase();
+  const urlParams = new URLSearchParams(location.search);
+  const param = (urlParams.get('summary') || '').toLowerCase();
   const saved = (localStorage.getItem('rrit_summary_view') || '').toLowerCase();
 
   let useAcc = true;                     // default = accordion
@@ -325,9 +325,6 @@ async function renderAllQuestions() {
     
     console.log(`[RRIT] Rendered ${questions.length} questions`);
     
-    // Update language display to show correct language
-    updateLanguageDisplay();
-    
   } catch (error) {
     console.error('[RRIT] Error rendering questions:', error);
     const container = document.getElementById('questionsList');
@@ -445,7 +442,6 @@ function collectCategories() {
     setTimeout(() => placeSummaryBottom(), 0);
   }
 
-  updateCategoryStatusMessage();
 }
 
 function restoreResponses(scenario) {
@@ -484,8 +480,6 @@ function restoreResponses(scenario) {
       cb.checked = selectedCats.has(cb.value);
     }
   });
-
-  collectCategories();
 
   // Restore all answers
   scenario.data.forEach(catData => {
@@ -1129,8 +1123,6 @@ function editAnswersFlow() {
         summaryActionRow.style.display = "flex";
         summaryActionRow.classList.remove("hidden");
     }
-
-    collectCategories();
     
     window.editModeCleanup = () => {
         qsa("#categoryFormEN input, #categoryFormFR input").forEach(checkbox => {
@@ -1266,9 +1258,6 @@ function initializeCategoryListeners() {
                     console.log(`[RRIT] Synced ${event.target.value} in ${otherFormId}: ${event.target.checked}`);
                 }
                 
-                // Then collect categories
-                collectCategories();
-                
                 // Force language display update after category changes
                 setTimeout(() => {
                     updateLanguageDisplay();
@@ -1378,12 +1367,10 @@ function toggleLanguage(lang) {
     // Update page language attribute
     document.documentElement.lang = lang;
     
-    // CRITICAL: Re-collect categories after language change
+    // Update display after language change
     setTimeout(() => {
-        collectCategories();
         updateLanguageDisplay();
         updateButtonText();
-        updateCategoryStatusMessage();
     }, 50);
     
     // Announce language change
@@ -1472,7 +1459,6 @@ function updateLanguageDisplay() {
         }
     });
     
-    updateCategoryStatusMessage();
     updateButtonText();
     
     if (qs("#summaryTableContainer:not(.hidden)") || qs("#summaryAccordionContainer:not(.hidden)")) {

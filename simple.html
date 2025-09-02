@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>RRIT Test</title>
+    <style>
+        .hidden { display: none !important; }
+        .question-fieldset { margin: 1rem 0; padding: 1rem; border: 1px solid #ddd; }
+        .radio-spacing { margin-right: 1rem; }
+        .why-matters { font-style: italic; color: #666; }
+    </style>
+</head>
+<body>
+    <h1 data-lang="en">RRIT Questions</h1>
+    <h1 data-lang="fr" class="hidden">Questions OIRR</h1>
+    
+    <div>
+        <button onclick="toggleLanguage('en')">English</button>
+        <button onclick="toggleLanguage('fr')">Français</button>
+    </div>
+    
+    <div id="questionsList"></div>
+    
+    <button id="btnGenerateSummary">Generate Summary</button>
+    
+    <div id="summaryEmptyState">
+        <span data-lang="en">Answer all 24 questions to generate summary.</span>
+        <span data-lang="fr" class="hidden">Répondez aux 24 questions pour générer le résumé.</span>
+    </div>
+    
+    <div id="rrit-summary" style="display: none;">
+        <h2 class="panel-title">Summary</h2>
+        <div id="risksContainer"></div>
+    </div>
+    
+    <script src="js/rrit-simple.js"></script>
+</body>
+</html>
