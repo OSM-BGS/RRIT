@@ -434,12 +434,50 @@ function validateResponses(responses) {
     return responses.every(r => r.qid && (r.value !== undefined));
 }
 
+function collectAndUpdateResponses() {
+    const lang = currentLang;
+    const responses = [];
+    
+    // Get selected categories
+    const selected = new Set(["A", "B"]); // A and B are always included
+    qsa("#categoryFormEN input:checked, #categoryFormFR input:checked")
+        .forEach(i => selected.add(i.value));
+    
+    selected.forEach(cat => {
+        const questions = [];
+        
+        // Collect answered questions for this category
+        qsa(`#step${cat} input[name^="cat${cat}q"]:checked`).forEach(input => {
+            const fs = input.closest("fieldset");
+            const qid = input.dataset.qid || fs?.dataset.qid || "";
+            const txt = fs?.querySelector("legend")?.textContent || "";
+            if (qid && txt && input.value) {
+                questions.push({ qid, question: txt, answer: input.value });
+            }
+        });
+        
+        if (questions.length > 0) {
+            responses.push({ 
+                category: categories[cat] && categories[cat][lang] ? categories[cat][lang] : cat, 
+                questions: questions,
+                selected: true 
+            });
+        }
+    });
+    
+    window.collectedResponses = responses;
+    console.log("[RRIT] Updated collectedResponses:", responses);
+}
+
 /* =========================================================
    Section 4: Summary Generation and Risk Logic
    ========================================================= */
 
 function generateSummary() {
     const isEditMode = RRITState.isEditing;
+    
+    // First, collect current responses to update window.collectedResponses
+    collectAndUpdateResponses();
     
     // Guard: only render a summary when user has provided input
     if (!summaryIsReady()) {
@@ -470,13 +508,6 @@ function generateSummary() {
     }
     
     updateSummaryMessage(isEditMode);
-    
-    if (isEditMode) {
-        const genBtn = qs("#generateSummaryBtn");
-        if (genBtn) {
-            genBtn.textContent = "Generate Summary";
-        }
-    }
     
     saveScenario(window.collectedResponses);
     if (isEditMode) {
@@ -799,7 +830,6 @@ function generateSummaryTable() {
 
 function handleButtonVisibility(isEditing) {
     const buttons = {
-        generateSummaryBtn: isEditing,
         editAnswersBtn: !isEditing,
         newScenarioBtn: !isEditing,
         printSummaryBtn: true
@@ -890,18 +920,9 @@ function editAnswersFlow() {
     }
 
     const summaryActionRow = qs("#summaryActionRow");
-    const genBtn = qs("#generateSummaryBtn");
-    if (genBtn && summaryActionRow) {
+    if (summaryActionRow) {
         summaryActionRow.style.display = "flex";
         summaryActionRow.classList.remove("hidden");
-        genBtn.style.display = "inline-block";
-        genBtn.classList.remove("hidden");
-        genBtn.removeAttribute("aria-hidden");
-        
-        const buttonText = currentLang === "en" ? 
-            "Generate Updated Summary" : 
-            "Générer le sommaire mis à jour";
-        genBtn.textContent = buttonText;
     }
 
     collectCategories();
@@ -932,7 +953,6 @@ function editAnswersFlow() {
 
 function initializeEventListeners() {
     const buttonHandlers = {
-        generateSummaryBtn: generateSummary,
         btnGenerateSummary: async () => {
             const btn = qs('#btnGenerateSummary');
             if (!btn) return;
@@ -1267,13 +1287,11 @@ function updateCategoryStatusMessage() {
 function updateButtonText() {
     const buttonTexts = {
         en: {
-            generateSummaryBtn: RRITState.isEditing ? "Generate Updated Summary" : "Generate Summary",
             editAnswersBtn: "Edit Answers",
             newScenarioBtn: "Start New Scenario",
             printSummaryBtn: "Print / Save as PDF"
         },
         fr: {
-            generateSummaryBtn: RRITState.isEditing ? "Générer le sommaire mis à jour" : "Générer le sommaire",
             editAnswersBtn: "Modifier les réponses",
             newScenarioBtn: "Nouveau scénario",
             printSummaryBtn: "Imprimer / Sauvegarder en PDF"
