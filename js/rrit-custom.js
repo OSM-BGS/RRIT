@@ -46,7 +46,7 @@ async function loadQuestions() {
   if (window.QUESTIONS.length) return window.QUESTIONS;
   try {
     // Accept either an array or {questions:[…]}
-    const res = await fetch("/RRIT/data/rrit_questions_bilingual.json", { cache: "no-store" });
+    const res = await fetch("data/rrit_questions_bilingual.json", { cache: "no-store" });
     if (!res.ok) throw new Error("HTTP "+res.status);
     const data = await res.json();
     window.QUESTIONS = Array.isArray(data) ? data : (data.questions || []);
