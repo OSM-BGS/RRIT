@@ -137,14 +137,23 @@ function collectResponses() {
   return window.QUESTIONS.map(q => {
     const el = qs(`input[name="${q.id}"]:checked`);
     return { qid: q.id, answer: el ? el.value : null };
-  }).filter(r => r.answer !== null);
+  });
+}
+
+// Helper function that returns checked value for a question ID, as mentioned in requirements
+function getCheckedValue(qid) {
+  const el = qs(`input[name="${qid}"]:checked`);
+  return el ? el.value : null;
 }
 
 function saveScenario() {
   const payload = {
     version: "v2",
     lang: currentLang,
-    data: collectResponses(),
+    data: window.QUESTIONS.map(q => ({
+      qid: q.id,
+      answer: getCheckedValue(q.id) // 'yes'|'no'|'unknown'|'na' or null
+    })),
     meta: {
       name: qs("#projectName")?.value || "",
       desc: qs("#projectDesc")?.value || "",
@@ -162,10 +171,113 @@ function saveScenario() {
 
 function loadScenario() {
   try {
+    // Prefer the new v2 format
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch {
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && parsed.version === "v2") {
+        return parsed;
+      }
+    }
+    
+    // Try to migrate from older category-based format
+    const legacyKeys = [
+      'rrit_savedScenario',
+      'rrit_savedScenario_v1', 
+      'rrit_responses',
+      'rrit_data'
+    ];
+    
+    for (const legacyKey of legacyKeys) {
+      const legacyRaw = localStorage.getItem(legacyKey);
+      if (legacyRaw) {
+        try {
+          const legacy = JSON.parse(legacyRaw);
+          const migrated = migrateLegacyFormat(legacy);
+          if (migrated) {
+            console.warn(`[RRIT] Migrated data from legacy format (${legacyKey})`);
+            // Save in new format and remove old
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+            localStorage.removeItem(legacyKey);
+            return migrated;
+          }
+        } catch (e) {
+          console.warn(`[RRIT] Failed to migrate legacy format from ${legacyKey}:`, e);
+        }
+      }
+    }
+    
+    return null;
+  } catch (e) {
+    console.warn("[RRIT] Failed to load scenario:", e);
+    return null;
+  }
+}
+
+// Migration function for older category-based formats
+function migrateLegacyFormat(legacy) {
+  if (!legacy || typeof legacy !== 'object') return null;
+  
+  try {
+    // Handle different possible legacy structures
+    let responses = [];
+    
+    // Case 1: Category-based structure like { "A. Regulatory": { "A.01": "yes", ... }, ... }
+    if (legacy.categories || (typeof legacy === 'object' && !Array.isArray(legacy.data))) {
+      const categoryData = legacy.categories || legacy;
+      for (const categoryKey in categoryData) {
+        if (typeof categoryData[categoryKey] === 'object') {
+          for (const qid in categoryData[categoryKey]) {
+            responses.push({
+              qid: qid,
+              answer: categoryData[categoryKey][qid]
+            });
+          }
+        }
+      }
+    }
+    
+    // Case 2: Flat structure like { "A.01": "yes", "A.02": "no", ... }
+    else if (!legacy.data && !legacy.version) {
+      for (const qid in legacy) {
+        if (typeof legacy[qid] === 'string' && qid.match(/^[A-K]\.\d+$/)) {
+          responses.push({
+            qid: qid,
+            answer: legacy[qid]
+          });
+        }
+      }
+    }
+    
+    // Case 3: Old v1 format with data array
+    else if (legacy.data && Array.isArray(legacy.data)) {
+      responses = legacy.data.map(item => ({
+        qid: item.qid || item.id,
+        answer: item.answer || item.value
+      }));
+    }
+    
+    if (responses.length === 0) return null;
+    
+    // Convert to new v2 format - ensure ALL questions are included
+    const newData = window.QUESTIONS.map(q => {
+      const existingResponse = responses.find(r => r.qid === q.id);
+      return {
+        qid: q.id,
+        answer: existingResponse ? existingResponse.answer : null
+      };
+    });
+    
+    return {
+      version: "v2",
+      lang: legacy.lang || currentLang,
+      data: newData,
+      meta: legacy.meta || {},
+      savedAt: Date.now(),
+      migratedFrom: "legacy"
+    };
+  } catch (e) {
+    console.warn("[RRIT] Migration failed:", e);
     return null;
   }
 }
@@ -176,8 +288,10 @@ function restoreScenario(saved) {
   if (saved.lang) toggleLanguage(saved.lang, /*noRecurse*/true);
   // restore inputs
   saved.data.forEach(({ qid, answer }) => {
-    const inp = qs(`input[name="${qid}"][value="${normalizeAnswer(answer)}"]`);
-    if (inp && !inp.checked) inp.click();
+    if (answer !== null) { // Only restore non-null answers
+      const inp = qs(`input[name="${qid}"][value="${normalizeAnswer(answer)}"]`);
+      if (inp && !inp.checked) inp.click();
+    }
   });
 
   // restore meta
@@ -219,7 +333,8 @@ function ensureSummaryScaffold() {
 }
 
 function summaryIsReady() {
-  return collectResponses().length === window.QUESTIONS.length;
+  const responses = collectResponses();
+  return responses.filter(r => r.answer !== null).length === window.QUESTIONS.length;
 }
 
 function generateSummary() {
@@ -235,7 +350,7 @@ function generateSummary() {
     oldRiskCount.parentElement.remove();
   }
 
-  const responses = collectResponses();
+  const responses = collectResponses().filter(r => r.answer !== null); // Only use answered questions for summary
   const risks = responses.filter(r => {
     const n = normalizeAnswer(r.answer);
     return n === "no" || n === "unknown";
@@ -326,8 +441,10 @@ function toggleLanguage(lang, noRecurse=false) {
   
   // Restore responses after re-rendering
   savedResponses.forEach(({ qid, answer }) => {
-    const inp = qs(`input[name="${qid}"][value="${normalizeAnswer(answer)}"]`);
-    if (inp && !inp.checked) inp.checked = true;
+    if (answer !== null) { // Only restore non-null answers
+      const inp = qs(`input[name="${qid}"][value="${normalizeAnswer(answer)}"]`);
+      if (inp && !inp.checked) inp.checked = true;
+    }
   });
   
   // Trigger progress update after restoring responses
@@ -364,6 +481,11 @@ function editAnswers() {
   // Show questions again and restore saved selections
   const qsec = qs("#questionsSection");
   if (qsec) qsec.style.display = "";
+  
+  // Hide summary section
+  const sum = qs("#summarySection");
+  if (sum) sum.style.display = "none";
+  
   const saved = loadScenario();
   if (saved) restoreScenario(saved);
   // Recompute progress
