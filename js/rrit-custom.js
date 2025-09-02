@@ -6,8 +6,8 @@
 // === Summary view selection (accordion is default) ===
 window.FEATURES = window.FEATURES || {};
 (function () {
-  const qs = new URLSearchParams(location.search);
-  const param = (qs.get('summary') || '').toLowerCase();
+  const urlParams = new URLSearchParams(location.search);
+  const param = (urlParams.get('summary') || '').toLowerCase();
   const saved = (localStorage.getItem('rrit_summary_view') || '').toLowerCase();
 
   let useAcc = true;                     // default = accordion
@@ -62,6 +62,21 @@ async function loadAnnex() {
     window.RISK_ANNEX = window.RISK_ANNEX || {};
   }
   return window.RISK_ANNEX;
+}
+
+// === Load 24 bilingual questions ===
+async function loadQuestions() {
+  if (window.RRIT_QUESTIONS) return window.RRIT_QUESTIONS;
+  try {
+    const res = await fetch('data/rrit_questions_bilingual.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('Questions HTTP ' + res.status);
+    const data = await res.json();
+    window.RRIT_QUESTIONS = data.questions;
+  } catch (error) {
+    console.error('[RRIT] Failed to load questions:', error);
+    window.RRIT_QUESTIONS = [];
+  }
+  return window.RRIT_QUESTIONS;
 }
 
 // --- i18n + answer helpers ---
@@ -238,12 +253,14 @@ const setVis = (el, show = true) => {
 // --- Summary readiness check ---
 function summaryIsReady() {
   try {
-    const recs = Array.isArray(window.collectedResponses) ? window.collectedResponses : [];
-    const selectedCats = recs.filter(r => r && (r.selected !== false) && Array.isArray(r.questions) && r.questions.length).length;
-    const answered = recs.reduce((n, c) =>
-      n + (Array.isArray(c.questions) ? c.questions.filter(q => (q && String(q.answer || '').trim() !== '')).length : 0), 0);
-    return selectedCats > 0 && answered > 0;
+    // Count all radio button inputs that are checked
+    const answeredInputs = document.querySelectorAll('input[type="radio"]:checked[data-qid]');
+    const answeredCount = answeredInputs.length;
+    
+    console.log(`[RRIT] Answered questions: ${answeredCount}/24`);
+    return answeredCount === 24; // All 24 questions must be answered
   } catch (e) {
+    console.error('[RRIT] Error checking summary readiness:', e);
     return false;
   }
 }
@@ -284,6 +301,74 @@ function syncExecPrintVisibility() {
 }
 
 // Note: Button event listeners are now handled in initializeEventListeners() to avoid conflicts
+
+/* =========================================================
+   Questions Rendering (New 24-Question System)
+   ========================================================= */
+
+// Render a single question with bilingual support and "Why this matters"
+function renderQuestion(question, index) {
+  const lang = getLang();
+  const qText = question.question[lang] || question.question.en || '';
+  const whyText = question.whyMatters[lang] || question.whyMatters.en || '';
+  
+  return `
+    <fieldset data-qid="${question.qid}" class="question-fieldset">
+      <legend>
+        <strong>${index + 1}. ${qText}</strong>
+      </legend>
+      <div class="rrit-responses">
+        <label class="radio-spacing">
+          <input type="radio" name="q${question.qid}" value="Yes" data-qid="${question.qid}"> 
+          <span data-lang="en">Yes</span><span data-lang="fr" class="hidden">Oui</span>
+        </label>
+        <label class="radio-spacing">
+          <input type="radio" name="q${question.qid}" value="No" data-qid="${question.qid}"> 
+          <span data-lang="en">No</span><span data-lang="fr" class="hidden">Non</span>
+        </label>
+        <label class="radio-spacing">
+          <input type="radio" name="q${question.qid}" value="Unknown" data-qid="${question.qid}"> 
+          <span data-lang="en">Unknown</span><span data-lang="fr" class="hidden">Inconnu</span>
+        </label>
+        <label class="radio-spacing">
+          <input type="radio" name="q${question.qid}" value="Not Applicable" data-qid="${question.qid}"> 
+          <span data-lang="en">N/A</span><span data-lang="fr" class="hidden">S.O.</span>
+        </label>
+      </div>
+      <p class="why-matters"><em>${whyText}</em></p>
+    </fieldset>
+  `;
+}
+
+// Render all 24 questions
+async function renderAllQuestions() {
+  try {
+    const questions = await loadQuestions();
+    const container = document.getElementById('questionsList');
+    
+    if (!container) {
+      console.error('[RRIT] Questions container not found');
+      return;
+    }
+    
+    if (!questions || questions.length === 0) {
+      container.innerHTML = '<p class="alert alert-warning">Failed to load questions. Please refresh the page.</p>';
+      return;
+    }
+    
+    const questionsHtml = questions.map((q, index) => renderQuestion(q, index)).join('\n');
+    container.innerHTML = questionsHtml;
+    
+    console.log(`[RRIT] Rendered ${questions.length} questions`);
+    
+  } catch (error) {
+    console.error('[RRIT] Error rendering questions:', error);
+    const container = document.getElementById('questionsList');
+    if (container) {
+      container.innerHTML = '<p class="alert alert-danger">Error loading questions. Please refresh the page.</p>';
+    }
+  }
+}
 
 /* =========================================================
    Section 2: Local Storage and Data Handling
@@ -393,7 +478,6 @@ function collectCategories() {
     setTimeout(() => placeSummaryBottom(), 0);
   }
 
-  updateCategoryStatusMessage();
 }
 
 function restoreResponses(scenario) {
@@ -432,8 +516,6 @@ function restoreResponses(scenario) {
       cb.checked = selectedCats.has(cb.value);
     }
   });
-
-  collectCategories();
 
   // Restore all answers
   scenario.data.forEach(catData => {
@@ -490,38 +572,27 @@ function validateResponses(responses) {
 }
 
 function collectAndUpdateResponses() {
-    const lang = currentLang;
     const responses = [];
     
-    // Get selected categories
-    const selected = new Set(["A", "B"]); // A and B are always included
-    qsa("#categoryFormEN input:checked, #categoryFormFR input:checked")
-        .forEach(i => selected.add(i.value));
+    // Collect all answered questions from the new 24-question format
+    const checkedInputs = document.querySelectorAll('input[type="radio"]:checked[data-qid]');
     
-    selected.forEach(cat => {
-        const questions = [];
+    checkedInputs.forEach(input => {
+        const fieldset = input.closest("fieldset");
+        const qid = input.dataset.qid;
+        const questionText = fieldset?.querySelector("legend")?.textContent?.trim() || "";
         
-        // Collect answered questions for this category
-        qsa(`#step${cat} input[name^="cat${cat}q"]:checked`).forEach(input => {
-            const fs = input.closest("fieldset");
-            const qid = input.dataset.qid || fs?.dataset.qid || "";
-            const txt = extractLegendText(fs?.querySelector("legend"));
-            if (qid && txt && input.value) {
-                questions.push({ qid, question: txt, answer: input.value });
-            }
-        });
-        
-        if (questions.length > 0) {
+        if (qid && questionText && input.value) {
             responses.push({ 
-                category: categories[cat] && categories[cat][lang] ? categories[cat][lang] : cat, 
-                questions: questions,
-                selected: true 
+                qid, 
+                question: questionText, 
+                answer: input.value 
             });
         }
     });
     
     window.collectedResponses = responses;
-    console.log("[RRIT] Updated collectedResponses:", responses);
+    console.log(`[RRIT] Updated collectedResponses: ${responses.length} answers collected`);
 }
 
 /* =========================================================
@@ -537,7 +608,7 @@ function generateSummary() {
     // Guard: only render a summary when user has provided input
     if (!summaryIsReady()) {
         setSummaryVisibility(false);
-        showSummaryNudge('Please select at least one category and answer at least one question, then generate the summary.');
+        showSummaryNudge('Answer all 24 questions to generate your risk summary.');
         return; // stop here; nothing to render yet
     }
     
@@ -547,26 +618,135 @@ function generateSummary() {
         delete window.editCategoryHandler;
     }
     
-    // Use accordion or table based on feature flag
-    if (window.FEATURES && window.FEATURES.useAccordionSummary) {
-        loadAnnex().then(() => {
-            renderSummaryAccordion();
-            setSummaryVisibility(true);
-        }).catch(() => {
-            // Fail open: render without annex if fetch fails
-            renderSummaryAccordion();
-            setSummaryVisibility(true);
-        });
-    } else {
-        generateSummaryTable();
-        setSummaryVisibility(true);
-    }
+    // Generate risks-only summary
+    renderRisksOnlySummary();
+    setSummaryVisibility(true);
     
     updateSummaryMessage(isEditMode);
     
     saveScenario(window.collectedResponses);
     if (isEditMode) {
         RRITState.setEditMode(false);
+    }
+}
+
+// New function to render risks-only summary
+async function renderRisksOnlySummary() {
+    try {
+        const questions = await loadQuestions();
+        const responses = window.collectedResponses || [];
+        
+        // Filter for No/Unknown answers only
+        const risks = responses.filter(r => {
+            const normalized = normalizeAnswer(r.answer);
+            return normalized === 'no' || normalized === 'unknown';
+        });
+        
+        const riskCount = risks.length;
+        const lang = getLang();
+        
+        // Update summary header with total risk count
+        const summaryTitle = document.querySelector('#rrit-summary .panel-title');
+        if (summaryTitle) {
+            const titleText = lang === 'fr' ? 'Résumé du profil de risque' : 'Risk Profile Summary';
+            summaryTitle.innerHTML = `${titleText} — <span class="risk-count">Total risks identified: ${riskCount}</span>`;
+        }
+        
+        // Clear existing summary containers
+        const tableContainer = document.getElementById('summaryTableContainer');
+        const accordionContainer = document.getElementById('summaryAccordionContainer');
+        
+        if (tableContainer) tableContainer.style.display = 'none';
+        if (accordionContainer) accordionContainer.style.display = 'none';
+        
+        // Create or update risks container
+        let risksContainer = document.getElementById('risksContainer');
+        if (!risksContainer) {
+            risksContainer = document.createElement('div');
+            risksContainer.id = 'risksContainer';
+            risksContainer.style.marginTop = '2rem';
+            
+            // Insert after the summary panel body
+            const summaryPanel = document.getElementById('rrit-summary');
+            if (summaryPanel) {
+                summaryPanel.appendChild(risksContainer);
+            }
+        }
+        
+        // Generate risk cards HTML
+        if (riskCount === 0) {
+            risksContainer.innerHTML = `
+                <div class="alert alert-success">
+                    <strong>${lang === 'fr' ? 'Aucun risque identifié' : 'No risks identified'}</strong>
+                    <p>${lang === 'fr' ? 'Toutes les questions ont reçu des réponses Oui ou S.O.' : 'All questions received Yes or N/A answers.'}</p>
+                </div>
+            `;
+        } else {
+            const riskCardsHtml = await Promise.all(risks.map(async (risk) => {
+                const question = questions.find(q => q.qid === risk.qid);
+                const questionText = question ? (question.question[lang] || question.question.en) : risk.question;
+                const whyMatters = question ? (question.whyMatters[lang] || question.whyMatters.en) : '';
+                
+                // Get risk statement and mitigations from annex
+                const annex = window.RISK_ANNEX || {};
+                let riskStatement = '';
+                let mitigations = [];
+                
+                // Try to find annex data for this question
+                for (const catKey of Object.keys(annex)) {
+                    const catData = annex[catKey];
+                    for (const qKey of Object.keys(catData)) {
+                        if (qKey === risk.qid || qKey.replace(/[.-]/g, '') === risk.qid.replace(/[.-]/g, '')) {
+                            const qData = catData[qKey];
+                            riskStatement = qData.risk ? (qData.risk[lang] || qData.risk.en || '') : '';
+                            mitigations = qData.mit ? (qData.mit[lang] || qData.mit.en || []) : [];
+                            break;
+                        }
+                    }
+                    if (riskStatement) break;
+                }
+                
+                const answerLabel = translateAnswer(risk.answer);
+                const answerClass = normalizeAnswer(risk.answer) === 'no' ? 'badge-danger' : 'badge-warning';
+                
+                return `
+                    <div class="risk-card panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                ${questionText}
+                                <span class="badge ${answerClass}">${answerLabel}</span>
+                            </h4>
+                        </div>
+                        <div class="panel-body">
+                            ${whyMatters ? `<p class="why-matters"><em>${whyMatters}</em></p>` : ''}
+                            ${riskStatement ? `<div class="risk-statement"><strong>${lang === 'fr' ? 'Énoncé de risque:' : 'Risk statement:'}</strong> ${riskStatement}</div>` : ''}
+                            ${mitigations.length > 0 ? `
+                                <div class="mitigations">
+                                    <strong>${lang === 'fr' ? 'Mesures d\'atténuation suggérées:' : 'Suggested mitigations:'}</strong>
+                                    <ul>
+                                        ${mitigations.map(m => `<li>${m}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }));
+            
+            risksContainer.innerHTML = riskCardsHtml.join('\n');
+        }
+        
+        // Hide intro and questions sections
+        const intro = document.getElementById('rrit-intro');
+        const questionsSection = document.getElementById('questionsSection');
+        
+        if (intro) intro.style.display = 'none';
+        if (questionsSection) questionsSection.style.display = 'none';
+        
+        console.log(`[RRIT] Generated risks-only summary with ${riskCount} risks`);
+        
+    } catch (error) {
+        console.error('[RRIT] Error generating risks summary:', error);
     }
 }
 
@@ -979,8 +1159,6 @@ function editAnswersFlow() {
         summaryActionRow.style.display = "flex";
         summaryActionRow.classList.remove("hidden");
     }
-
-    collectCategories();
     
     window.editModeCleanup = () => {
         qsa("#categoryFormEN input, #categoryFormFR input").forEach(checkbox => {
@@ -1116,9 +1294,6 @@ function initializeCategoryListeners() {
                     console.log(`[RRIT] Synced ${event.target.value} in ${otherFormId}: ${event.target.checked}`);
                 }
                 
-                // Then collect categories
-                collectCategories();
-                
                 // Force language display update after category changes
                 setTimeout(() => {
                     updateLanguageDisplay();
@@ -1159,13 +1334,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     // Initialize event listeners
     initializeEventListeners();
-    initializeCategoryListeners();
     
-    // Initialize categories and responses data structure
-    collectCategories();
+    // Load and render questions instead of category listeners
+    renderAllQuestions().then(() => {
+        console.log('[RRIT] Questions loaded and rendered');
+    }).catch(error => {
+        console.error('[RRIT] Failed to load questions:', error);
+    });
     
     // On load, hide summary until a valid generate occurs
-    setSummaryVisibility(summaryIsReady() && !!document.getElementById('riskProfileSummarySection') && false);
+    setSummaryVisibility(false);
     
     // Initialize summary control labels and visibility on load
     syncSummaryControlLabels();
@@ -1242,12 +1420,10 @@ function toggleLanguage(lang) {
     // Update page language attribute
     document.documentElement.lang = lang;
     
-    // CRITICAL: Re-collect categories after language change
+    // Update display after language change
     setTimeout(() => {
-        collectCategories();
         updateLanguageDisplay();
         updateButtonText();
-        updateCategoryStatusMessage();
     }, 50);
     
     // Announce language change
@@ -1336,11 +1512,18 @@ function updateLanguageDisplay() {
         }
     });
     
-    updateCategoryStatusMessage();
     updateButtonText();
     
     if (qs("#summaryTableContainer:not(.hidden)") || qs("#summaryAccordionContainer:not(.hidden)")) {
         regenerateSummaryTable();
+    }
+    
+    // Re-render questions in the new language if questions container exists
+    const questionsContainer = document.getElementById('questionsList');
+    if (questionsContainer && questionsContainer.children.length > 0) {
+        renderAllQuestions().catch(error => {
+            console.error('[RRIT] Error re-rendering questions for language change:', error);
+        });
     }
     
     console.log(`[RRIT] Language display updated to: ${currentLang}`);
