@@ -30,6 +30,66 @@ legend{font-weight:700; border:none; border-bottom: none;}
   .rrit-responses{margin-bottom:1.5rem;}
   .rrit-status{margin-top:1rem;font-weight:700;}
   
+  /* Question styling for new 24-question format */
+  .question-fieldset {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .why-matters {
+    margin-top: 0.5rem;
+    font-size: 0.9em;
+    color: #666;
+  }
+  
+  /* Risk cards styling */
+  .risk-card {
+    margin-bottom: 1.5rem;
+  }
+  
+  .risk-card .panel-heading {
+    background-color: #f5f5f5;
+  }
+  
+  .risk-card .panel-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .risk-card .badge-danger {
+    background-color: #d9534f;
+  }
+  
+  .risk-card .badge-warning {
+    background-color: #f0ad4e;
+  }
+  
+  .risk-statement {
+    margin: 1rem 0;
+    padding: 0.75rem;
+    background-color: #f8f8f8;
+    border-left: 4px solid #d9534f;
+  }
+  
+  .mitigations {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #f4f8ff;
+    border-left: 4px solid #5bc0de;
+  }
+  
+  .mitigations ul {
+    margin-bottom: 0;
+  }
+  
+  .risk-count {
+    font-weight: bold;
+    color: #d9534f;
+  }
+  
   /* Remove borders from collapsed accordion summaries */
   details.wb-accordion > summary,
   section[id^="step"] details > summary {

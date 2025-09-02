@@ -1,0 +1,268 @@
+{
+  "questions": [
+    {
+      "qid": "Q1",
+      "question": {
+        "en": "Does the HR solution comply with the Policy on Privacy Protection and other pertinent privacy regulations?",
+        "fr": "La solution RH est-elle conforme à la Politique sur la protection de la vie privée et aux autres réglementations pertinentes?"
+      },
+      "whyMatters": {
+        "en": "Privacy compliance is mandatory for all government systems handling personal information to avoid legal penalties and protect citizen trust.",
+        "fr": "La conformité à la vie privée est obligatoire pour tous les systèmes gouvernementaux traitant des informations personnelles afin d'éviter les sanctions légales et de protéger la confiance des citoyens."
+      }
+    },
+    {
+      "qid": "Q2",
+      "question": {
+        "en": "Is the solution in line with Canadian labour laws, ensuring equitable treatment and non-discrimination?",
+        "fr": "La solution est-elle conforme aux lois du travail canadiennes, assurant un traitement équitable et non discriminatoire?"
+      },
+      "whyMatters": {
+        "en": "Labour law compliance prevents discrimination claims and ensures fair treatment of all employees across the organization.",
+        "fr": "La conformité au droit du travail prévient les plaintes pour discrimination et assure un traitement équitable de tous les employés de l'organisation."
+      }
+    },
+    {
+      "qid": "Q3",
+      "question": {
+        "en": "Does the system conform to public sector-specific guidelines for data management and employee information?",
+        "fr": "Le système est-il conforme aux directives spécifiques au secteur public pour la gestion des données et des informations des employés?"
+      },
+      "whyMatters": {
+        "en": "Public sector guidelines ensure proper stewardship of government data and maintain operational integrity.",
+        "fr": "Les directives du secteur public assurent une gestion appropriée des données gouvernementales et maintiennent l'intégrité opérationnelle."
+      }
+    },
+    {
+      "qid": "Q4",
+      "question": {
+        "en": "Are proactive measures in place to maintain compliance with changing legal and regulatory frameworks?",
+        "fr": "Des mesures proactives sont-elles en place pour maintenir la conformité aux cadres légaux et réglementaires changeants?"
+      },
+      "whyMatters": {
+        "en": "Proactive compliance management prevents costly retrofits and ensures continuous legal alignment as regulations evolve.",
+        "fr": "La gestion proactive de la conformité prévient les modifications coûteuses et assure un alignement légal continu à mesure que les réglementations évoluent."
+      }
+    },
+    {
+      "qid": "Q5",
+      "question": {
+        "en": "Does the solution implement strong encryption for data both at rest and in transit?",
+        "fr": "La solution met-elle en œuvre un chiffrement fort des données au repos et en transit?"
+      },
+      "whyMatters": {
+        "en": "Strong encryption is essential to protect sensitive employee data from unauthorized access and cyber threats.",
+        "fr": "Un chiffrement robuste est essentiel pour protéger les données sensibles des employés contre l'accès non autorisé et les cybermenaces."
+      }
+    },
+    {
+      "qid": "Q6",
+      "question": {
+        "en": "Are effective user authentication and access control measures in place?",
+        "fr": "Des mesures efficaces d'authentification des utilisateurs et de contrôle des accès sont-elles en place?"
+      },
+      "whyMatters": {
+        "en": "Proper access controls ensure only authorized personnel can access sensitive HR information, reducing data breach risks.",
+        "fr": "Des contrôles d'accès appropriés garantissent que seul le personnel autorisé peut accéder aux informations RH sensibles, réduisant les risques de violation de données."
+      }
+    },
+    {
+      "qid": "Q7",
+      "question": {
+        "en": "Is there a comprehensive data retention and deletion policy in place?",
+        "fr": "Une politique complète de conservation et de suppression des données est-elle en place?"
+      },
+      "whyMatters": {
+        "en": "Clear data retention policies ensure compliance with privacy laws and minimize legal liability from retaining data unnecessarily.",
+        "fr": "Des politiques claires de conservation des données assurent la conformité aux lois sur la vie privée et minimisent la responsabilité légale liée à la conservation inutile de données."
+      }
+    },
+    {
+      "qid": "Q8",
+      "question": {
+        "en": "Does the system undergo regular security audits and vulnerability assessments?",
+        "fr": "Le système fait-il l'objet d'audits de sécurité et d'évaluations de vulnérabilités réguliers?"
+      },
+      "whyMatters": {
+        "en": "Regular security assessments identify and address vulnerabilities before they can be exploited by malicious actors.",
+        "fr": "Les évaluations de sécurité régulières identifient et traitent les vulnérabilités avant qu'elles ne puissent être exploitées par des acteurs malveillants."
+      }
+    },
+    {
+      "qid": "Q9",
+      "question": {
+        "en": "Are incident response procedures and breach notification mechanisms established?",
+        "fr": "Les procédures de réponse aux incidents et les mécanismes de notification de violation sont-ils établis?"
+      },
+      "whyMatters": {
+        "en": "Incident response procedures minimize damage from security breaches and ensure legal notification requirements are met.",
+        "fr": "Les procédures de réponse aux incidents minimisent les dommages causés par les violations de sécurité et assurent le respect des exigences légales de notification."
+      }
+    },
+    {
+      "qid": "Q10",
+      "question": {
+        "en": "Is the HR technology solution compatible with existing IT infrastructure?",
+        "fr": "La solution technologique RH est-elle compatible avec l'infrastructure informatique existante?"
+      },
+      "whyMatters": {
+        "en": "Technology compatibility reduces integration costs and prevents system conflicts that could disrupt operations.",
+        "fr": "La compatibilité technologique réduit les coûts d'intégration et prévient les conflits de systèmes qui pourraient perturber les opérations."
+      }
+    },
+    {
+      "qid": "Q11",
+      "question": {
+        "en": "Does the solution support your department's digital strategy and transformation goals?",
+        "fr": "La solution soutient-elle la stratégie numérique et les objectifs de transformation de votre ministère?"
+      },
+      "whyMatters": {
+        "en": "Strategic alignment ensures the solution contributes to broader digital transformation objectives and provides long-term value.",
+        "fr": "L'alignement stratégique garantit que la solution contribue aux objectifs plus larges de transformation numérique et fournit une valeur à long terme."
+      }
+    },
+    {
+      "qid": "Q12",
+      "question": {
+        "en": "Is the HR solution intuitive and user-friendly for employees and administrators?",
+        "fr": "La solution RH est-elle intuitive et conviviale pour les employés et les administrateurs?"
+      },
+      "whyMatters": {
+        "en": "User-friendly systems increase adoption rates and reduce training costs while improving employee satisfaction.",
+        "fr": "Les systèmes conviviaux augmentent les taux d'adoption et réduisent les coûts de formation tout en améliorant la satisfaction des employés."
+      }
+    },
+    {
+      "qid": "Q13",
+      "question": {
+        "en": "Are training materials tailored to diverse user needs and accessibility requirements?",
+        "fr": "Les matériels de formation sont-ils adaptés aux besoins diversifiés des utilisateurs et aux exigences d'accessibilité?"
+      },
+      "whyMatters": {
+        "en": "Inclusive training ensures all employees can effectively use the system regardless of their abilities or background.",
+        "fr": "La formation inclusive garantit que tous les employés peuvent utiliser efficacement le système indépendamment de leurs capacités ou de leur origine."
+      }
+    },
+    {
+      "qid": "Q14",
+      "question": {
+        "en": "Is ongoing training and user support available post-implementation?",
+        "fr": "Une formation continue et un soutien aux utilisateurs sont-ils disponibles après la mise en œuvre?"
+      },
+      "whyMatters": {
+        "en": "Ongoing support ensures sustained system effectiveness and helps users adapt to updates and new features.",
+        "fr": "Le soutien continu assure l'efficacité soutenue du système et aide les utilisateurs à s'adapter aux mises à jour et nouvelles fonctionnalités."
+      }
+    },
+    {
+      "qid": "Q15",
+      "question": {
+        "en": "Has a cost-benefit analysis been conducted to evaluate the financial impact?",
+        "fr": "Une analyse coûts-avantages a-t-elle été menée pour évaluer l'impact financier?"
+      },
+      "whyMatters": {
+        "en": "Cost-benefit analysis ensures taxpayer funds are used efficiently and the investment provides appropriate value.",
+        "fr": "L'analyse coûts-avantages garantit que les fonds des contribuables sont utilisés efficacement et que l'investissement fournit une valeur appropriée."
+      }
+    },
+    {
+      "qid": "Q16",
+      "question": {
+        "en": "Are long-term costs including maintenance, licensing, and support clearly understood?",
+        "fr": "Les coûts à long terme incluant la maintenance, les licences et le soutien sont-ils clairement compris?"
+      },
+      "whyMatters": {
+        "en": "Understanding total cost of ownership prevents budget overruns and ensures sustainable funding for the solution.",
+        "fr": "Comprendre le coût total de possession prévient les dépassements de budget et assure un financement durable pour la solution."
+      }
+    },
+    {
+      "qid": "Q17",
+      "question": {
+        "en": "Has the vendor demonstrated a track record of reliability and stability?",
+        "fr": "Le fournisseur a-t-il démontré un historique de fiabilité et de stabilité?"
+      },
+      "whyMatters": {
+        "en": "Vendor reliability reduces the risk of service disruptions and ensures long-term support for the system.",
+        "fr": "La fiabilité du fournisseur réduit le risque d'interruptions de service et assure un soutien à long terme pour le système."
+      }
+    },
+    {
+      "qid": "Q18",
+      "question": {
+        "en": "Are vendor support services clearly defined and meet your operational requirements?",
+        "fr": "Les services de soutien du fournisseur sont-ils clairement définis et répondent-ils à vos exigences opérationnelles?"
+      },
+      "whyMatters": {
+        "en": "Clear support agreements prevent service gaps and ensure issues are resolved promptly to maintain operations.",
+        "fr": "Des accords de soutien clairs préviennent les lacunes de service et assurent que les problèmes sont résolus rapidement pour maintenir les opérations."
+      }
+    },
+    {
+      "qid": "Q19",
+      "question": {
+        "en": "Does the initiative align with workforce plans and forecasted future needs?",
+        "fr": "L'initiative s'aligne-t-elle sur les plans de main-d'œuvre et les besoins futurs prévus?"
+      },
+      "whyMatters": {
+        "en": "Workforce alignment ensures the solution supports organizational growth and changing business requirements.",
+        "fr": "L'alignement de la main-d'œuvre garantit que la solution soutient la croissance organisationnelle et les exigences commerciales changeantes."
+      }
+    },
+    {
+      "qid": "Q20",
+      "question": {
+        "en": "Are there strategies to develop or upskill the existing workforce for system adoption?",
+        "fr": "Existe-t-il des stratégies pour développer ou perfectionner la main-d'œuvre existante pour l'adoption du système?"
+      },
+      "whyMatters": {
+        "en": "Workforce development strategies ensure employees can effectively utilize new systems and maximize their potential.",
+        "fr": "Les stratégies de développement de la main-d'œuvre garantissent que les employés peuvent utiliser efficacement les nouveaux systèmes et maximiser leur potentiel."
+      }
+    },
+    {
+      "qid": "Q21",
+      "question": {
+        "en": "Are there defined KPIs or metrics to measure the initiative's impact on employee engagement?",
+        "fr": "Des indicateurs de performance ou des mesures sont-ils définis pour mesurer l'impact de l'initiative sur l'engagement des employés?"
+      },
+      "whyMatters": {
+        "en": "Defined metrics enable measurement of success and identification of areas for improvement in employee engagement.",
+        "fr": "Des mesures définies permettent de mesurer le succès et d'identifier les domaines d'amélioration de l'engagement des employés."
+      }
+    },
+    {
+      "qid": "Q22",
+      "question": {
+        "en": "Does the initiative align with departmental and Government of Canada strategic objectives?",
+        "fr": "L'initiative s'aligne-t-elle sur les objectifs stratégiques ministériels et du gouvernement du Canada?"
+      },
+      "whyMatters": {
+        "en": "Strategic alignment ensures the initiative contributes to broader government priorities and policy objectives.",
+        "fr": "L'alignement stratégique garantit que l'initiative contribue aux priorités gouvernementales plus larges et aux objectifs politiques."
+      }
+    },
+    {
+      "qid": "Q23",
+      "question": {
+        "en": "Does the solution comply with the Accessible Canada Act and accessibility standards?",
+        "fr": "La solution est-elle conforme à la Loi canadienne sur l'accessibilité et aux normes d'accessibilité?"
+      },
+      "whyMatters": {
+        "en": "Accessibility compliance ensures equal access for all employees and demonstrates commitment to inclusive practices.",
+        "fr": "La conformité à l'accessibilité garantit un accès égal pour tous les employés et démontre l'engagement envers des pratiques inclusives."
+      }
+    },
+    {
+      "qid": "Q24",
+      "question": {
+        "en": "Is the initiative compliant with relevant federal laws, policies, and directives?",
+        "fr": "L'initiative est-elle conforme aux lois, politiques et directives fédérales pertinentes?"
+      },
+      "whyMatters": {
+        "en": "Federal compliance ensures the initiative meets all legal requirements and supports good governance practices.",
+        "fr": "La conformité fédérale garantit que l'initiative répond à toutes les exigences légales et soutient les pratiques de bonne gouvernance."
+      }
+    }
+  ]
+}
