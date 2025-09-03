@@ -152,7 +152,7 @@ function ensureSection(root, id) {
 async function loadQuestions() {
   if (QUESTIONS.length) return QUESTIONS;
   try {
-    const res = await fetch("/RRIT/data/rrit_questions_bilingual.json", { cache: "no-store" });
+    const res = await fetch("data/rrit_questions_bilingual.json", { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     QUESTIONS = Array.isArray(data) ? data : (data.questions || []);
