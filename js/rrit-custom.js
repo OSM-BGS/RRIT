@@ -82,8 +82,8 @@ function getIds() {
     (headerHost || questionsSectionPrimary || document.body).prepend(progressText);
   }
 
-  // Generate buttons (you have two): use #btnGenerateSummary primarily; support #generateSummaryBtn as alias
-  const btnGenerateSummary = qs('#btnGenerateSummary') || qs('#generateSummaryBtn');
+  // Generate button: use #btnGenerateSummary
+  const btnGenerateSummary = qs('#btnGenerateSummary');
 
   // Summary containers inside #rrit-summary; we’ll create subcontainers as needed
   const summaryPanel = qs('#rrit-summary') || ensureSection(document.body, 'rrit-summary');
@@ -383,11 +383,6 @@ function wireEvents() {
 
   if (btnGenerateSummary) {
     btnGenerateSummary.addEventListener("click", e => { e.preventDefault(); generateSummary(false); });
-  }
-  // Also support the alt button if present (#generateSummaryBtn)
-  const altGen = qs('#generateSummaryBtn');
-  if (altGen) {
-    altGen.addEventListener("click", e => { e.preventDefault(); generateSummary(false); });
   }
 
   if (editAnswersBtn)   editAnswersBtn.addEventListener("click", e => { e.preventDefault(); editAnswers(); });
