@@ -1,159 +1,224 @@
 /* =========================================================
-   RRIT – Rapid Risk Identification Tool
-   Clean refactor for 24Q, single-language render, risks-only summary
+   RRIT – Rapid Risk Identification Tool (Simple Build)
+   - 24 mandatory questions
+   - Single-language render for Q&A and Summary
+   - Risks-only summary: No/Unknown items with risk statements + mitigations
+   - Save/restore, Edit, Print
+   - Works with the HTML in "index 2025-09-03.txt"
    ========================================================= */
 
-/* =========================
-   Global state & utilities
-   ========================= */
-
-window.QUESTIONS = [];              // [{ id, text{en,fr}, why{en,fr}, risk_statement{en,fr}, mitigations{en[],fr[]} }]
+/* -------------------------
+   Globals & helpers
+------------------------- */
 const STORAGE_KEY = "rrit_savedScenario_v2";
+let QUESTIONS = []; // [{id, text{en,fr}, why{en,fr}, risk_statement{en,fr}, mitigations{en[],fr[]}}]
 let currentLang = (localStorage.getItem("rrit_lang") ||
-                  (navigator.language||"en").toLowerCase().startsWith("fr") ? "fr" : "en");
+                  ((navigator.languages?.[0] || navigator.language || "en").toLowerCase().startsWith("fr") ? "fr" : "en"));
 
-/* Shortcuts */
-const qs  = (s, r=document) => r.querySelector(s);
-const qsa = (s, r=document) => Array.from(r.querySelectorAll(s));
-const setTxt = (el, txt) => { if (el) el.textContent = txt; };
+const qs  = (sel, root = document) => root.querySelector(sel);
+const qsa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+const setText = (el, txt) => { if (el) el.textContent = txt; };
 
-/* Localize helpers */
-function t(obj) {
-  if (obj == null) return "";
-  if (typeof obj === "string") return obj;
-  return obj[currentLang] ?? obj.en ?? "";
-}
+function t(obj) { return (typeof obj === "string") ? obj : (obj?.[currentLang] ?? obj?.en ?? ""); }
+
 function ansLabel(v) {
-  const L = currentLang === "fr"
-    ? { yes:"Oui", no:"Non", unknown:"Inconnu", na:"S.O." }
-    : { yes:"Yes", no:"No", unknown:"Unknown", na:"N/A" };
-  return L[v] || v;
+  const map = currentLang === "fr"
+    ? { yes: "Oui", no: "Non", unknown: "Inconnu", na: "S.O." }
+    : { yes: "Yes", no: "No", unknown: "Unknown", na: "N/A" };
+  return map[v] || v;
 }
+
 function normalizeAnswer(v) {
-  const s = (v||"").toString().trim().toLowerCase();
-  if (["yes","oui","y","o"].includes(s)) return "yes";
-  if (["no","non","n"].includes(s)) return "no";
-  if (["unknown","inconnu","ns","n/s","dontknow","don't know"].includes(s)) return "unknown";
-  if (["na","n/a","not applicable","s.o.","so","sans objet"].includes(s)) return "na";
+  const s = String(v || "").trim().toLowerCase();
+  if (["oui","o","yes","y"].includes(s)) return "yes";
+  if (["non","no","n"].includes(s)) return "no";
+  if (["unknown","inconnu","dontknow","don't know"].includes(s)) return "unknown";
+  if (["na","n/a","so","s.o.","not applicable"].includes(s)) return "na";
   return s;
 }
 
-/* =========================
-   Data loading
-   ========================= */
+/* -------------------------
+   Language handling
+------------------------- */
+function applyLangToSpans() {
+  // Cooperates with your existing [data-lang] spans elsewhere in the page.
+  qsa("[data-lang]").forEach(el => {
+    const isTarget = el.getAttribute("data-lang") === currentLang;
+    el.classList.toggle("hidden", !isTarget);
+    el.setAttribute("aria-hidden", (!isTarget).toString());
+  });
+  // Update <html lang> for a11y/print
+  document.documentElement.lang = currentLang;
+}
 
+function toggleLanguage(lang) {
+  currentLang = (lang === "fr") ? "fr" : "en";
+  localStorage.setItem("rrit_lang", currentLang);
+  applyLangToSpans();
+  renderQuestions();            // re-render Q&A in a single language
+  renderSummaryIfVisible();     // if summary is visible, re-render it as well
+  // Update button label variants if present
+  const g1 = qs("#btnGenerateSummary");
+  if (g1) setText(g1, currentLang === "fr" ? "Générer le résumé" : "Generate Summary");
+}
+window.toggleLanguage = toggleLanguage; // keep your inline onclicks working
+
+/* -------------------------
+   Ensure/normalize HTML scaffold (IDs from your file)
+------------------------- */
+function getIds() {
+  // You have two #questionsSection blocks; prefer the first (panel) with #questionsList.
+  const questionsSectionPrimary = qs('section.panel.panel-default#questionsSection');
+  const questionsList = qs('#questionsList') || ensureDiv(questionsSectionPrimary, 'questionsList');
+
+  // Progress text (you also have a second progressText in a duplicate section; prefer unique)
+  let progressText = qs('#progressText');
+  if (!progressText) {
+    progressText = document.createElement('p');
+    progressText.id = 'progressText';
+    progressText.className = 'mrgn-bttm-sm';
+    // place near the questions list header if available
+    const headerHost = questionsSectionPrimary?.querySelector('.panel-body');
+    (headerHost || questionsSectionPrimary || document.body).prepend(progressText);
+  }
+
+  // Generate buttons (you have two): use #btnGenerateSummary primarily; support #generateSummaryBtn as alias
+  const btnGenerateSummary = qs('#btnGenerateSummary') || qs('#generateSummaryBtn');
+
+  // Summary containers inside #rrit-summary; we’ll create subcontainers as needed
+  const summaryPanel = qs('#rrit-summary') || ensureSection(document.body, 'rrit-summary');
+  let summaryHeader = qs('#summaryHeader', summaryPanel);
+  if (!summaryHeader) {
+    summaryHeader = document.createElement('div');
+    summaryHeader.id = 'summaryHeader';
+    summaryPanel.querySelector('.panel-body')?.prepend(summaryHeader);
+  }
+  let riskCountEl = qs('#riskCount', summaryPanel);
+  if (!riskCountEl) {
+    const p = document.createElement('p');
+    p.innerHTML = (currentLang === 'fr'
+      ? 'Nombre total de risques identifiés : '
+      : 'Total risks identified: ') + '<strong id="riskCount">0</strong>';
+    summaryPanel.querySelector('.panel-body')?.appendChild(p);
+    riskCountEl = qs('#riskCount', summaryPanel);
+  }
+  let riskList = qs('#riskList', summaryPanel);
+  if (!riskList) {
+    riskList = document.createElement('div');
+    riskList.id = 'riskList';
+    summaryPanel.querySelector('.panel-body')?.appendChild(riskList);
+  }
+
+  // Action buttons in your markup
+  const editAnswersBtn   = qs('#editAnswersBtn');
+  const newScenarioBtn   = qs('#newScenarioBtn');
+  const printSummaryBtn  = qs('#printSummaryBtn');
+  const postResultActions= qs('#postResultActions');
+  const backToSummaryBtn = qs('#backToSummary'); // present but hidden in your HTML
+
+  return {
+    questionsSectionPrimary,
+    questionsList,
+    progressText,
+    btnGenerateSummary,
+    summaryPanel,
+    summaryHeader,
+    riskCountEl,
+    riskList,
+    editAnswersBtn,
+    newScenarioBtn,
+    printSummaryBtn,
+    postResultActions,
+    backToSummaryBtn
+  };
+}
+
+function ensureDiv(root, id) {
+  const el = document.createElement('div');
+  el.id = id;
+  (root || document.body).appendChild(el);
+  return el;
+}
+function ensureSection(root, id) {
+  const el = document.createElement('section');
+  el.id = id;
+  (root || document.body).appendChild(el);
+  return el;
+}
+
+/* -------------------------
+   Data loading (JSON)
+------------------------- */
 async function loadQuestions() {
-  if (window.QUESTIONS.length) return window.QUESTIONS;
+  if (QUESTIONS.length) return QUESTIONS;
   try {
-    // Accept either an array or {questions:[…]}
-    const res = await fetch("data/rrit_questions_bilingual.json", { cache: "no-store" });
-    if (!res.ok) throw new Error("HTTP "+res.status);
+    const res = await fetch("/RRIT/data/rrit_questions_bilingual.json", { cache: "no-store" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    window.QUESTIONS = Array.isArray(data) ? data : (data.questions || []);
+    QUESTIONS = Array.isArray(data) ? data : (data.questions || []);
   } catch (e) {
     console.error("[RRIT] Failed to load questions:", e);
-    window.QUESTIONS = [];
+    QUESTIONS = [];
   }
-  return window.QUESTIONS;
+  return QUESTIONS;
 }
 
-/* =========================
-   Render – questions (single language)
-   ========================= */
-
-function ensureQuestionsScaffold() {
-  // Minimal scaffold if host HTML doesn’t have containers
-  let wrap = qs("#questionsSection");
-  if (!wrap) {
-    wrap = document.createElement("section");
-    wrap.id = "questionsSection";
-    document.body.prepend(wrap);
-  }
-  if (!qs("#progressText", wrap)) {
-    const p = document.createElement("p");
-    p.id = "progressText";
-    p.className = "mrgn-bttm-sm";
-    wrap.appendChild(p);
-  }
-  if (!qs("#questionsList", wrap)) {
-    const d = document.createElement("div");
-    d.id = "questionsList";
-    wrap.appendChild(d);
-  }
-  if (!qs("#btnGenerateSummary")) {
-    const b = document.createElement("button");
-    b.id = "btnGenerateSummary";
-    b.className = "btn btn-primary mrgn-tp-lg";
-    b.disabled = true;
-    b.textContent = currentLang === "fr" ? "Générer le résumé" : "Generate summary";
-    wrap.appendChild(b);
-  }
-}
-
+/* -------------------------
+   Rendering – Questions
+------------------------- */
 function renderQuestions() {
-  ensureQuestionsScaffold();
-  const list = qs("#questionsList");
-  const L = currentLang;
-  const items = window.QUESTIONS;
+  const { questionsList, progressText, btnGenerateSummary } = getIds();
+  const items = QUESTIONS;
 
-  list.innerHTML = items.map((q, idx) => {
-    const qid = q.id || `Q${idx+1}`;
+  // Render single-language blocks (no EN/FR doubles)
+  questionsList.innerHTML = items.map((q, i) => {
+    const qid = q.id || `Q${i+1}`;
     const qText = t(q.text);
     const why   = t(q.why);
     return `
-      <fieldset class="question-fieldset" data-qid="${qid}">
-        <legend><strong>${idx+1}. ${qText}</strong></legend>
+      <fieldset class="question-fieldset mrgn-bttm-md" data-qid="${qid}">
+        <legend><strong>${i+1}. ${qText}</strong></legend>
         <div class="rrit-responses" role="radiogroup" aria-label="${qText}">
           ${["yes","no","unknown","na"].map(v => `
             <label class="radio-inline mrgn-rght-sm">
               <input type="radio" name="${qid}" value="${v}" required>
               <span>${ansLabel(v)}</span>
-            </label>`).join("")}
+            </label>
+          `).join("")}
         </div>
         ${why ? `<p class="why-matters"><em>${why}</em></p>` : ""}
       </fieldset>
     `;
   }).join("");
 
-  // progress + enablement
-  const onChange = () => {
-    const total = items.length;
+  // Progress + guard
+  const updateProgress = () => {
     const answered = items.filter(q => !!qs(`input[name="${q.id}"]:checked`)).length;
-    setTxt(qs("#progressText"), (L==="fr" ? "Répondu " : "Answered ") + `${answered}/${total}`);
-    const btn = qs("#btnGenerateSummary");
-    if (btn) btn.disabled = answered !== total;
+    setText(progressText, (currentLang === "fr" ? "Répondu " : "Answered ") + `${answered}/${items.length}`);
+    if (btnGenerateSummary) btnGenerateSummary.disabled = answered !== items.length;
   };
-  list.removeEventListener("change", list._rritOnChange || (()=>{}));
-  list._rritOnChange = onChange;
-  list.addEventListener("change", onChange);
-  onChange();
+
+  questionsList.removeEventListener("change", questionsList._rritChange || (()=>{}));
+  questionsList._rritChange = updateProgress;
+  questionsList.addEventListener("change", updateProgress);
+  updateProgress();
 }
 
-/* =========================
+/* -------------------------
    Collect / Save / Restore
-   ========================= */
-
+------------------------- */
 function collectResponses() {
-  return window.QUESTIONS.map(q => {
-    const el = qs(`input[name="${q.id}"]:checked`);
-    return { qid: q.id, answer: el ? el.value : null };
-  });
-}
-
-// Helper function that returns checked value for a question ID, as mentioned in requirements
-function getCheckedValue(qid) {
-  const el = qs(`input[name="${qid}"]:checked`);
-  return el ? el.value : null;
+  return QUESTIONS.map(q => {
+    const sel = qs(`input[name="${q.id}"]:checked`);
+    return { qid: q.id, answer: sel ? sel.value : null };
+  }).filter(r => r.answer !== null);
 }
 
 function saveScenario() {
   const payload = {
     version: "v2",
     lang: currentLang,
-    data: window.QUESTIONS.map(q => ({
-      qid: q.id,
-      answer: getCheckedValue(q.id) // 'yes'|'no'|'unknown'|'na' or null
-    })),
+    data: collectResponses(),
     meta: {
       name: qs("#projectName")?.value || "",
       desc: qs("#projectDesc")?.value || "",
@@ -165,136 +230,27 @@ function saveScenario() {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
   } catch (e) {
-    console.warn("[RRIT] localStorage save failed", e);
+    console.warn("[RRIT] localStorage save failed:", e);
   }
 }
 
 function loadScenario() {
   try {
-    // Prefer the new v2 format
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed && parsed.version === "v2") {
-        return parsed;
-      }
-    }
-    
-    // Try to migrate from older category-based format
-    const legacyKeys = [
-      'rrit_savedScenario',
-      'rrit_savedScenario_v1', 
-      'rrit_responses',
-      'rrit_data'
-    ];
-    
-    for (const legacyKey of legacyKeys) {
-      const legacyRaw = localStorage.getItem(legacyKey);
-      if (legacyRaw) {
-        try {
-          const legacy = JSON.parse(legacyRaw);
-          const migrated = migrateLegacyFormat(legacy);
-          if (migrated) {
-            console.warn(`[RRIT] Migrated data from legacy format (${legacyKey})`);
-            // Save in new format and remove old
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
-            localStorage.removeItem(legacyKey);
-            return migrated;
-          }
-        } catch (e) {
-          console.warn(`[RRIT] Failed to migrate legacy format from ${legacyKey}:`, e);
-        }
-      }
-    }
-    
-    return null;
-  } catch (e) {
-    console.warn("[RRIT] Failed to load scenario:", e);
-    return null;
-  }
-}
-
-// Migration function for older category-based formats
-function migrateLegacyFormat(legacy) {
-  if (!legacy || typeof legacy !== 'object') return null;
-  
-  try {
-    // Handle different possible legacy structures
-    let responses = [];
-    
-    // Case 1: Category-based structure like { "A. Regulatory": { "A.01": "yes", ... }, ... }
-    if (legacy.categories || (typeof legacy === 'object' && !Array.isArray(legacy.data))) {
-      const categoryData = legacy.categories || legacy;
-      for (const categoryKey in categoryData) {
-        if (typeof categoryData[categoryKey] === 'object') {
-          for (const qid in categoryData[categoryKey]) {
-            responses.push({
-              qid: qid,
-              answer: categoryData[categoryKey][qid]
-            });
-          }
-        }
-      }
-    }
-    
-    // Case 2: Flat structure like { "A.01": "yes", "A.02": "no", ... }
-    else if (!legacy.data && !legacy.version) {
-      for (const qid in legacy) {
-        if (typeof legacy[qid] === 'string' && qid.match(/^[A-K]\.\d+$/)) {
-          responses.push({
-            qid: qid,
-            answer: legacy[qid]
-          });
-        }
-      }
-    }
-    
-    // Case 3: Old v1 format with data array
-    else if (legacy.data && Array.isArray(legacy.data)) {
-      responses = legacy.data.map(item => ({
-        qid: item.qid || item.id,
-        answer: item.answer || item.value
-      }));
-    }
-    
-    if (responses.length === 0) return null;
-    
-    // Convert to new v2 format - ensure ALL questions are included
-    const newData = window.QUESTIONS.map(q => {
-      const existingResponse = responses.find(r => r.qid === q.id);
-      return {
-        qid: q.id,
-        answer: existingResponse ? existingResponse.answer : null
-      };
-    });
-    
-    return {
-      version: "v2",
-      lang: legacy.lang || currentLang,
-      data: newData,
-      meta: legacy.meta || {},
-      savedAt: Date.now(),
-      migratedFrom: "legacy"
-    };
-  } catch (e) {
-    console.warn("[RRIT] Migration failed:", e);
-    return null;
-  }
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch { return null; }
 }
 
 function restoreScenario(saved) {
   if (!saved?.data) return;
-  // language preference
-  if (saved.lang) toggleLanguage(saved.lang, /*noRecurse*/true);
-  // restore inputs
+  if (saved.lang && saved.lang !== currentLang) toggleLanguage(saved.lang);
   saved.data.forEach(({ qid, answer }) => {
-    if (answer !== null) { // Only restore non-null answers
-      const inp = qs(`input[name="${qid}"][value="${normalizeAnswer(answer)}"]`);
-      if (inp && !inp.checked) inp.click();
-    }
+    const v = normalizeAnswer(answer);
+    const el = qs(`input[name="${qid}"][value="${v}"]`);
+    if (el && !el.checked) el.click();
   });
-
-  // restore meta
+  // Restore meta
   const m = saved.meta || {};
   if (qs("#projectName")) qs("#projectName").value = m.name || "";
   if (qs("#projectDesc")) qs("#projectDesc").value = m.desc || "";
@@ -302,231 +258,155 @@ function restoreScenario(saved) {
   if (qs("#completedBy")) qs("#completedBy").value = m.completedBy || "";
 }
 
-/* =========================
-   Summary – risks only
-   ========================= */
-
-function ensureSummaryScaffold() {
-  let sec = qs("#summarySection");
-  if (!sec) {
-    sec = document.createElement("section");
-    sec.id = "summarySection";
-    sec.className = "hidden";
-    document.body.appendChild(sec);
-  }
-  if (!qs("#summaryTitle", sec)) {
-    const h = document.createElement("h2");
-    h.id = "summaryTitle";
-    sec.appendChild(h);
-  }
-  if (!qs("#riskCountLine", sec)) {
-    const p = document.createElement("p");
-    p.id = "riskCountLine";
-    sec.appendChild(p);
-  }
-  if (!qs("#riskList", sec)) {
-    const d = document.createElement("div");
-    d.id = "riskList";
-    d.className = "panel-group";
-    sec.appendChild(d);
-  }
+/* -------------------------
+   Summary – Risks only
+------------------------- */
+function renderSummaryIfVisible() {
+  const { summaryPanel } = getIds();
+  // If panel body already contains riskList content, refresh with new language
+  const riskList = qs('#riskList', summaryPanel);
+  if (riskList && riskList.childElementCount) generateSummary(true);
 }
 
-function summaryIsReady() {
+function generateSummary(skipGuard = false) {
+  const {
+    questionsSectionPrimary,
+    summaryPanel,
+    summaryHeader,
+    riskCountEl,
+    riskList,
+    postResultActions,
+    editAnswersBtn,
+    newScenarioBtn,
+    printSummaryBtn
+  } = getIds();
+
   const responses = collectResponses();
-  return responses.filter(r => r.answer !== null).length === window.QUESTIONS.length;
-}
-
-function generateSummary() {
-  if (!summaryIsReady()) {
-    alert(currentLang==="fr" ? "Veuillez répondre aux 24 questions." : "Please answer all 24 questions.");
+  if (!skipGuard && responses.length !== QUESTIONS.length) {
+    alert(currentLang === "fr" ? "Veuillez répondre aux 24 questions." : "Please answer all 24 questions.");
     return;
   }
-  ensureSummaryScaffold();
-  
-  // Clean up any old elements that might conflict
-  const oldRiskCount = qs("#riskCount");
-  if (oldRiskCount && oldRiskCount.parentElement) {
-    oldRiskCount.parentElement.remove();
-  }
 
-  const responses = collectResponses().filter(r => r.answer !== null); // Only use answered questions for summary
+  // Compute risks (No/Unknown)
   const risks = responses.filter(r => {
-    const n = normalizeAnswer(r.answer);
-    return n === "no" || n === "unknown";
+    const v = normalizeAnswer(r.answer);
+    return v === "no" || v === "unknown";
   });
 
-  // Header - using t() for bilingual support
-  setTxt(qs("#summaryTitle"), t(currentLang==="fr" ? "Résumé des risques" : "Risk Summary"));
-  
-  // Count line - bilingual format as specified
-  const riskCountLine = qs("#riskCountLine");
-  if (riskCountLine) {
-    riskCountLine.textContent = currentLang==="fr" 
-      ? `Nombre total de risques identifiés : ${risks.length}`
-      : `Total risks identified: ${risks.length}`;
+  // Header text
+  const h2 = qs('.panel-heading .panel-title[data-lang]', summaryPanel);
+  if (h2) {
+    // handled by applyLangToSpans(); also insert a local title for clarity
   }
+  setText(summaryHeader, currentLang === "fr" ? "Résumé des risques" : "Risk Summary");
+  setText(riskCountEl, String(risks.length));
 
-  // List
-  const list = qs("#riskList");
-  const items = risks.map(r => {
-    const q = window.QUESTIONS.find(x => x.id === r.qid) || {};
-    const qText = t(q.text);
-    const riskS = t(q.risk_statement);
-    const mits  = t(q.mitigations);
-    const mitsList = Array.isArray(mits) ? mits : (mits && typeof mits === 'object' ? (mits[currentLang] || mits.en || []) : []);
+  // Build risk cards
+  riskList.innerHTML = "";
+  if (!risks.length) {
+    riskList.innerHTML = `<div class="alert alert-success"><strong>${currentLang === "fr" ? "Aucun risque identifié." : "No risks identified."}</strong></div>`;
+  } else {
+    risks.forEach(r => {
+      const q = QUESTIONS.find(x => x.id === r.qid) || {};
+      const qText = t(q.text);
+      const why   = t(q.why);
+      const riskS = t(q.risk_statement);
+      const mits  = Array.isArray(q.mitigations?.[currentLang]) ? q.mitigations[currentLang]
+                   : (Array.isArray(q.mitigations?.en) ? q.mitigations.en : []);
 
-    return `
-      <div class="panel panel-default">
+      const card = document.createElement("article");
+      card.className = "panel panel-default risk-card mrgn-bttm-md";
+      card.innerHTML = `
         <div class="panel-heading">
-          <h4 class="panel-title">
-            ${qText}
-            <small>(${ansLabel(normalizeAnswer(r.answer))})</small>
-          </h4>
+          <h3 class="panel-title">
+            ${qText} <small>(${ansLabel(normalizeAnswer(r.answer))})</small>
+          </h3>
         </div>
         <div class="panel-body">
-          ${riskS ? `<h4>${currentLang==="fr" ? "Énoncé de risque" : "Risk statement"}</h4><p>${riskS}</p>` : ""}
-          ${Array.isArray(mitsList) && mitsList.length ? `
-            <h4>${currentLang==="fr" ? "Mesures d’atténuation" : "Mitigation actions"}</h4>
-            <ul>${mitsList.map(m => `<li>${m}</li>`).join("")}</ul>
+          ${why ? `<p class="why-matters"><em>${why}</em></p>` : ""}
+          ${riskS ? `<h4>${currentLang === "fr" ? "Énoncé de risque" : "Risk statement"}</h4><p>${riskS}</p>` : ""}
+          ${mits?.length ? `
+            <h4>${currentLang === "fr" ? "Mesures d’atténuation" : "Mitigation actions"}</h4>
+            <ul>${mits.map(m => `<li>${m}</li>`).join("")}</ul>
           ` : ""}
         </div>
-      </div>
-    `;
-  }).join("");
-
-  list.innerHTML = risks.length === 0
-    ? `<p><strong>${currentLang==="fr" ? "Aucun risque identifié" : "No risks identified"}</strong></p>`
-    : items;
-
-  // Show summary section
-  const sum = qs("#summarySection");
-  if (sum) {
-    sum.classList.remove("hidden");
-    sum.style.display = "block";
+      `;
+      riskList.appendChild(card);
+    });
   }
 
-  // Hide questions section to focus attention (optional)
-  const qsec = qs("#questionsSection");
-  if (qsec) qsec.style.display = "none";
+  // UI state
+  if (questionsSectionPrimary) questionsSectionPrimary.style.display = "none";
+  if (postResultActions) {
+    postResultActions.classList.remove("hidden");
+    postResultActions.setAttribute("data-state", "active");
+  }
+  [editAnswersBtn, newScenarioBtn, printSummaryBtn].forEach(b => b && (b.classList.remove("hidden"), b.removeAttribute("aria-hidden")));
 
-  // Persist
+  // Persist scenario
   saveScenario();
 }
 
-/* =========================
-   Summary visibility helper
-   ========================= */
-
-function renderSummaryIfVisible() {
-  const sum = qs("#summarySection");
-  if (sum && sum.offsetParent !== null) {
-    generateSummary(); // re-renders with the current language
-  }
-}
-
-/* =========================
-   Language toggle (re-render)
-   ========================= */
-
-function toggleLanguage(lang, noRecurse=false) {
-  currentLang = (lang === "fr") ? "fr" : "en";
-  document.documentElement.lang = currentLang;
-  localStorage.setItem("rrit_lang", currentLang);
-
-  // Save current responses before re-rendering questions
-  const savedResponses = collectResponses();
-  
-  renderQuestions();
-  
-  // Restore responses after re-rendering
-  savedResponses.forEach(({ qid, answer }) => {
-    if (answer !== null) { // Only restore non-null answers
-      const inp = qs(`input[name="${qid}"][value="${normalizeAnswer(answer)}"]`);
-      if (inp && !inp.checked) inp.checked = true;
-    }
-  });
-  
-  // Trigger progress update after restoring responses
-  const onChange = qs("#questionsList")?._rritOnChange;
-  if (onChange) onChange();
-  
-  renderSummaryIfVisible();
-
-  // Update button labels if present
-  const gen = qs("#btnGenerateSummary");
-  if (gen) gen.textContent = currentLang==="fr" ? "Générer le résumé" : "Generate summary";
-
-  if (!noRecurse) console.log("[RRIT] Language switched to:", currentLang);
-}
-
-/* =========================
-   Print (single-language)
-   ========================= */
-
-function printSummary() {
-  // Ensure language attribute is set correctly for the print
-  document.documentElement.setAttribute("data-print-lang", currentLang);
-  setTimeout(() => {
-    window.print();
-    setTimeout(() => document.documentElement.removeAttribute("data-print-lang"), 250);
-  }, 50);
-}
-
-/* =========================
-   Edit flow
-   ========================= */
-
+/* -------------------------
+   Edit / New / Print
+------------------------- */
 function editAnswers() {
-  // Show questions again and restore saved selections
-  const qsec = qs("#questionsSection");
-  if (qsec) qsec.style.display = "";
-  
-  // Hide summary section
-  const sum = qs("#summarySection");
-  if (sum) sum.style.display = "none";
-  
+  const { questionsSectionPrimary } = getIds();
+  if (questionsSectionPrimary) questionsSectionPrimary.style.display = "";
   const saved = loadScenario();
   if (saved) restoreScenario(saved);
-  // Recompute progress
-  const evt = new Event("change", { bubbles: true });
-  qs("#questionsList")?.dispatchEvent(evt);
+  // Trigger progress recompute
+  qs("#questionsList")?.dispatchEvent(new Event("change", { bubbles: true }));
 }
 
-/* =========================
-   Event wiring & boot
-   ========================= */
+function newScenario() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  location.reload();
+}
 
+function printSummary() {
+  // Ensure single-language print
+  document.documentElement.setAttribute("data-print-lang", currentLang);
+  setTimeout(() => { window.print(); setTimeout(() => document.documentElement.removeAttribute("data-print-lang"), 200); }, 50);
+}
+
+/* -------------------------
+   Event wiring
+------------------------- */
 function wireEvents() {
-  const map = {
-    "#btnGenerateSummary": generateSummary,
-    "#printSummaryBtn": printSummary,
-    "#editAnswersBtn": editAnswers,
-    "#newScenarioBtn": () => { localStorage.removeItem(STORAGE_KEY); location.reload(); }
-  };
-  Object.entries(map).forEach(([sel, fn]) => {
-    const el = qs(sel);
-    if (el) {
-      const clone = el.cloneNode(true);
-      el.replaceWith(clone);
-      clone.addEventListener("click", (e) => { e.preventDefault(); fn(); });
-    }
-  });
+  const {
+    btnGenerateSummary,
+    editAnswersBtn,
+    newScenarioBtn,
+    printSummaryBtn
+  } = getIds();
 
-  // Optional language switchers (if present)
-  const langEN = qs('[data-action="lang-en"]') || qs('a[onclick*="toggleLanguage(\'en\')"]');
-  const langFR = qs('[data-action="lang-fr"]') || qs('a[onclick*="toggleLanguage(\'fr\')"]');
-  if (langEN) { langEN.addEventListener("click", e => { e.preventDefault(); toggleLanguage("en"); }); }
-  if (langFR) { langFR.addEventListener("click", e => { e.preventDefault(); toggleLanguage("fr"); }); }
+  if (btnGenerateSummary) {
+    btnGenerateSummary.addEventListener("click", e => { e.preventDefault(); generateSummary(false); });
+  }
+  // Also support the alt button if present (#generateSummaryBtn)
+  const altGen = qs('#generateSummaryBtn');
+  if (altGen) {
+    altGen.addEventListener("click", e => { e.preventDefault(); generateSummary(false); });
+  }
+
+  if (editAnswersBtn)   editAnswersBtn.addEventListener("click", e => { e.preventDefault(); editAnswers(); });
+  if (newScenarioBtn)   newScenarioBtn.addEventListener("click", e => { e.preventDefault(); newScenario(); });
+  if (printSummaryBtn)  printSummaryBtn.addEventListener("click", e => { e.preventDefault(); printSummary(); });
+
+  // Language links already call window.toggleLanguage('en'/'fr') inline
 }
 
+/* -------------------------
+   Boot
+------------------------- */
 document.addEventListener("DOMContentLoaded", async () => {
+  applyLangToSpans();
   await loadQuestions();
-  document.documentElement.lang = currentLang;
   renderQuestions();
   wireEvents();
 
-  // Try to restore a saved scenario (optional)
+  // Attempt restore
   const saved = loadScenario();
   if (saved) restoreScenario(saved);
 });
