@@ -182,6 +182,17 @@ Top of file through section/category selection
   <div class="panel-body">
     <p data-lang="en">After completing all 24 questions, click below to generate your risk summary. Only "No" or "Unknown" answers will be listed.</p>
     <p data-lang="fr" class="hidden">Après avoir répondu aux 24 questions, cliquez ci-dessous pour générer votre résumé des risques. Seules les réponses "Non" ou "Inconnu" seront affichées.</p>
+    
+    <!-- Risk summary content -->
+    <p>
+      <span data-lang="en">Total risks identified: </span>
+      <span data-lang="fr" class="hidden">Nombre total de risques identifiés : </span>
+      <strong id="riskCount">0</strong>
+    </p>
+    <div id="riskList">
+      <!-- Risk items will be populated by JavaScript -->
+    </div>
+    
     <div id="summaryActionRow" class="d-flex flex-wrap gap-2 mt-3">
       <!-- Revealed only after the first summary -->
       <div id="postResultActions" class="hidden" data-state="inactive">
