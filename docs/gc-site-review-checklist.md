@@ -95,7 +95,10 @@ Testing
 -------------------------------------------------------------------------------
 
 How to use this checklist
-1) Run the automated audit (see docs/README-AUDIT.md).
+1) Run the automated audit (see [docs/README-AUDIT.md](./README-AUDIT.md)).
 2) Manually review with keyboard and screen reader for core tasks.
 3) Validate official languages, privacy, and content quality.
 4) Record issues with severity, language parity, routes, and remediation plan.
+
+**For detailed guidance**: See [docs/reviewer-guide.md](./reviewer-guide.md) for step-by-step instructions.
+**For structured reviews**: Use the [GC Review issue template](../.github/ISSUE_TEMPLATE/gc-review.md) to track progress.

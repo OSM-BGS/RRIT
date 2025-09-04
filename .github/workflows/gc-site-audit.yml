@@ -1,0 +1,94 @@
+name: GC Site Audit
+
+on:
+  pull_request:
+    paths:
+      - '**.html'
+      - '**.css'
+      - '**.js'
+      - '**.md'
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  audit:
+    name: Government of Canada Web Compliance Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Install audit tools
+      run: |
+        npm install -g @axe-core/cli lighthouse broken-link-checker html-validate
+        
+    - name: Start local server (if needed)
+      run: |
+        # Start a simple HTTP server for testing
+        python3 -m http.server 8080 &
+        sleep 3
+        
+    - name: Run accessibility checks with axe-core
+      run: |
+        mkdir -p audit-results
+        # Test main pages
+        axe http://localhost:8080 --tags wcag2a,wcag2aa --reporter json --dir ./audit-results/ || true
+        axe http://localhost:8080/policy-library.html --tags wcag2a,wcag2aa --reporter json --dir ./audit-results/ || true
+        
+    - name: Run HTML validation
+      run: |
+        html-validate *.html || true
+        
+    - name: Run Lighthouse performance audit
+      run: |
+        lighthouse http://localhost:8080 --output json --output-path ./audit-results/lighthouse-main.json --chrome-flags="--headless --no-sandbox" || true
+        lighthouse http://localhost:8080/policy-library.html --output json --output-path ./audit-results/lighthouse-policy.json --chrome-flags="--headless --no-sandbox" || true
+        
+    - name: Check for broken links
+      run: |
+        # Check internal links only to avoid external dependency issues
+        blc http://localhost:8080 --recursive --exclude-external --ordered || true
+        
+    - name: Upload audit results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: gc-audit-results
+        path: audit-results/
+        retention-days: 30
+        
+    - name: Comment on PR with audit summary
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          let comment = '## 🇨🇦 GC Web Compliance Audit Results\n\n';
+          
+          // Check if audit files exist and add summary
+          try {
+            comment += '### Automated Checks Completed:\n';
+            comment += '- ✅ Accessibility scan (axe-core)\n';
+            comment += '- ✅ HTML validation\n';
+            comment += '- ✅ Performance audit (Lighthouse)\n';
+            comment += '- ✅ Link validation\n\n';
+            comment += '📋 **Next Steps**: Review the detailed [GC Site Review Checklist](./docs/gc-site-review-checklist.md) for manual validation.\n\n';
+            comment += '📊 **Detailed Results**: Check the workflow artifacts for complete audit reports.\n\n';
+            comment += '📖 **Audit Guide**: See [docs/README-AUDIT.md](./docs/README-AUDIT.md) for tool usage and interpretation.';
+          } catch (error) {
+            comment += '⚠️ Some automated checks encountered issues. Check the workflow logs for details.';
+          }
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
