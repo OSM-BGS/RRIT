@@ -54,6 +54,7 @@ function applyLangToSpans() {
 function toggleLanguage(lang) {
   currentLang = (lang === "fr") ? "fr" : "en";
   localStorage.setItem("rrit_lang", currentLang);
+  console.debug('[RRIT] lang:', currentLang);
   applyLangToSpans();
   renderQuestions();            // re-render Q&A in a single language
   renderSummaryIfVisible();     // if summary is visible, re-render it as well
@@ -152,10 +153,11 @@ function ensureSection(root, id) {
 async function loadQuestions() {
   if (QUESTIONS.length) return QUESTIONS;
   try {
-    const res = await fetch("/RRIT/data/rrit_questions_bilingual.json", { cache: "no-store" });
+    const res = await fetch("data/rrit_questions_bilingual.json", { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     QUESTIONS = Array.isArray(data) ? data : (data.questions || []);
+    console.debug('[RRIT] QUESTIONS:', QUESTIONS.length);
   } catch (e) {
     console.error("[RRIT] Failed to load questions:", e);
     QUESTIONS = [];
@@ -194,8 +196,14 @@ function renderQuestions() {
   // Progress + guard
   const updateProgress = () => {
     const answered = items.filter(q => !!qs(`input[name="${q.id}"]:checked`)).length;
-    setText(progressText, (currentLang === "fr" ? "Répondu " : "Answered ") + `${answered}/${items.length}`);
-    if (btnGenerateSummary) btnGenerateSummary.disabled = answered !== items.length;
+    const total = items.length;
+    setText(progressText, (currentLang === "fr" ? "Répondu " : "Answered ") + `${answered}/${total}`);
+    if (btnGenerateSummary) {
+      btnGenerateSummary.disabled = answered !== total;
+      if (answered === total) {
+        console.debug('[RRIT] progress:', answered, '/', total);
+      }
+    }
   };
 
   questionsList.removeEventListener("change", questionsList._rritChange || (()=>{}));
@@ -292,6 +300,8 @@ function generateSummary(skipGuard = false) {
     const v = normalizeAnswer(r.answer);
     return v === "no" || v === "unknown";
   });
+
+  console.debug('[RRIT] generate; risks:', risks.length);
 
   // Header text
   const h2 = qs('.panel-heading .panel-title[data-lang]', summaryPanel);
