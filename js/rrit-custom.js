@@ -343,6 +343,9 @@ function generateSummary(skipGuard = false) {
   }
   [editAnswersBtn, newScenarioBtn, printSummaryBtn].forEach(b => b && (b.classList.remove("hidden"), b.removeAttribute("aria-hidden")));
 
+  // Show summary section
+  document.body.classList.add('summary-ready');
+
   // Persist scenario
   saveScenario();
 }
@@ -353,6 +356,7 @@ function generateSummary(skipGuard = false) {
 function editAnswers() {
   const { questionsSectionPrimary } = getIds();
   if (questionsSectionPrimary) questionsSectionPrimary.style.display = "";
+  document.body.classList.remove('summary-ready');
   const saved = loadScenario();
   if (saved) restoreScenario(saved);
   // Trigger progress recompute
