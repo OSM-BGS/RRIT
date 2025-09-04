@@ -63,15 +63,15 @@
     "category_fr": "A. Conformité réglementaire et politique",
     "text": {
       "en": "If a vendor or contract is involved, is our procurement approach compliant and will required clauses be included?",
-      "fr": "Avons-nous confirmé ce qui doit être conservé, pour combien de temps, et comment ce sera disposé quand ce ne sera plus nécessaire?"
+      "fr": "Si un fournisseur ou un contrat est en cause, notre approche d'approvisionnement est-elle conforme et les clauses requises seront-elles incluses?"
     },
     "why": {
       "en": "Contract gaps are expensive to fix after selection.",
-      "fr": "Les exigences de dossiers, de rétention et de disposition sont obligatoires et vérifiables."
+      "fr": "Les lacunes contractuelles coûtent cher à corriger après la sélection."
     },
     "risk_statement": {
       "en": "There is a risk that vendor contracts will not meet compliance requirements or include necessary clauses.",
-      "fr": "Il y a un risque que les dossiers requis soient perdus, retenus trop longtemps, ou disposés de manière inappropriée."
+      "fr": "Il y a un risque que les contrats des fournisseurs ne répondent pas aux exigences de conformité ou n'incluent pas les clauses nécessaires."
     },
     "mitigations": {
       "en": [
@@ -80,9 +80,9 @@
         "Conduct compliance checks before finalizing contracts."
       ],
       "fr": [
-        "Développer un calendrier de rétention des données et dossiers.",
-        "Former le personnel sur les procédures appropriées de manipulation et de disposition.",
-        "Implémenter des rappels automatisés ou des contrôles pour les jalons de rétention."
+        "Utiliser des modèles de contrat standard avec des clauses de conformité.",
+        "Faire intervenir les équipes d'approvisionnement et juridiques pour l'examen des contrats.",
+        "Effectuer des vérifications de conformité avant de finaliser les contrats."
       ]
     }
   },
@@ -150,15 +150,15 @@
     "category_fr": "C. Technologie RH / Intégration",
     "text": {
       "en": "Do we know the data it needs from other systems and what data it will send back—and are standard connectors or APIs available for this?",
-      "fr": "La solution fonctionnera-t-elle avec notre connexion standard et les navigateurs/appareils que nos gens utilisent?"
+      "fr": "Connaissons-nous les données dont elle a besoin d'autres systèmes et quelles données elle renverra — et des connecteurs standard ou des API sont-ils disponibles pour cela?"
     },
     "why": {
       "en": "Clear in/out flows and supported connectors prevent brittle integrations.",
-      "fr": "Les problèmes de compatibilité de base créent des maux de tête de support et ralentissent l'adoption."
+      "fr": "Des flux entrants/sortants clairs et des connecteurs pris en charge préviennent des intégrations fragiles."
     },
     "risk_statement": {
       "en": "There is a risk that necessary data integrations will fail or cause data issues.",
-      "fr": "Il y a un risque que les employés ne puissent pas accéder à la solution ou l'utiliser efficacement."
+      "fr": "Il y a un risque que les intégrations de données nécessaires échouent ou causent des problèmes de données."
     },
     "mitigations": {
       "en": [
@@ -167,9 +167,9 @@
         "Establish integration support and monitoring procedures."
       ],
       "fr": [
-        "Tester la solution sur tous les appareils et navigateurs supportés.",
-        "Assurer la compatibilité avec les systèmes de connexion organisationnels.",
-        "Fournir des directives d'utilisation claires et un support de dépannage."
+        "Évaluer et documenter les intégrations requises tôt.",
+        "Utiliser et tester les API ou connecteurs standard.",
+        "Établir des procédures de soutien et de surveillance des intégrations."
       ]
     }
   },
@@ -178,16 +178,16 @@
     "category_en": "C. HR Technology / Integration",
     "category_fr": "C. Technologie RH / Intégration",
     "text": {
-      "en": "If we needed to change technology  later, can we export our data in a usable format and close the service cleanly?",
-      "fr": "Connaissons-nous les données dont elle a besoin d'autres systèmes et quelles données elle renverra—et des connecteurs standard ou API sont-ils disponibles pour ceci?"
+      "en": "If we needed to change technology later, can we export our data in a usable format and close the service cleanly?",
+      "fr": "Si nous devions changer de technologie plus tard, pouvons-nous exporter nos données dans un format utilisable et fermer le service proprement?"
     },
     "why": {
       "en": "Exit options protect you from lock-in and messy transitions.",
-      "fr": "Des flux entrants/sortants clairs et des connecteurs supportés préviennent les intégrations fragiles."
+      "fr": "Les options de sortie protègent contre l'enfermement et les transitions désordonnées."
     },
     "risk_statement": {
       "en": "There is a risk that data will be lost or unavailable if we discontinue with the vendor.",
-      "fr": "Il y a un risque que les intégrations de données nécessaires échouent ou causent des problèmes de données."
+      "fr": "Il y a un risque que les données soient perdues ou indisponibles si nous cessons d'utiliser le fournisseur."
     },
     "mitigations": {
       "en": [
@@ -196,9 +196,9 @@
         "Develop an exit plan with clear offboarding steps."
       ],
       "fr": [
-        "Évaluer et documenter les intégrations requises tôt.",
-        "Utiliser et tester les API/connecteurs standard.",
-        "Établir des procédures de support et de surveillance des intégrations."
+        "Veiller à ce que les contrats précisent les droits et formats d'exportation des données.",
+        "Tester les processus d'exportation des données avant le déploiement.",
+        "Élaborer un plan de sortie avec des étapes d'offboarding claires."
       ]
     }
   },
@@ -208,15 +208,15 @@
     "category_fr": "D. Adoption et formation des utilisateurs",
     "text": {
       "en": "Do we have short, role-based training and quick-reference guides in both official languages?",
-      "fr": "Les employés et gestionnaires typiques peuvent-ils compléter leurs tâches clés sans instructions supplémentaires?"
+      "fr": "Avons-nous une formation courte, basée sur les rôles, et des guides de référence rapide dans les deux langues officielles?"
     },
     "why": {
       "en": "Different roles need different “how-to” help, and bilingual support widens reach.",
-      "fr": "Si les tâches quotidiennes ne sont pas évidentes, l'adoption stagne."
+      "fr": "Différents rôles ont besoin d'aide « comment faire » différente, et le soutien bilingue élargit la portée."
     },
     "risk_statement": {
       "en": "There is a risk that users will lack accessible training or resources, leading to errors or confusion.",
-      "fr": "Il y a un risque que les utilisateurs ne puissent pas compléter les tâches clés, réduisant l'adoption ou l'efficacité."
+      "fr": "Il y a un risque que les utilisateurs manquent de formation ou de ressources accessibles, menant à des erreurs ou à de la confusion."
     },
     "mitigations": {
       "en": [
@@ -225,9 +225,9 @@
         "Regularly review and update training content."
       ],
       "fr": [
-        "Effectuer des tests utilisateur avec un groupe diversifié avant le lancement.",
-        "Simplifier les flux de tâches et interfaces où possible.",
-        "Fournir du contenu « comment faire » bref et accessible."
+        "Développer et distribuer des matériaux de formation concis et propres à chaque rôle.",
+        "S'assurer que les ressources sont disponibles dans toutes les langues requises.",
+        "Examiner et mettre à jour régulièrement le contenu de formation."
       ]
     }
   },
@@ -237,15 +237,15 @@
     "category_fr": "D. Adoption et formation des utilisateurs",
     "text": {
       "en": "Is there a clear place to get help after launch, and do we know who responds and how fast?",
-      "fr": "Avons-nous une formation courte, basée sur les rôles et des guides de référence rapide dans les deux langues officielles?"
+      "fr": "Y a-t-il un endroit clair pour obtenir de l'aide après le lancement, et savons-nous qui répond et à quelle vitesse?"
     },
     "why": {
       "en": "Good support turns first-week confusion into routine use.",
-      "fr": "Différents rôles ont besoin d'aide « comment faire » différente, et le support bilingue élargit la portée."
+      "fr": "Un bon soutien transforme la confusion de la première semaine en utilisation routinière."
     },
     "risk_statement": {
       "en": "There is a risk that users will be unable to get timely support, resulting in frustration or delays.",
-      "fr": "Il y a un risque que les utilisateurs manquent de formation ou ressources accessibles, menant à des erreurs ou confusion."
+      "fr": "Il y a un risque que les utilisateurs ne puissent obtenir un soutien en temps opportun, ce qui entraîne de la frustration ou des retards."
     },
     "mitigations": {
       "en": [
@@ -254,9 +254,9 @@
         "Monitor support activity and follow up on unresolved issues."
       ],
       "fr": [
-        "Développer et distribuer des matériaux de formation concis et spécifiques aux rôles.",
-        "Assurer que les ressources soient disponibles dans toutes les langues requises.",
-        "Examiner et mettre à jour régulièrement le contenu de formation."
+        "Désigner un canal de soutien clair et des responsables.",
+        "Communiquer les heures de soutien et les délais de réponse attendus.",
+        "Surveiller l'activité de soutien et faire le suivi des problèmes non résolus."
       ]
     }
   },
@@ -266,15 +266,15 @@
     "category_fr": "D. Adoption et formation des utilisateurs",
     "text": {
       "en": "Do we have a simple communications plan (who needs to know what, when, and how)?",
-      "fr": "Y a-t-il un endroit clair pour obtenir de l'aide après le lancement, et savons-nous qui répond et à quelle vitesse?"
+      "fr": "Avons-nous un plan de communication simple (qui doit savoir quoi, quand et comment)?"
     },
     "why": {
       "en": "The right message at the right time prevents surprises and rework.",
-      "fr": "Un bon support transforme la confusion de la première semaine en usage routinier."
+      "fr": "Le bon message au bon moment évite les surprises et le retravail."
     },
     "risk_statement": {
       "en": "There is a risk that essential information will not reach stakeholders, resulting in misalignment or errors.",
-      "fr": "Il y a un risque que les utilisateurs ne puissent obtenir un support en temps opportun, résultant en frustration ou retards."
+      "fr": "Il y a un risque que l'information essentielle ne parvienne pas aux parties prenantes, entraînant des désalignements ou des erreurs."
     },
     "mitigations": {
       "en": [
@@ -283,9 +283,9 @@
         "Schedule regular status updates."
       ],
       "fr": [
-        "Désigner un canal de support clair et des propriétaires.",
-        "Communiquer les heures de support et temps de réponse attendus.",
-        "Surveiller l'activité de support et faire le suivi sur les problèmes non résolus."
+        "Élaborer et documenter un plan de communication.",
+        "Identifier les principales parties prenantes et leurs besoins d'information.",
+        "Planifier des mises à jour d'état régulières."
       ]
     }
   },
@@ -295,15 +295,15 @@
     "category_fr": "E. Coût-Bénéfice",
     "text": {
       "en": "Do we know the main costs, benefits and measures required to get started and to run this each year?",
-      "fr": "Connaissons-nous les coûts principaux pour démarrer et faire fonctionner ceci chaque année?"
+      "fr": "Connaissons-nous les coûts principaux, les bénéfices et les mesures nécessaires pour démarrer et faire fonctionner ceci chaque année?"
     },
     "why": {
       "en": "One-time costs and ongoing costs are both needed to judge value.",
-      "fr": "Les coûts uniques et les coûts continus sont tous deux nécessaires pour juger la valeur."
+      "fr": "Les coûts uniques et les coûts continus sont tous deux nécessaires pour juger de la valeur."
     },
     "risk_statement": {
-      "en": "There is a risk that costs will be underestimated or overlooked, leading to budget overruns. \n There is a risk that expected benefits will not be achieved or realized.",
-      "fr": "Il y a un risque que les coûts soient sous-estimés ou négligés, menant à des dépassements de budget."
+      "en": "There is a risk that costs will be underestimated or overlooked, leading to budget overruns. There is a risk that expected benefits will not be achieved or realized.",
+      "fr": "Il y a un risque que les coûts soient sous-estimés ou négligés, menant à des dépassements de budget. Il y a un risque que les bénéfices attendus ne soient pas atteints ou réalisés."
     },
     "mitigations": {
       "en": [
@@ -317,7 +317,10 @@
       "fr": [
         "Créer un budget de projet compréhensif incluant des contingences.",
         "Examiner les coûts initiaux et continus avec les parties prenantes financières.",
-        "Surveiller régulièrement les dépenses réelles par rapport aux estimations."
+        "Surveiller régulièrement les dépenses réelles par rapport aux estimations.",
+        "Définir des bénéfices mesurables et suivre les progrès.",
+        "Fixer des jalons de réalisation des bénéfices.",
+        "Examiner et réévaluer périodiquement les résultats attendus."
       ]
     }
   },
@@ -327,15 +330,15 @@
     "category_fr": "E. Coût-Bénéfice",
     "text": {
       "en": "Is funding confirmed for year one and the ongoing costs, and who is paying?",
-      "fr": "Avons-nous estimé les bénéfices en mesures simples et quand ils apparaîtront?"
+      "fr": "Le financement est-il confirmé pour la première année et les coûts récurrents, et qui paiera?"
     },
     "why": {
       "en": "Affordability and accountability must be clear before you start.",
-      "fr": "Des bénéfices clairs (avec timing) justifient la dépense et fixent des cibles."
+      "fr": "L'abordabilité et l'imputabilité doivent être claires avant de commencer."
     },
     "risk_statement": {
       "en": "There is a risk that funding will be insufficient or uncertain, jeopardizing the initiative.",
-      "fr": "Il y a un risque que les bénéfices attendus ne soient pas atteints ou réalisés."
+      "fr": "Il y a un risque que le financement soit insuffisant ou incertain, ce qui met en péril l'initiative."
     },
     "mitigations": {
       "en": [
@@ -344,9 +347,9 @@
         "Plan for contingencies if funding falls short."
       ],
       "fr": [
-        "Définir des bénéfices mesurables et suivre les progrès.",
-        "Fixer des jalons de réalisation des bénéfices.",
-        "Examiner et réévaluer périodiquement les résultats attendus."
+        "Obtenir une confirmation officielle du financement avant de commencer.",
+        "Identifier les responsables des coûts récurrents.",
+        "Prévoir des mesures d'atténuation si le financement s'avère insuffisant."
       ]
     }
   },
@@ -356,15 +359,15 @@
     "category_fr": "E. Coût-Bénéfice",
     "text": {
       "en": "Have we accounted for the people time to operate this and what we will stop or retire to make room?",
-      "fr": "Avons-nous comparé au moins une alternative crédible (incluant « ne rien faire » ou réutiliser ce que nous avons)?"
+      "fr": "Avons-nous tenu compte du temps des personnes pour exploiter ceci et de ce que nous cesserons ou retirerons pour faire de la place?"
     },
     "why": {
       "en": "The true cost includes staff time and decommissioning old tools.",
-      "fr": "Comparer les options prévient le sur-achat et révèle les compromis."
+      "fr": "Le coût réel comprend le temps du personnel et la mise hors service des anciens outils."
     },
     "risk_statement": {
       "en": "There is a risk that ongoing operational demands will exceed available resources.",
-      "fr": "Il y a un risque que de meilleures options soient manquées, résultant en résultats sous-optimaux."
+      "fr": "Il y a un risque que les exigences opérationnelles continues dépassent les ressources disponibles."
     },
     "mitigations": {
       "en": [
@@ -373,9 +376,9 @@
         "Monitor resource utilization post-launch."
       ],
       "fr": [
-        "Documenter et analyser au moins une alternative crédible.",
-        "Inclure « ne rien faire » comme base comparative.",
-        "Présenter les conclusions aux parties prenantes pour commentaires."
+        "Documenter les besoins en ressources et la capacité.",
+        "Identifier les tâches ou systèmes à retirer pour libérer de la capacité.",
+        "Surveiller l'utilisation des ressources après le lancement."
       ]
     }
   },
@@ -384,7 +387,7 @@
     "category_en": "F. Vendor & Partner",
     "category_fr": "F. Fournisseur et partenaire",
     "text": {
-      "en": "Has somebody conducted due diligence with regards to the vendor selection  for example, checking for standing offers, vendor reputation and stability, etc. -(Typically done by procurement)",
+      "en": "Has somebody conducted due diligence for the vendor selection — for example, checking standing offers, vendor reputation and stability, etc. (typically done by procurement) — so we can confirm it is reasonable to pursue?",
       "fr": "Le fournisseur est-il financièrement stable et utilisé par des pairs comme nous (avec des clients de référence que nous pouvons vérifier)?"
     },
     "why": {
@@ -402,8 +405,8 @@
         "Identify backup vendors as needed."
       ],
       "fr": [
-        "Demander des vérifications financières et de références sur tous les fournisseurs.",
-        "Examiner la réputation et l'histoire du marché.",
+        "Demander des vérifications financières et de références pour tous les fournisseurs.",
+        "Examiner la réputation et l'historique sur le marché.",
         "Identifier des fournisseurs de rechange au besoin."
       ]
     }
@@ -443,15 +446,15 @@
     "category_fr": "G. Planification et développement de la main-d'œuvre",
     "text": {
       "en": "Do we understand how day-to-day responsibilities will change for the main roles, and will job expectations be updated?",
-      "fr": "Avons-nous un plan pour obtenir ces compétences (développer les gens existants, embaucher, ou prendre un entrepreneur)—avec un échéancier réaliste?"
+      "fr": "Comprenons-nous comment les responsabilités quotidiennes changeront pour les rôles principaux, et les attentes des postes seront-elles mises à jour?"
     },
     "why": {
       "en": "New tools fail if old expectations stay in place.",
-      "fr": "Les compétences n'apparaissent pas d'elles-mêmes; le chemin doit être clair."
+      "fr": "Les nouveaux outils échouent si les anciennes attentes restent en place."
     },
     "risk_statement": {
       "en": "There is a risk that role changes will be unclear, creating confusion or resistance.",
-      "fr": "Il y a un risque que les lacunes de compétences persistent en raison d'une planification de ressources irréaliste ou incomplète."
+      "fr": "Il y a un risque que les changements de rôle soient flous, créant de la confusion ou de la résistance."
     },
     "mitigations": {
       "en": [
@@ -460,9 +463,9 @@
         "Update job descriptions and performance criteria."
       ],
       "fr": [
-        "Développer un plan de ressources et formation avec échéances.",
-        "Surveiller les progrès dans l'obtention des compétences nécessaires.",
-        "Ajuster les plans promptement si les lacunes persistent."
+        "Communiquer les responsabilités et rôles mis à jour.",
+        "Fournir de la formation et du soutien pour les nouvelles attentes.",
+        "Mettre à jour les descriptions de poste et les critères de rendement."
       ]
     }
   },
@@ -645,27 +648,27 @@
     "category_en": "J. Accessibility & Inclusion",
     "category_fr": "J. Accessibilité et inclusion",
     "text": {
-      "en": "Has a GBA Plus analysis been completed for the initiative",
-      "fr": "Le contenu est-il facile à comprendre et inclusif (langage simple, termes respectueux, micro-copie et étiquettes claires)?"
+      "en": "Has a GBA Plus analysis been completed for the initiative?",
+      "fr": "Une analyse ACS Plus a-t-elle été réalisée pour l'initiative?"
     },
     "why": {
-      "en": "GBA Plus helps identifying how the initiative could be tailored to meet diverse needs of the people most impacted",
-      "fr": "Une rédaction claire et inclusive prévient les erreurs et l'exclusion."
+      "en": "GBA Plus helps identify how the initiative could be tailored to meet diverse needs of the people most impacted.",
+      "fr": "L'ACS Plus aide à déterminer comment l'initiative peut être adaptée pour répondre aux divers besoins des personnes les plus touchées."
     },
     "risk_statement": {
-      "en": "There is a risk that the initiaitve ignores the perspectives of the people most impacted, producing sub-optimal results",
-      "fr": "Il y a un risque que les utilisateurs soient confus ou exclus en raison de contenu inaccessible ou peu clair."
+      "en": "There is a risk that the initiative ignores the perspectives of the people most impacted, producing sub-optimal results.",
+      "fr": "Il y a un risque que l'initiative ignore les perspectives des personnes les plus touchées, produisant des résultats sous-optimaux."
     },
     "mitigations": {
       "en": [
-        "Ensure project staff are familiar or trained in GBA Plus analsyis",
-        "Ensure GBA analysis is applied to project assumptions",
-        "Include gender considerations when exploring solutions"
+        "Ensure project staff are familiar with or trained in GBA Plus analysis.",
+        "Ensure GBA Plus analysis is applied to project assumptions.",
+        "Include gender considerations when exploring solutions."
       ],
       "fr": [
-        "Utiliser un langage simple et examiner pour l'inclusivité.",
-        "Tester la lisibilité du contenu avec les utilisateurs finaux.",
-        "Mettre à jour régulièrement le contenu selon les besoins."
+        "Veiller à ce que le personnel du projet connaisse ou soit formé à l'ACS Plus.",
+        "S'assurer que l'analyse ACS Plus est appliquée aux hypothèses du projet.",
+        "Inclure les considérations de genre lors de l'exploration des solutions."
       ]
     }
   },
@@ -675,15 +678,15 @@
     "category_fr": "J. Accessibilité et inclusion",
     "text": {
       "en": "Is the content easy to understand and inclusive (plain language, respectful terms, clear micro-copy and labels)?",
-      "fr": "Y a-t-il des alternatives pour différents besoins et contextes (indices non-couleur, accès clavier, sous-titres/transcriptions, références rapides imprimables)?"
+      "fr": "Le contenu est-il facile à comprendre et inclusif (langage simple, termes respectueux, micro-copie et étiquettes claires)?"
     },
     "why": {
       "en": "Clear, inclusive wording prevents mistakes and exclusion.",
-      "fr": "Tout le monde ne traite pas l'information de la même façon."
+      "fr": "Une rédaction claire et inclusive prévient les erreurs et l'exclusion."
     },
     "risk_statement": {
       "en": "There is a risk that users will be confused or excluded due to inaccessible or unclear content.",
-      "fr": "Il y a un risque que tous les employés ne puissent pas accéder à l'information ou fonctionnalités nécessaires."
+      "fr": "Il y a un risque que les utilisateurs soient confus ou exclus en raison d'un contenu inaccessible ou peu clair."
     },
     "mitigations": {
       "en": [
@@ -692,9 +695,9 @@
         "Regularly update content as needed."
       ],
       "fr": [
-        "Fournir des formats alternatifs et options d'accès.",
-        "Tester avec des utilisateurs qui ont des besoins diversifiés.",
-        "Solliciter des commentaires et mettre à jour les options où nécessaire."
+        "Utiliser un langage simple et vérifier l'inclusivité.",
+        "Tester la lisibilité du contenu avec des utilisateurs finaux.",
+        "Mettre à jour régulièrement le contenu selon les besoins."
       ]
     }
   }
