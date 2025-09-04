@@ -28,6 +28,14 @@ function ansLabel(v) {
   return map[v] || v;
 }
 
+// New: language-specific label generator (does not depend on currentLang)
+function ansLabelFor(lang, v) {
+  const map = lang === "fr"
+    ? { yes: "Oui", no: "Non", unknown: "Inconnu", na: "S.O." }
+    : { yes: "Yes", no: "No", unknown: "Unknown", na: "N/A" };
+  return map[v] || v;
+}
+
 function normalizeAnswer(v) {
   const s = String(v || "").trim().toLowerCase();
   if (["oui","o","yes","y"].includes(s)) return "yes";
@@ -51,13 +59,31 @@ function applyLangToSpans() {
   document.documentElement.lang = currentLang;
 }
 
+// New: keep aria-label in sync with the currently visible language
+function updateQuestionAriaLabelsForLang() {
+  qsa("fieldset.question-fieldset").forEach(fs => {
+    const legend = fs.querySelector("legend");
+    const labelEl = fs.querySelector(".rrit-responses");
+    if (!legend || !labelEl) return;
+
+    const langSpan = legend.querySelector(`[data-lang="${currentLang}"]`);
+    const label = langSpan?.textContent?.trim() || "";
+    if (label) labelEl.setAttribute("aria-label", label);
+  });
+}
+
 function toggleLanguage(lang) {
   currentLang = (lang === "fr") ? "fr" : "en";
   localStorage.setItem("rrit_lang", currentLang);
   console.debug('[RRIT] lang:', currentLang);
+
+  // Toggle visibility for bilingual spans and sync a11y labels
   applyLangToSpans();
-  renderQuestions();            // re-render Q&A in a single language
-  renderSummaryIfVisible();     // if summary is visible, re-render it as well
+  updateQuestionAriaLabelsForLang();
+
+  // If summary is visible, re-render it as well
+  renderSummaryIfVisible();
+
   // Update button label variants if present
   const g1 = qs("#btnGenerateSummary");
   if (g1) setText(g1, currentLang === "fr" ? "Générer le résumé" : "Generate Summary");
@@ -172,23 +198,35 @@ function renderQuestions() {
   const { questionsList, progressText, btnGenerateSummary } = getIds();
   const items = QUESTIONS;
 
-  // Render single-language blocks (no EN/FR doubles)
+  // Render bilingual blocks (keep inputs stable across language toggles)
   questionsList.innerHTML = items.map((q, i) => {
     const qid = q.id || `Q${i+1}`;
-    const qText = t(q.text);
-    const why   = t(q.why);
+    const textEN = q.text?.en || "";
+    const textFR = q.text?.fr || "";
+    const whyEN  = q.why?.en  || "";
+    const whyFR  = q.why?.fr  || "";
     return `
       <fieldset class="question-fieldset mrgn-bttm-md" data-qid="${qid}">
-        <legend><strong>${i+1}. ${qText}</strong></legend>
-        <div class="rrit-responses" role="radiogroup" aria-label="${qText}">
+        <legend><strong>${i+1}.
+          <span data-lang="en">${textEN}</span>
+          <span data-lang="fr">${textFR}</span>
+        </strong></legend>
+        <div class="rrit-responses" role="radiogroup" aria-label="${currentLang === "fr" ? textFR : textEN}">
           ${["yes","no","unknown","na"].map(v => `
             <label class="radio-inline mrgn-rght-sm">
               <input type="radio" name="${qid}" value="${v}" required>
-              <span>${ansLabel(v)}</span>
+              <span>
+                <span data-lang="en">${ansLabelFor("en", v)}</span>
+                <span data-lang="fr">${ansLabelFor("fr", v)}</span>
+              </span>
             </label>
           `).join("")}
         </div>
-        ${why ? `<p class="why-matters"><em>${why}</em></p>` : ""}
+        ${(whyEN || whyFR) ? `
+          <p class="why-matters"><em>
+            <span data-lang="en">${whyEN}</span>
+            <span data-lang="fr">${whyFR}</span>
+          </em></p>` : ""}
       </fieldset>
     `;
   }).join("");
@@ -210,6 +248,10 @@ function renderQuestions() {
   questionsList._rritChange = updateProgress;
   questionsList.addEventListener("change", updateProgress);
   updateProgress();
+
+  // Ensure new bilingual spans reflect the current language and a11y is aligned
+  applyLangToSpans();
+  updateQuestionAriaLabelsForLang();
 }
 
 /* -------------------------
