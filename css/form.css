@@ -605,6 +605,32 @@ body.summary-ready #summaryControls { display: none; }
   padding-bottom: 8px;
 }
 
+/* Keep the answer label on one line and right-aligned in risk card headers */
+.risk-card .panel-title {
+  display: flex;                 /* already set, reinforce here */
+  justify-content: flex-start;   /* use auto margin on the label to push it right */
+  align-items: center;
+  gap: .5rem;
+}
+
+.risk-card .panel-title small {
+  margin-left: auto;     /* push the answer to the right edge */
+  white-space: nowrap;   /* prevent "(Unknown)" or "(No)" from breaking */
+  flex: 0 0 auto;        /* don’t let it shrink/wrap */
+  /* Optional badge styling */
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: #eee;
+  font-weight: 600;
+  font-size: .85em;
+}
+
+/* On very narrow screens, allow the answer to drop below neatly */
+@media (max-width: 360px) {
+  .risk-card .panel-title { flex-wrap: wrap; }
+  .risk-card .panel-title small { margin-left: 0; margin-top: .25rem; }
+}
+
 
 
 
