@@ -560,6 +560,51 @@ body.summary-ready #summaryControls { display: none; }
 }
 */
 
+/* ==============================================================
+   Header alignment — match Canada.ca margins for logo + language
+   Constrain the header row to the same responsive max-widths as
+   #wb-cont and align both ends consistently.
+   ============================================================== */
+
+/* Make the banner act like a container (provides the 15px edge padding) */
+#wb-bnr {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Center and constrain the inner .row like a container at breakpoints.
+   Keep Bootstrap's negative row margins so column gutters work normally.
+   Note: container widths are 750/970/1170; the row needs +30px to account
+   for its -15px margins on each side (so 780/1000/1200). */
+#wb-bnr > .row {
+  margin-left: -15px;  /* keep Bootstrap behavior */
+  margin-right: -15px; /* keep Bootstrap behavior */
+  margin-inline: auto; /* center the row */
+  max-width: 100%;
+}
+
+@media (min-width: 768px) {
+  #wb-bnr > .row { max-width: 780px; }
+}
+@media (min-width: 992px) {
+  #wb-bnr > .row { max-width: 1000px; }
+}
+@media (min-width: 1200px) {
+  #wb-bnr > .row { max-width: 1200px; }
+}
+
+/* Normalize the logo block: remove the inline left margin so edges align */
+#wb-bnr .rrit-logo {
+  margin-left: 0 !important;
+}
+
+/* Optional: balance vertical rhythm in the banner */
+#wb-bnr .brand,
+#wb-bnr #wb-lng {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
 
 
 
