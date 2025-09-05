@@ -530,6 +530,36 @@ body.summary-ready #summaryControls { display: none; }
   margin-top: .5rem; 
 }
 
+/* ==============================================================
+   RRIT — Responsive content container (Canada.ca–style margins)
+   Constrain and center the main content like GCWeb's .container.
+   ============================================================== */
+
+#wb-cont {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;   /* offset the .row negative margins */
+  padding-right: 15px;  /* offset the .row negative margins */
+}
+
+/* Bootstrap/WET breakpoints (match GCWeb container widths) */
+@media screen and (min-width: 768px) {
+  #wb-cont { max-width: 750px; }
+}
+@media screen and (min-width: 992px) {
+  #wb-cont { max-width: 970px; }
+}
+@media screen and (min-width: 1200px) {
+  #wb-cont { max-width: 1170px; }
+}
+
+/* Optional: a bit more padding on very small screens */
+/*
+@media screen and (max-width: 767.98px) {
+  #wb-cont { padding-left: 20px; padding-right: 20px; }
+}
+*/
+
 
 
 
