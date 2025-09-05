@@ -620,7 +620,7 @@ body.summary-ready #summaryControls { display: none; }
   /* Optional badge styling */
   padding: 2px 8px;
   border-radius: 12px;
-  background: #eee;
+  ///background: #eee;
   font-weight: 600;
   font-size: .85em;
 }
@@ -630,6 +630,7 @@ body.summary-ready #summaryControls { display: none; }
   .risk-card .panel-title { flex-wrap: wrap; }
   .risk-card .panel-title small { margin-left: 0; margin-top: .25rem; }
 }
+
 
 
 
