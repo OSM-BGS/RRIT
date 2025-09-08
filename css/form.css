@@ -162,7 +162,7 @@ legend{font-weight:700; border:none; border-bottom: none;}
   /* Hide navigation, language switchers, buttons & intro */
   #wb-bnr,#wb-tphp,#wb-lng,#rrit-intro,#step0,
   footer,nav,#lang-switch,
-  #generateSummaryBtn,#printSummaryBtn,#editAnswersBtn,#newScenarioBtn,
+  #btnGenerateSummary,#generateSummaryBtn,#printSummaryBtn,#editAnswersBtn,#newScenarioBtn,
   #questionsSection,#summaryActionRow,#postResultActions,#summaryControls,
   button,.btn,.no-print{display:none!important;}
 
@@ -749,6 +749,7 @@ body.summary-ready #summaryControls { display: none; }
 @media (max-width: 767.98px) {
   #wb-lng { margin-bottom: .5rem; }
 }
+
 
 
 
