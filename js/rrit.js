@@ -1,9 +1,11 @@
 /* =========================================================
    RRIT – Rapid Risk Identification Tool (Unified Build)
    - Replaces rrit-simple.js and rrit-custom.js
-   - Single-language render; bilingual via [data-lang]
-   - Save/restore, progress guard, risks-only summary
-   - No modules/exports; attaches API to window.RRIT
+   - 24 mandatory questions (or however many in QUESTIONS)
+   - Single-language render for Q&A and Summary with bilingual content via [data-lang]
+   - Risks-only summary: No/Unknown items with risk statements + mitigations
+   - Save/restore, Edit, New Scenario, Print
+   - Compatible with the HTML used previously; robust ID lookups
    ========================================================= */
 
 /* -------------------------
@@ -25,10 +27,14 @@ let currentLang = (() => {
 })();
 
 /* -------------------------
-   DOM helpers
+   DOM helpers (now safe if root is null/undefined)
 ------------------------- */
-const qs  = (sel, root = document) => root.querySelector(sel);
-const qsa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+const qs  = (sel, root) => {
+  try { return (root || document).querySelector(sel); } catch { return null; }
+};
+const qsa = (sel, root) => {
+  try { return Array.from((root || document).querySelectorAll(sel)); } catch { return []; }
+};
 const setText = (el, txt) => { if (el) el.textContent = txt; };
 
 /* -------------------------
@@ -43,6 +49,7 @@ function ansLabel(v) {
     : { yes: "Yes", no: "No", unknown: "Unknown", na: "N/A" };
   return map[v] || v;
 }
+// Language-agnostic label generator
 function ansLabelFor(lang, v) {
   const map = lang === "fr"
     ? { yes: "Oui", no: "Non", unknown: "Inconnu", na: "S.O." }
@@ -71,8 +78,8 @@ function applyLangToSpans() {
 }
 function updateQuestionAriaLabelsForLang() {
   qsa("fieldset.question-fieldset").forEach(fs => {
-    const legend = fs.querySelector("legend");
-    const labelEl = fs.querySelector(".rrit-responses");
+    const legend = fs?.querySelector?.("legend");
+    const labelEl = fs?.querySelector?.(".rrit-responses");
     if (!legend || !labelEl) return;
     const langSpan = legend.querySelector(`[data-lang="${currentLang}"]`);
     const label = langSpan?.textContent?.trim() || "";
@@ -83,28 +90,43 @@ function toggleLanguage(lang) {
   currentLang = (lang === "fr") ? "fr" : "en";
   try { localStorage.setItem("rrit_lang", currentLang); } catch {}
   applyLangToSpans();
-  renderQuestions();
-  renderSummaryIfVisible();
+  renderQuestions();            // re-render Q&A in selected language
+  renderSummaryIfVisible();     // if summary is visible, refresh content
   const g1 = qs("#btnGenerateSummary");
   if (g1) setText(g1, currentLang === "fr" ? "Générer le résumé" : "Generate Summary");
 }
-window.toggleLanguage = toggleLanguage;
+window.toggleLanguage = toggleLanguage; // preserve inline onclick usage
 
 /* -------------------------
    Robust element lookup
 ------------------------- */
 function getIds() {
+  // Prefer the first #questionsSection that contains #questionsList
   const allSections = qsa("#questionsSection");
-  let questionsSectionPrimary = allSections.find(sec => qs("#questionsList", sec)) || allSections[0] || qs("#questionsSection");
+  let questionsSectionPrimary =
+    allSections.find(sec => qs("#questionsList", sec)) ||
+    allSections[0] ||
+    qs("#questionsSection");
 
   const questionsList = qs("#questionsList", questionsSectionPrimary) || qs("#questionsList");
   const progressText = qs("#progressText") || qs('[data-role="progressText"]');
 
+  // Summary area (guard each query with safe qs)
   const summaryPanel = qs("#summaryPanel") || qs('[data-role="summaryPanel"]');
-  const summaryHeader = qs("#summaryHeader", summaryPanel) || qs('[data-role="summaryHeader"]', summaryPanel) || summaryPanel;
-  const riskCountEl = qs("#riskCount", summaryPanel) || qs('[data-role="riskCount"]', summaryPanel);
-  const riskList = qs("#riskList", summaryPanel) || qs('[data-role="riskList"]', summaryPanel);
+  const summaryHeader =
+    (summaryPanel && qs("#summaryHeader", summaryPanel)) ||
+    (summaryPanel && qs('[data-role="summaryHeader"]', summaryPanel)) ||
+    summaryPanel;
+  const riskCountEl =
+    (summaryPanel && qs("#riskCount", summaryPanel)) ||
+    (summaryPanel && qs('[data-role="riskCount"]', summaryPanel)) ||
+    null;
+  const riskList =
+    (summaryPanel && qs("#riskList", summaryPanel)) ||
+    (summaryPanel && qs('[data-role="riskList"]', summaryPanel)) ||
+    null;
 
+  // Actions
   const btnGenerateSummary = qs("#btnGenerateSummary") || qs('[data-role="btnGenerateSummary"]');
   const editAnswersBtn = qs("#editAnswersBtn") || qs('[data-role="editAnswersBtn"]');
   const newScenarioBtn = qs("#newScenarioBtn") || qs('[data-role="newScenarioBtn"]');
@@ -139,6 +161,7 @@ function renderQuestions() {
   if (summaryPanel) summaryPanel.classList.add("hidden");
 
   const items = QUESTIONS || [];
+  // Build fieldsets
   questionsList.innerHTML = items.map(q => {
     const qTextEn = q.text?.en || "";
     const qTextFr = q.text?.fr || qTextEn;
@@ -173,9 +196,11 @@ function renderQuestions() {
     `;
   }).join("");
 
+  // Language visibility + a11y
   applyLangToSpans();
   updateQuestionAriaLabelsForLang();
 
+  // Progress + guard
   const total = items.length;
   const updateProgress = () => {
     const answered = items.filter(q => !!qs(`input[name="${q.id}"]:checked`)).length;
@@ -278,6 +303,7 @@ function generateSummary(skipGuard = false) {
     return;
   }
 
+  // Compute risks (No/Unknown)
   const risks = responses.filter(r => r.answer === "no" || r.answer === "unknown")
     .map(r => {
       const q = (QUESTIONS || []).find(x => x.id === r.qid);
@@ -286,9 +312,17 @@ function generateSummary(skipGuard = false) {
 
   if (!summaryPanel || !riskList) return;
 
-  if (summaryHeader) setText(summaryHeader, currentLang === "fr" ? "Résumé des risques" : "Risk Summary");
-  if (riskCountEl) setText(riskCountEl, String(risks.length));
+  // Header
+  if (summaryHeader) {
+    setText(summaryHeader, currentLang === "fr" ? "Résumé des risques" : "Risk Summary");
+  }
 
+  // Count
+  if (riskCountEl) {
+    setText(riskCountEl, String(risks.length));
+  }
+
+  // List
   riskList.innerHTML = risks.map(({ q, answer }) => {
     const qTextEn = q.text?.en || "";
     const qTextFr = q.text?.fr || qTextEn;
@@ -327,29 +361,37 @@ function generateSummary(skipGuard = false) {
     `;
   }).join("");
 
+  // Toggle visibility
   if (questionsSectionPrimary) questionsSectionPrimary.classList.add("hidden");
   summaryPanel.classList.remove("hidden");
 
+  // Ensure language visibility is correct
   applyLangToSpans();
 
+  // Wire actions (idempotent)
   if (editAnswersBtn) {
     editAnswersBtn.onclick = () => {
       summaryPanel.classList.add("hidden");
       if (questionsSectionPrimary) questionsSectionPrimary.classList.remove("hidden");
+      // Ensure a11y/labels are correct after showing questions again
       applyLangToSpans();
       updateQuestionAriaLabelsForLang();
     };
   }
   if (newScenarioBtn) {
     newScenarioBtn.onclick = () => {
+      // Clear answers
       (QUESTIONS || []).forEach(q => {
         qsa(`input[name="${q.id}"]`).forEach(el => { el.checked = false; });
       });
+      // Clear meta
       if (qs("#projectName")) qs("#projectName").value = "";
       if (qs("#projectDesc")) qs("#projectDesc").value = "";
       if (qs("#assessmentDate")) qs("#assessmentDate").value = "";
       if (qs("#completedBy")) qs("#completedBy").value = "";
+      // Clear storage
       try { localStorage.removeItem(STORAGE_KEY); } catch {}
+      // Back to questions
       summaryPanel.classList.add("hidden");
       const { questionsSectionPrimary: qsp } = getIds();
       if (qsp) qsp.classList.remove("hidden");
@@ -359,11 +401,13 @@ function generateSummary(skipGuard = false) {
   if (printSummaryBtn) {
     printSummaryBtn.onclick = () => window.print();
   }
+
+  // Optional: reveal any post-result actions
   if (postResultActions) postResultActions.classList.remove("hidden");
 }
 
 /* -------------------------
-   Public API
+   Public API (optional)
 ------------------------- */
 window.RRIT = {
   setQuestions(list) {
@@ -387,11 +431,14 @@ window.RRIT = {
 function initRRIT() {
   applyLangToSpans();
 
+  // If QUESTIONS were provided globally, render; otherwise wait for caller to set
   if (QUESTIONS.length) {
     renderQuestions();
+    // If a saved scenario exists, restore it silently
     const saved = loadScenario();
     if (saved) {
       restoreScenario(saved);
+      // Keep on questions view; the Generate Summary button will enable after restore
       const { btnGenerateSummary } = getIds();
       if (btnGenerateSummary) {
         const answered = collectResponses().length;
@@ -400,15 +447,18 @@ function initRRIT() {
     }
   }
 
+  // Wire the Generate Summary button if present
   const { btnGenerateSummary } = getIds();
   if (btnGenerateSummary) {
     btnGenerateSummary.addEventListener("click", (e) => {
       e.preventDefault();
+      // Persist before generating
       saveScenario();
       generateSummary();
     });
   }
 
+  // Optional: autosave on changes
   const { questionsList } = getIds();
   if (questionsList) {
     questionsList.addEventListener("change", () => {
@@ -417,6 +467,7 @@ function initRRIT() {
   }
 }
 
+// DOM ready
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initRRIT);
 } else {
