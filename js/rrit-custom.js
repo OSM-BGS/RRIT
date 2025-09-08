@@ -180,7 +180,7 @@ function renderQuestions() {
         <legend><strong>${i+1}. ${qText}</strong></legend>
         <div class="rrit-responses" role="radiogroup" aria-label="${qText}">
           ${["yes","no","unknown","na"].map(v => `
-            <label class="radio-inline mrgn-rght-sm">
+            <label class="radio-inline mrgn-rght-sm radio-spacing">
               <input type="radio" name="${qid}" value="${v}" required>
               <span>${ansLabel(v)}</span>
             </label>
@@ -324,11 +324,13 @@ function generateSummary(skipGuard = false) {
         </div>
         <div class="panel-body">
           ${why ? `<p class="why-matters"><em>${why}</em></p>` : ""}
-          ${riskS ? `<h4>${currentLang === "fr" ? "Énoncé de risque" : "Risk statement"}</h4><p>${riskS}</p>` : ""}
-          ${mits?.length ? `
-            <h4>${currentLang === "fr" ? "Mesures d’atténuation" : "Mitigation actions"}</h4>
-            <ul>${mits.map(m => `<li>${m}</li>`).join("")}</ul>
-          ` : ""}
+          ${riskS ? `<h4>${currentLang === "fr" ? "Énoncé de risque" : "Risk statement"}</h4><p class="risk-statement">${riskS}</p>` : ""}
+         ${mits?.length ? `
+  <div class="mitigations">
+    <h4>${currentLang === "fr" ? "Mesures d’atténuation" : "Mitigation actions"}</h4>
+    <ul>${mits.map(m => `<li>${m}</li>`).join("")}</ul>
+  </div>
+` : ""}
         </div>
       `;
       riskList.appendChild(card);
