@@ -19,31 +19,32 @@ Top of file through section/category selection
 
 <!-- Replace only the header block -->
 <header id="wb-bnr" class="container-fluid" role="banner">
-  <div class="container"><!-- aligns header to the same widths as main content -->
+  <div class="container"><!-- this enforces the same widths as main content -->
+    <!-- Row 1: Language toggle (right-aligned) -->
     <div class="row">
-      <!-- Language Selection -->
-      <section id="wb-lng" class="col-xs-12 col-sm-4 text-right">
-        <!-- unchanged inner content -->
+      <section id="wb-lng" class="col-xs-12 text-right">
         <h2 class="wb-inv">Language selection</h2>
-        <div class="row">
-          <div class="col-md-12">
-            <ul class="list-inline mrgn-bttm-0">
-              <li><a href="#" lang="en" hreflang="en" class="lang-link" data-lang-target="en" onclick="toggleLanguage('en'); return false;">
-                <span class="hidden-xs">English</span>
-                <abbr title="English" class="visible-xs h3 mrgn-tp-sm mrgn-bttm-0 text-uppercase">en</abbr>
-              </a></li>
-              <li><a href="#" lang="fr" hreflang="fr" class="lang-link" data-lang-target="fr" onclick="toggleLanguage('fr'); return false;">
-                <span class="hidden-xs">Français</span>
-                <abbr title="Français" class="visible-xs h3 mrgn-tp-sm mrgn-bttm-0 text-uppercase">fr</abbr>
-              </a></li>
-            </ul>
-          </div>
-        </div>
+        <ul class="list-inline mrgn-bttm-0">
+          <li>
+            <a href="#" lang="en" hreflang="en" class="lang-link" data-lang-target="en" onclick="toggleLanguage('en'); return false;">
+              <span class="hidden-xs">English</span>
+              <abbr title="English" class="visible-xs h3 mrgn-tp-sm mrgn-bttm-0 text-uppercase">en</abbr>
+            </a>
+          </li>
+          <li>
+            <a href="#" lang="fr" hreflang="fr" class="lang-link" data-lang-target="fr" onclick="toggleLanguage('fr'); return false;">
+              <span class="hidden-xs">Français</span>
+              <abbr title="Français" class="visible-xs h3 mrgn-tp-sm mrgn-bttm-0 text-uppercase">fr</abbr>
+            </a>
+          </li>
+        </ul>
       </section>
+    </div>
 
-      <!-- Logo/Brand -->
-      <div class="brand col-xs-12 col-sm-8" property="publisher" typeof="GovernmentOrganization">
-        <div class="rrit-logo"><!-- removed inline margin-left -->
+    <!-- Row 2: Logo/Brand (left-aligned) -->
+    <div class="row">
+      <div class="brand col-xs-12" property="publisher" typeof="GovernmentOrganization">
+        <div class="rrit-logo">
           <img src="/RRIT/assets/svg/tbs-logo-en.svg" alt="Treasury Board of Canada Secretariat" data-lang="en">
           <img src="/RRIT/assets/svg/tbs-logo-fr.svg" alt="Secrétariat du Conseil du Trésor du Canada" data-lang="fr" class="hidden" aria-hidden="true">
         </div>
@@ -53,7 +54,6 @@ Top of file through section/category selection
     </div>
   </div>
 </header>
-
 <div class="container-fluid">
   <div class="row">
     <main id="wb-cont" role="main">
