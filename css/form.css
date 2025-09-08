@@ -674,6 +674,24 @@ body.summary-ready #summaryControls { display: none; }
   #wb-bnr { padding-left: 15px; padding-right: 15px; }
   #wb-lng { padding-right: 15px; }
 }
+/* Header alignment: match #wb-cont container edges */
+#wb-bnr .rrit-logo { margin-left: 0 !important; }
+
+/* Keep comfortable vertical rhythm in the banner */
+#wb-bnr .brand,
+#wb-bnr #wb-lng {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+/* Tighten the language toggle so it sits on the right container edge cleanly */
+#wb-lng .list-inline { margin-right: 0; }
+#wb-lng .list-inline > li { padding-right: 0; }
+
+/* Mobile: stack nicely */
+@media (max-width: 767.98px) {
+  #wb-lng { margin-bottom: .5rem; }
+}
 
 
 
