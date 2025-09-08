@@ -17,36 +17,39 @@ Top of file through section/category selection
 </head>
 <body vocab="http://schema.org/" typeof="WebPage">
 
+<!-- Replace only the header block -->
 <header id="wb-bnr" class="container-fluid" role="banner">
-  <div class="row">
-    <!-- Language Selection - First Column -->
-    <section id="wb-lng" class="col-xs-3 col-sm-12 pull-right text-right">
-      <h2 class="wb-inv">Language selection</h2>
-      <div class="row">
-        <div class="col-md-12">
-          <!-- Add visual state indicators -->
-          <ul class="list-inline mrgn-bttm-0">
-            <li><a href="#" lang="en" hreflang="en" class="lang-link" data-lang-target="en" onclick="toggleLanguage('en'); return false;">
-              <span class="hidden-xs">English</span>
-              <abbr title="English" class="visible-xs h3 mrgn-tp-sm mrgn-bttm-0 text-uppercase">en</abbr>
-            </a></li>
-            <li><a href="#" lang="fr" hreflang="fr" class="lang-link" data-lang-target="fr" onclick="toggleLanguage('fr'); return false;">
-              <span class="hidden-xs">Français</span>
-              <abbr title="Français" class="visible-xs h3 mrgn-tp-sm mrgn-bttm-0 text-uppercase">fr</abbr>
-            </a></li>
-          </ul>
+  <div class="container"><!-- aligns header to the same widths as main content -->
+    <div class="row">
+      <!-- Language Selection -->
+      <section id="wb-lng" class="col-xs-12 col-sm-4 text-right">
+        <!-- unchanged inner content -->
+        <h2 class="wb-inv">Language selection</h2>
+        <div class="row">
+          <div class="col-md-12">
+            <ul class="list-inline mrgn-bttm-0">
+              <li><a href="#" lang="en" hreflang="en" class="lang-link" data-lang-target="en" onclick="toggleLanguage('en'); return false;">
+                <span class="hidden-xs">English</span>
+                <abbr title="English" class="visible-xs h3 mrgn-tp-sm mrgn-bttm-0 text-uppercase">en</abbr>
+              </a></li>
+              <li><a href="#" lang="fr" hreflang="fr" class="lang-link" data-lang-target="fr" onclick="toggleLanguage('fr'); return false;">
+                <span class="hidden-xs">Français</span>
+                <abbr title="Français" class="visible-xs h3 mrgn-tp-sm mrgn-bttm-0 text-uppercase">fr</abbr>
+              </a></li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Logo/Brand Section - Second Column (Expanded) -->
-    <div class="brand col-xs-9 col-sm-5 col-md-8" property="publisher" typeof="GovernmentOrganization">
-      <div class="rrit-logo" style="display:inline-block; margin-left:1rem;">
-        <img src="/RRIT/assets/svg/tbs-logo-en.svg" alt="Treasury Board of Canada Secretariat" data-lang="en">
-        <img src="/RRIT/assets/svg/tbs-logo-fr.svg" alt="Secrétariat du Conseil du Trèsor du Canada" data-lang="fr" class="hidden" aria-hidden="true">
+      <!-- Logo/Brand -->
+      <div class="brand col-xs-12 col-sm-8" property="publisher" typeof="GovernmentOrganization">
+        <div class="rrit-logo"><!-- removed inline margin-left -->
+          <img src="/RRIT/assets/svg/tbs-logo-en.svg" alt="Treasury Board of Canada Secretariat" data-lang="en">
+          <img src="/RRIT/assets/svg/tbs-logo-fr.svg" alt="Secrétariat du Conseil du Trésor du Canada" data-lang="fr" class="hidden" aria-hidden="true">
+        </div>
+        <meta property="name" content="Treasury Board of Canada Secretariat">
+        <meta property="areaServed" typeof="Country" content="Canada">
       </div>
-      <meta property="name" content="Treasury Board of Canada Secretariat">
-      <meta property="areaServed" typeof="Country" content="Canada">
     </div>
   </div>
 </header>
