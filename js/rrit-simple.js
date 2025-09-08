@@ -423,7 +423,21 @@ function newScenario() {
 function printSummary() {
   // Ensure single-language print
   document.documentElement.setAttribute("data-print-lang", currentLang);
-  setTimeout(() => { window.print(); setTimeout(() => document.documentElement.removeAttribute("data-print-lang"), 200); }, 50);
+  
+  // Set print date for the page title
+  const now = new Date();
+  const dateStr = currentLang === "fr" 
+    ? now.toLocaleDateString("fr-CA", { year: 'numeric', month: 'long', day: 'numeric' })
+    : now.toLocaleDateString("en-CA", { year: 'numeric', month: 'long', day: 'numeric' });
+  document.documentElement.setAttribute("data-print-date", dateStr);
+  
+  setTimeout(() => { 
+    window.print(); 
+    setTimeout(() => {
+      document.documentElement.removeAttribute("data-print-lang");
+      document.documentElement.removeAttribute("data-print-date");
+    }, 200); 
+  }, 50);
 }
 
 /* -------------------------
