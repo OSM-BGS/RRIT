@@ -630,6 +630,50 @@ body.summary-ready #summaryControls { display: none; }
   .risk-card .panel-title { flex-wrap: wrap; }
   .risk-card .panel-title small { margin-left: 0; margin-top: .25rem; }
 }
+/* ==============================================================
+   Header alignment to main content edges
+   ============================================================== */
+
+/* Give the banner the same side padding as #wb-cont */
+#wb-bnr {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* Constrain and center the header row to match container widths.
+   Row needs +30px (15px gutters each side) vs. .container. */
+#wb-bnr > .row {
+  margin-left: -15px;   /* keep Bootstrap gutters */
+  margin-right: -15px;
+  margin-inline: auto;  /* center the row */
+  max-width: 100%;
+}
+
+@media (min-width: 768px)  { #wb-bnr > .row { max-width: 780px; } }  /* 750 + 30 */
+@media (min-width: 992px)  { #wb-bnr > .row { max-width: 1000px; } } /* 970 + 30 */
+@media (min-width: 1200px) { #wb-bnr > .row { max-width: 1200px; } } /* 1170 + 30 */
+
+/* Remove the inline left margin on the logo so it sits on the same left edge */
+#wb-bnr .rrit-logo {
+  margin-left: 0 !important;
+}
+
+/* Ensure the language toggle aligns to the right container edge */
+#wb-lng {
+  text-align: right;
+}
+#wb-lng .list-inline {
+  margin-right: 0;   /* prevent extra right offset */
+}
+#wb-lng .list-inline > li {
+  padding-right: 0;  /* keep edge tight to the container padding */
+}
+
+/* Mobile: keep header padding consistent with main content */
+@media (max-width: 767.98px) {
+  #wb-bnr { padding-left: 15px; padding-right: 15px; }
+  #wb-lng { padding-right: 15px; }
+}
 
 
 
