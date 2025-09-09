@@ -4,8 +4,8 @@
     "category_en": "A. Regulatory & Policy Compliance",
     "category_fr": "A. Conformité réglementaire et politique",
     "text": {
-      "en": "Have we listed the laws, directives, standards, and agreements that apply to this initiative?",
-      "fr": "Avons-nous dressé la liste des lois, directives, normes et ententes qui s'appliquent à cette initiative?"
+      "en": "1. Have we listed the laws, directives, standards, and agreements that apply to this initiative?",
+      "fr": "1. Avons-nous dressé la liste des lois, directives, normes et ententes qui s'appliquent à cette initiative?"
     },
     "why": {
       "en": "You can’t comply with what you haven’t identified.",
@@ -33,8 +33,8 @@
     "category_en": "A. Regulatory & Policy Compliance",
     "category_fr": "A. Conformité réglementaire et politique",
     "text": {
-      "en": "Do we know which internal authorities must be consulted or must approve, and when?",
-      "fr": "Savons-nous quelles autorités internes doivent être consultées ou doivent approuver, et quand?"
+      "en": "2. Do we know which internal authorities must be consulted or must approve, and when?",
+      "fr": "2. Savons-nous quelles autorités internes doivent être consultées ou doivent approuver, et quand?"
     },
     "why": {
       "en": "Missing the right voices leads to late surprises.",
@@ -62,8 +62,8 @@
     "category_en": "A. Regulatory & Policy Compliance",
     "category_fr": "A. Conformité réglementaire et politique",
     "text": {
-      "en": "If a vendor or contract is involved, is our procurement approach compliant and will required clauses be included?",
-      "fr": "Si un fournisseur ou un contrat est en cause, notre approche d'approvisionnement est-elle conforme et les clauses requises seront-elles incluses?"
+      "en": "3. If a vendor or contract is involved, is our procurement approach compliant and will required clauses be included?",
+      "fr": "3. Si un fournisseur ou un contrat est en cause, notre approche d'approvisionnement est-elle conforme et les clauses requises seront-elles incluses?"
     },
     "why": {
       "en": "Contract gaps are expensive to fix after selection.",
@@ -91,8 +91,8 @@
     "category_en": "B. Data Security & Privacy",
     "category_fr": "B. Sécurité des données et confidentialité",
     "text": {
-      "en": "Do we know what data this initiative uses and how sensitive it is (including any personal information)?",
-      "fr": "Savons-nous quelles données cette initiative utilise et à quel point elles sont sensibles (incluant toute information personnelle)?"
+      "en": "4. Do we know what data this initiative uses and how sensitive it is (including any personal information)?",
+      "fr": "4. Savons-nous quelles données cette initiative utilise et à quel point elles sont sensibles (incluant toute information personnelle)?"
     },
     "why": {
       "en": "You can’t protect data you haven’t identified.",
@@ -120,8 +120,8 @@
     "category_en": "B. Data Security & Privacy",
     "category_fr": "B. Sécurité des données et confidentialité",
     "text": {
-      "en": "Have we started the required privacy and security review, with an owner and a target date?",
-      "fr": "Avons-nous commencé l'examen requis de confidentialité et de sécurité, avec un responsable et une date cible?"
+      "en": "5. Have we started the required privacy and security review, with an owner and a target date?",
+      "fr": "5. Avons-nous commencé l'examen requis de confidentialité et de sécurité, avec un responsable et une date cible?"
     },
     "why": {
       "en": "Reviews take time; starting early avoids late blockers.",
@@ -149,8 +149,8 @@
     "category_en": "C. HR Technology / Integration",
     "category_fr": "C. Technologie RH / Intégration",
     "text": {
-      "en": "Do we know the data it needs from other systems and what data it will send back—and are standard connectors or APIs available for this?",
-      "fr": "Connaissons-nous les données dont elle a besoin d'autres systèmes et quelles données elle renverra — et des connecteurs standard ou des API sont-ils disponibles pour cela?"
+      "en": "6. Do we know the data it needs from other systems and what data it will send back—and are standard connectors or APIs available for this?",
+      "fr": "6. Connaissons-nous les données dont elle a besoin d'autres systèmes et quelles données elle renverra — et des connecteurs standard ou des API sont-ils disponibles pour cela?"
     },
     "why": {
       "en": "Clear in/out flows and supported connectors prevent brittle integrations.",
@@ -178,8 +178,8 @@
     "category_en": "C. HR Technology / Integration",
     "category_fr": "C. Technologie RH / Intégration",
     "text": {
-      "en": "If we needed to change technology later, can we export our data in a usable format and close the service cleanly?",
-      "fr": "Si nous devions changer de technologie plus tard, pouvons-nous exporter nos données dans un format utilisable et fermer le service proprement?"
+      "en": "7. If we needed to change technology later, can we export our data in a usable format and close the service cleanly?",
+      "fr": "7. Si nous devions changer de technologie plus tard, pouvons-nous exporter nos données dans un format utilisable et fermer le service proprement?"
     },
     "why": {
       "en": "Exit options protect you from lock-in and messy transitions.",
@@ -207,8 +207,8 @@
     "category_en": "D. User Adoption & Training",
     "category_fr": "D. Adoption et formation des utilisateurs",
     "text": {
-      "en": "Do we have short, role-based training and quick-reference guides in both official languages?",
-      "fr": "Avons-nous une formation courte, basée sur les rôles, et des guides de référence rapide dans les deux langues officielles?"
+      "en": "8. Do we have short, role-based training and quick-reference guides in both official languages?",
+      "fr": "8. Avons-nous une formation courte, basée sur les rôles, et des guides de référence rapide dans les deux langues officielles?"
     },
     "why": {
       "en": "Different roles need different “how-to” help, and bilingual support widens reach.",
@@ -236,8 +236,8 @@
     "category_en": "D. User Adoption & Training",
     "category_fr": "D. Adoption et formation des utilisateurs",
     "text": {
-      "en": "Is there a clear place to get help after launch, and do we know who responds and how fast?",
-      "fr": "Y a-t-il un endroit clair pour obtenir de l'aide après le lancement, et savons-nous qui répond et à quelle vitesse?"
+      "en": "9. Is there a clear place to get help after launch, and do we know who responds and how fast?",
+      "fr": "9. Y a-t-il un endroit clair pour obtenir de l'aide après le lancement, et savons-nous qui répond et à quelle vitesse?"
     },
     "why": {
       "en": "Good support turns first-week confusion into routine use.",
@@ -265,8 +265,8 @@
     "category_en": "D. User Adoption & Training",
     "category_fr": "D. Adoption et formation des utilisateurs",
     "text": {
-      "en": "Do we have a simple communications plan (who needs to know what, when, and how)?",
-      "fr": "Avons-nous un plan de communication simple (qui doit savoir quoi, quand et comment)?"
+      "en": "10. Do we have a simple communications plan (who needs to know what, when, and how)?",
+      "fr": "10. Avons-nous un plan de communication simple (qui doit savoir quoi, quand et comment)?"
     },
     "why": {
       "en": "The right message at the right time prevents surprises and rework.",
@@ -294,8 +294,8 @@
     "category_en": "E. Cost–Benefit",
     "category_fr": "E. Coût-Bénéfice",
     "text": {
-      "en": "Do we know the main costs, benefits and measures required to get started and to run this each year?",
-      "fr": "Connaissons-nous les coûts principaux, les bénéfices et les mesures nécessaires pour démarrer et faire fonctionner ceci chaque année?"
+      "en": "11. Do we know the main costs, benefits and measures required to get started and to run this each year?",
+      "fr": "11. Connaissons-nous les coûts principaux, les bénéfices et les mesures nécessaires pour démarrer et faire fonctionner ceci chaque année?"
     },
     "why": {
       "en": "One-time costs and ongoing costs are both needed to judge value.",
@@ -329,8 +329,8 @@
     "category_en": "E. Cost–Benefit",
     "category_fr": "E. Coût-Bénéfice",
     "text": {
-      "en": "Is funding confirmed for year one and the ongoing costs, and who is paying?",
-      "fr": "Le financement est-il confirmé pour la première année et les coûts récurrents, et qui paiera?"
+      "en": "12. Is funding confirmed for year one and the ongoing costs, and who is paying?",
+      "fr": "12. Le financement est-il confirmé pour la première année et les coûts récurrents, et qui paiera?"
     },
     "why": {
       "en": "Affordability and accountability must be clear before you start.",
@@ -358,8 +358,8 @@
     "category_en": "E. Cost–Benefit",
     "category_fr": "E. Coût-Bénéfice",
     "text": {
-      "en": "Have we accounted for the people time to operate this and what we will stop or retire to make room?",
-      "fr": "Avons-nous tenu compte du temps des personnes pour exploiter ceci et de ce que nous cesserons ou retirerons pour faire de la place?"
+      "en": "13. Have we accounted for the people time to operate this and what we will stop or retire to make room?",
+      "fr": "13. Avons-nous tenu compte du temps des personnes pour exploiter ceci et de ce que nous cesserons ou retirerons pour faire de la place?"
     },
     "why": {
       "en": "The true cost includes staff time and decommissioning old tools.",
@@ -387,8 +387,8 @@
     "category_en": "F. Vendor & Partner",
     "category_fr": "F. Fournisseur et partenaire",
     "text": {
-      "en": "Has somebody conducted due diligence for the vendor selection — for example, checking standing offers, vendor reputation and stability, etc. (typically done by procurement) — so we can confirm it is reasonable to pursue?",
-      "fr": "Le fournisseur est-il financièrement stable et utilisé par des pairs comme nous (avec des clients de référence que nous pouvons vérifier)?"
+      "en": "14. Has somebody conducted due diligence for the vendor selection — for example, checking standing offers, vendor reputation and stability, etc. (typically done by procurement) — so we can confirm it is reasonable to pursue?",
+      "fr": "14. Le fournisseur est-il financièrement stable et utilisé par des pairs comme nous (avec des clients de référence que nous pouvons vérifier)?"
     },
     "why": {
       "en": "Staying power and fit for similar organizations reduce risk.",
@@ -416,8 +416,8 @@
     "category_en": "G. Workforce Planning & Development",
     "category_fr": "G. Planification et développement de la main-d'œuvre",
     "text": {
-      "en": "Have we listed the key skills this initiative needs—by role—and who needs to be able to do what?",
-      "fr": "Avons-nous listé les compétences clés dont cette initiative a besoin—par rôle—et qui doit pouvoir faire quoi?"
+      "en": "15. Have we listed the key skills this initiative needs—by role—and who needs to be able to do what?",
+      "fr": "15. Avons-nous listé les compétences clés dont cette initiative a besoin—par rôle—et qui doit pouvoir faire quoi?"
     },
     "why": {
       "en": "If skills aren’t named, they won’t be built.",
@@ -445,8 +445,8 @@
     "category_en": "G. Workforce Planning & Development",
     "category_fr": "G. Planification et développement de la main-d'œuvre",
     "text": {
-      "en": "Do we understand how day-to-day responsibilities will change for the main roles, and will job expectations be updated?",
-      "fr": "Comprenons-nous comment les responsabilités quotidiennes changeront pour les rôles principaux, et les attentes des postes seront-elles mises à jour?"
+      "en": "16. Do we understand how day-to-day responsibilities will change for the main roles, and will job expectations be updated?",
+      "fr": "16. Comprenons-nous comment les responsabilités quotidiennes changeront pour les rôles principaux, et les attentes des postes seront-elles mises à jour?"
     },
     "why": {
       "en": "New tools fail if old expectations stay in place.",
@@ -474,8 +474,8 @@
     "category_en": "H. Performance Metrics & Evaluation",
     "category_fr": "H. Métriques de performance et évaluation",
     "text": {
-      "en": "Have we chosen a short list (3–5) of outcome measures that match our business goals?",
-      "fr": "Avons-nous choisi une liste courte (3-5) de mesures de résultats qui correspondent à nos objectifs d'affaires?"
+      "en": "17. Have we chosen a short list (3–5) of outcome measures that match our business goals?",
+      "fr": "17. Avons-nous choisi une liste courte (3-5) de mesures de résultats qui correspondent à nos objectifs d'affaires?"
     },
     "why": {
       "en": "Too many measures blur focus; the wrong ones hide real progress.",
@@ -503,8 +503,8 @@
     "category_en": "H. Performance Metrics & Evaluation",
     "category_fr": "H. Métriques de performance et évaluation",
     "text": {
-      "en": "Do we know the starting point (baseline) and the target for each measure, and by when we aim to hit it and do we have a process in place to track this?",
-      "fr": "Connaissons-nous le point de départ (base de référence) et la cible pour chaque mesure, et d'ici quand nous visons l'atteindre?"
+      "en": "18. Do we know the starting point (baseline) and the target for each measure, and by when we aim to hit it and do we have a process in place to track this?",
+      "fr": "18. Connaissons-nous le point de départ (base de référence) et la cible pour chaque mesure, et d'ici quand nous visons l'atteindre?"
     },
     "why": {
       "en": "Baseline + target + date turns wishes into commitments.",
@@ -532,8 +532,8 @@
     "category_en": "I. Strategic Alignment",
     "category_fr": "I. Alignement stratégique",
     "text": {
-      "en": "Can we point to the specific priority or strategy this initiative advances (and name the expected outcome it supports)?",
-      "fr": "Pouvons-nous pointer vers la priorité ou stratégie spécifique que cette initiative fait avancer (et nommer le résultat attendu qu'elle supporte)?"
+      "en": "19. Can we point to the specific priority or strategy this initiative advances (and name the expected outcome it supports)?",
+      "fr": "19. Pouvons-nous pointer vers la priorité ou stratégie spécifique que cette initiative fait avancer (et nommer le résultat attendu qu'elle supporte)?"
     },
     "why": {
       "en": "Clear alignment beats generic good intentions.",
@@ -561,8 +561,8 @@
     "category_en": "I. Strategic Alignment",
     "category_fr": "I. Alignement stratégique",
     "text": {
-      "en": "Do we have a named executive sponsor who will make time for decisions and unblock issues?",
-      "fr": "Avons-nous un commanditaire exécutif nommé qui prendra le temps pour les décisions et débloquer les problèmes?"
+      "en": "20. Do we have a named executive sponsor who will make time for decisions and unblock issues?",
+      "fr": "20. Avons-nous un commanditaire exécutif nommé qui prendra le temps pour les décisions et débloquer les problèmes?"
     },
     "why": {
       "en": "Sponsor time is the strongest signal that the work matters.",
@@ -590,8 +590,8 @@
     "category_en": "I. Strategic Alignment",
     "category_fr": "I. Alignement stratégique",
     "text": {
-      "en": "Have we verified whether an existing corporate system or solution is already in use that could meet these requirements or be leveraged for this project?",
-      "fr": "Avons-nous vérifié si un système ou solution corporative existante est déjà en usage qui pourrait répondre à ces exigences ou être utilisée pour ce projet?"
+      "en": "21. Have we verified whether an existing corporate system or solution is already in use that could meet these requirements or be leveraged for this project?",
+      "fr": "21. Avons-nous vérifié si un système ou solution corporative existante est déjà en usage qui pourrait répondre à ces exigences ou être utilisée pour ce projet?"
     },
     "why": {
       "en": "If others already have resolved the problem, it will be easier and cheaper if we can use what they have.",
@@ -619,8 +619,8 @@
     "category_en": "J. Accessibility & Inclusion",
     "category_fr": "J. Accessibilité et inclusion",
     "text": {
-      "en": "Do you have a plan in place for having typical employees—including people who use assistive technologies—try key tasks end to end?",
-      "fr": "Des employés typiques—incluant des personnes qui utilisent des technologies d'assistance—ont-ils essayé les tâches clés de bout en bout, et ont-ils réussi?"
+      "en": "22. Do you have a plan in place for having typical employees—including people who use assistive technologies—try key tasks end to end?",
+      "fr": "22. Des employés typiques—incluant des personnes qui utilisent des technologies d'assistance—ont-ils essayé les tâches clés de bout en bout, et ont-ils réussi?"
     },
     "why": {
       "en": "Real users reveal barriers that checklists miss.",
@@ -648,8 +648,8 @@
     "category_en": "J. Accessibility & Inclusion",
     "category_fr": "J. Accessibilité et inclusion",
     "text": {
-      "en": "Has a GBA Plus analysis been completed for the initiative?",
-      "fr": "Une analyse ACS Plus a-t-elle été réalisée pour l'initiative?"
+      "en": "23. Has a GBA Plus analysis been completed for the initiative?",
+      "fr": "23. Une analyse ACS Plus a-t-elle été réalisée pour l'initiative?"
     },
     "why": {
       "en": "GBA Plus helps identify how the initiative could be tailored to meet diverse needs of the people most impacted.",
@@ -677,8 +677,8 @@
     "category_en": "J. Accessibility & Inclusion",
     "category_fr": "J. Accessibilité et inclusion",
     "text": {
-      "en": "Is the content easy to understand and inclusive (plain language, respectful terms, clear micro-copy and labels)?",
-      "fr": "Le contenu est-il facile à comprendre et inclusif (langage simple, termes respectueux, micro-copie et étiquettes claires)?"
+      "en": "24. Is the content easy to understand and inclusive (plain language, respectful terms, clear micro-copy and labels)?",
+      "fr": "24. Le contenu est-il facile à comprendre et inclusif (langage simple, termes respectueux, micro-copie et étiquettes claires)?"
     },
     "why": {
       "en": "Clear, inclusive wording prevents mistakes and exclusion.",
