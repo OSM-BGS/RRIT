@@ -140,11 +140,28 @@ function updateQuestionAriaLabelsForLang() {
 function toggleLanguage(lang) {
   currentLang = (lang === "fr") ? "fr" : "en";
   try { localStorage.setItem("rrit_lang", currentLang); } catch {}
+
+  // Do NOT re-render questions; keep existing selections
   applyLangToSpans();
-  renderQuestions();            // re-render Q&A in selected language
-  renderSummaryIfVisible();     // if summary is visible, refresh content
-  const g1 = qs("#btnGenerateSummary");
+  updateQuestionAriaLabelsForLang();
+
+  // Update progress text in the current language
+  const { progressText } = getIds();
+  if (progressText) {
+    const total = (QUESTIONS || []).length;
+    const answered = collectResponses().length;
+    setText(
+      progressText,
+      (currentLang === "fr" ? "Répondu " : "Answered ") + `${answered}/${total}`
+    );
+  }
+
+  // Update Generate Summary button label
+  const g1 = qs("#btnGenerateSummary") || qs('[data-role="btnGenerateSummary"]');
   if (g1) setText(g1, currentLang === "fr" ? "Générer le résumé" : "Generate Summary");
+
+  // Ensure the summary view reflects the selected language if it’s visible
+  renderSummaryIfVisible();
 }
 window.toggleLanguage = toggleLanguage; // preserve inline onclick usage
 
