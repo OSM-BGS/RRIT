@@ -1,11 +1,8 @@
 /* =========================================================
    RRIT – Rapid Risk Identification Tool (Unified Build)
-   - Replaces rrit-simple.js and rrit-custom.js
-   - 24 mandatory questions (or however many in QUESTIONS)
    - Single-language render for Q&A and Summary with bilingual content via [data-lang]
    - Risks-only summary: No/Unknown items with risk statements + mitigations
    - Save/restore, Edit, New Scenario, Print
-   - Compatible with the HTML used previously; robust ID lookups
    ========================================================= */
 
 /* -------------------------
@@ -60,13 +57,6 @@ function t(obj) {
 }
 function ansLabel(v) {
   const map = currentLang === "fr"
-    ? { yes: "Oui", no: "Non", unknown: "Inconnu", na: "S.O." }
-    : { yes: "Yes", no: "No", unknown: "Unknown", na: "N/A" };
-  return map[v] || v;
-}
-// Language-agnostic label generator
-function ansLabelFor(lang, v) {
-  const map = lang === "fr"
     ? { yes: "Oui", no: "Non", unknown: "Inconnu", na: "S.O." }
     : { yes: "Yes", no: "No", unknown: "Unknown", na: "N/A" };
   return map[v] || v;
@@ -133,7 +123,7 @@ function getIds() {
     qs("#summarySection") ||
     qs('[data-role="summaryPanel"]');
 
-  // Optional dedicated header element (we avoid overwriting bilingual <h2> titles)
+  // Optional dedicated header element (avoid overwriting bilingual <h2> titles)
   const summaryHeader =
     (summaryPanel && (qs("#summaryHeader", summaryPanel) || qs('[data-role="summaryHeader"]', summaryPanel))) || null;
 
@@ -326,15 +316,17 @@ function generateSummary(skipGuard = false) {
   }
 
   // Compute risks (No/Unknown)
-  const risks = responses.filter(r => r.answer === "no" || r.answer === "unknown")
+  const risks = responses
+    .filter(r => r.answer === "no" || r.answer === "unknown")
     .map(r => {
       const q = (QUESTIONS || []).find(x => x.id === r.qid);
       return { q, answer: r.answer };
-    }).filter(x => !!x && !!x.q);
+    })
+    .filter(x => !!x && !!x.q); // guard: only render when the question record exists
 
   if (!summaryPanel || !riskList) return;
 
-  // Header (only if a dedicated header node exists)
+  // Optional header (only if a dedicated header node exists)
   if (summaryHeader) {
     setText(summaryHeader, currentLang === "fr" ? "Résumé des risques" : "Risk Summary");
   }
@@ -395,7 +387,6 @@ function generateSummary(skipGuard = false) {
     editAnswersBtn.onclick = () => {
       summaryPanel.classList.add("hidden");
       if (questionsSectionPrimary) questionsSectionPrimary.classList.remove("hidden");
-      // Ensure a11y/labels are correct after showing questions again
       applyLangToSpans();
       updateQuestionAriaLabelsForLang();
     };
@@ -474,7 +465,6 @@ function initRRIT() {
   if (btnGenerateSummary) {
     btnGenerateSummary.addEventListener("click", (e) => {
       e.preventDefault();
-      // Persist before generating
       saveScenario();
       generateSummary();
     });
