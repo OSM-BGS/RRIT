@@ -1,0 +1,19 @@
+/* Guarantee single-language print */
+@media print {
+  /* Honor JS visibility toggles */
+  .hidden,
+  [aria-hidden="true"] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Redundant safety: hide all language variants by default,
+     then show only the current language based on data-print-lang */
+  [data-lang] {
+    display: none !important;
+  }
+  html[data-print-lang="en"] [data-lang="en"],
+  html[data-print-lang="fr"] [data-lang="fr"] {
+    display: unset !important; /* block for headings, inline for spans */
+  }
+}
