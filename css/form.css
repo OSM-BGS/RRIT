@@ -669,6 +669,11 @@ body.summary-ready #summaryControls { display: none; }
   align-items: center;
   gap: .5rem;
 }
+/* Remove bullets/markers and extra indent for the risk list */
+#riskList { list-style: none; padding-left: 0; margin-left: 0; }
+#riskList .risk-item { list-style: none; }
+#riskList .risk-item::marker { content: ""; }  /* neutralize custom markers if any */
+#riskList .risk-item::before { content: none !important; } /* in case a theme uses ::before */
 
 .risk-card .panel-title small {
   margin-left: auto;     /* push the answer to the right edge */
@@ -749,6 +754,7 @@ body.summary-ready #summaryControls { display: none; }
 @media (max-width: 767.98px) {
   #wb-lng { margin-bottom: .5rem; }
 }
+
 
 
 
