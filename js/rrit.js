@@ -1,8 +1,10 @@
 /* =========================================================
    RRIT – Rapid Risk Identification Tool (Unified Build)
-   - Single-language render for Q&A and Summary with bilingual content via [data-lang]
-   - Risks-only summary: No/Unknown items with risk statements + mitigations
+   - 24+ mandatory questions (length of QUESTIONS)
+   - Bilingual UI via [data-lang] spans
+   - Risks-only summary (No/Unknown)
    - Save/restore, Edit, New Scenario, Print
+   - Single bootstrap: load questions, then init once
    ========================================================= */
 
 /* -------------------------
@@ -10,7 +12,11 @@
 ------------------------- */
 const STORAGE_KEY = "rrit_savedScenario_v2";
 
-// Load questions from JSON (relative path so it works at /RRIT/)
+// QUESTIONS must be an array of:
+// { id, text:{en,fr}, why:{en,fr}, risk_statement:{en,fr}, mitigations:{en:[],fr:[]} }
+let QUESTIONS = Array.isArray(window.RRIT_QUESTIONS) ? window.RRIT_QUESTIONS : [];
+
+// Load questions from JSON (relative path so it works under /RRIT/)
 async function loadQuestions() {
   if (QUESTIONS.length) return QUESTIONS;
   try {
@@ -25,10 +31,6 @@ async function loadQuestions() {
   return QUESTIONS;
 }
 
-// QUESTIONS must be an array of:
-// { id, text:{en,fr}, why:{en,fr}, risk_statement:{en,fr}, mitigations:{en:[],fr:[]} }
-let QUESTIONS = Array.isArray(window.RRIT_QUESTIONS) ? window.RRIT_QUESTIONS : [];
-
 let currentLang = (() => {
   try {
     const saved = localStorage.getItem("rrit_lang");
@@ -41,22 +43,23 @@ let currentLang = (() => {
 /* -------------------------
    DOM helpers
 ------------------------- */
-const qs  = (sel, root) => {
-  try { return (root || document).querySelector(sel); } catch { return null; }
-};
-const qsa = (sel, root) => {
-  try { return Array.from((root || document).querySelectorAll(sel)); } catch { return []; }
-};
+const qs  = (sel, root) => { try { return (root || document).querySelector(sel); } catch { return null; } };
+const qsa = (sel, root) => { try { return Array.from((root || document).querySelectorAll(sel)); } catch { return []; } };
 const setText = (el, txt) => { if (el) el.textContent = txt; };
 
 /* -------------------------
    i18n helpers
 ------------------------- */
-function t(obj) {
-  return (typeof obj === "string") ? obj : (obj?.[currentLang] ?? obj?.en ?? "");
-}
+function t(obj) { return (typeof obj === "string") ? obj : (obj?.[currentLang] ?? obj?.en ?? ""); }
 function ansLabel(v) {
   const map = currentLang === "fr"
+    ? { yes: "Oui", no: "Non", unknown: "Inconnu", na: "S.O." }
+    : { yes: "Yes", no: "No", unknown: "Unknown", na: "N/A" };
+  return map[v] || v;
+}
+// Language-agnostic label generator
+function ansLabelFor(lang, v) {
+  const map = lang === "fr"
     ? { yes: "Oui", no: "Non", unknown: "Inconnu", na: "S.O." }
     : { yes: "Yes", no: "No", unknown: "Unknown", na: "N/A" };
   return map[v] || v;
@@ -123,7 +126,7 @@ function getIds() {
     qs("#summarySection") ||
     qs('[data-role="summaryPanel"]');
 
-  // Optional dedicated header element (avoid overwriting bilingual <h2> titles)
+  // Optional dedicated header element (we avoid overwriting bilingual <h2> titles)
   const summaryHeader =
     (summaryPanel && (qs("#summaryHeader", summaryPanel) || qs('[data-role="summaryHeader"]', summaryPanel))) || null;
 
@@ -173,21 +176,22 @@ function renderQuestions() {
   if (summaryPanel) summaryPanel.classList.add("hidden");
 
   const items = QUESTIONS || [];
-  // Build fieldsets
   questionsList.innerHTML = items.map(q => {
     const qTextEn = q.text?.en || "";
     const qTextFr = q.text?.fr || qTextEn;
-
     const whyEn = q.why?.en || "";
     const whyFr = q.why?.fr || whyEn;
-
     const name = q.id;
+
     const inputs = ["yes","no","unknown","na"].map(v => {
       const id = `${name}_${v}`;
       return `
         <label class="rrit-choice">
           <input type="radio" name="${name}" id="${id}" value="${v}" />
-          <span>${ansLabel(v)}</span>
+          <span>
+            <span data-lang="en">${ansLabelFor("en", v)}</span>
+            <span data-lang="fr">${ansLabelFor("fr", v)}</span>
+          </span>
         </label>`;
     }).join("");
 
@@ -315,18 +319,18 @@ function generateSummary(skipGuard = false) {
     return;
   }
 
-  // Compute risks (No/Unknown)
+  // Compute risks (No/Unknown) and map to question records safely
   const risks = responses
     .filter(r => r.answer === "no" || r.answer === "unknown")
     .map(r => {
       const q = (QUESTIONS || []).find(x => x.id === r.qid);
-      return { q, answer: r.answer };
+      return q ? { q, answer: r.answer } : null;
     })
-    .filter(x => !!x && !!x.q); // guard: only render when the question record exists
+    .filter(x => !!x);
 
   if (!summaryPanel || !riskList) return;
 
-  // Optional header (only if a dedicated header node exists)
+  // Optional dedicated header node: set if present (bilingual H2s are handled by data-lang)
   if (summaryHeader) {
     setText(summaryHeader, currentLang === "fr" ? "Résumé des risques" : "Risk Summary");
   }
@@ -336,7 +340,7 @@ function generateSummary(skipGuard = false) {
     setText(riskCountEl, String(risks.length));
   }
 
-  // List
+  // List content
   riskList.innerHTML = risks.map(({ q, answer }) => {
     const qTextEn = q.text?.en || "";
     const qTextFr = q.text?.fr || qTextEn;
@@ -382,8 +386,10 @@ function generateSummary(skipGuard = false) {
   // Ensure language visibility is correct
   applyLangToSpans();
 
-  // Wire actions (idempotent)
+  // Wire actions (idempotent) and reveal them
   if (editAnswersBtn) {
+    editAnswersBtn.classList.remove("hidden");
+    editAnswersBtn.removeAttribute("aria-hidden");
     editAnswersBtn.onclick = () => {
       summaryPanel.classList.add("hidden");
       if (questionsSectionPrimary) questionsSectionPrimary.classList.remove("hidden");
@@ -392,6 +398,8 @@ function generateSummary(skipGuard = false) {
     };
   }
   if (newScenarioBtn) {
+    newScenarioBtn.classList.remove("hidden");
+    newScenarioBtn.removeAttribute("aria-hidden");
     newScenarioBtn.onclick = () => {
       // Clear answers
       (QUESTIONS || []).forEach(q => {
@@ -412,11 +420,17 @@ function generateSummary(skipGuard = false) {
     };
   }
   if (printSummaryBtn) {
+    printSummaryBtn.classList.remove("hidden");
+    printSummaryBtn.removeAttribute("aria-hidden");
     printSummaryBtn.onclick = () => window.print();
   }
+  if (postResultActions) {
+    postResultActions.classList.remove("hidden");
+    postResultActions.setAttribute("data-state", "active");
+  }
 
-  // Optional: reveal any post-result actions
-  if (postResultActions) postResultActions.classList.remove("hidden");
+  // Persist scenario after generating
+  saveScenario();
 }
 
 /* -------------------------
@@ -427,9 +441,7 @@ window.RRIT = {
     QUESTIONS = Array.isArray(list) ? list : [];
     renderQuestions();
   },
-  getQuestions() {
-    return QUESTIONS.slice();
-  },
+  getQuestions() { return QUESTIONS.slice(); },
   saveScenario,
   loadScenario,
   restoreScenario,
@@ -444,14 +456,14 @@ window.RRIT = {
 function initRRIT() {
   applyLangToSpans();
 
-  // If QUESTIONS were provided globally, render; otherwise wait for caller to set
+  // If QUESTIONS were pre-injected, render; otherwise wait for loader/bootstrap
   if (QUESTIONS.length) {
     renderQuestions();
-    // If a saved scenario exists, restore it silently
+    // Attempt restore
     const saved = loadScenario();
     if (saved) {
       restoreScenario(saved);
-      // Keep on questions view; the Generate Summary button will enable after restore
+      // Enable Generate Summary based on restored answers
       const { btnGenerateSummary } = getIds();
       if (btnGenerateSummary) {
         const answered = collectResponses().length;
@@ -465,7 +477,7 @@ function initRRIT() {
   if (btnGenerateSummary) {
     btnGenerateSummary.addEventListener("click", (e) => {
       e.preventDefault();
-      saveScenario();
+      saveScenario();   // persist before generating
       generateSummary();
     });
   }
@@ -479,12 +491,14 @@ function initRRIT() {
   }
 }
 
-// Single bootstrap: load questions, then init once.
+/* -------------------------
+   Bootstrap
+------------------------- */
 (function () {
   const start = async () => {
     try {
       await loadQuestions();  // ensure QUESTIONS is populated
-      initRRIT();             // wires Generate Summary click handler and renders
+      initRRIT();             // render and wire once
     } catch (e) {
       console.error("[RRIT] Initialization failed:", e);
     }
