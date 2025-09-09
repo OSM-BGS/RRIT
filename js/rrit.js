@@ -482,21 +482,23 @@ function initRRIT() {
   }
 }
 
-// DOM ready
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initRRIT);
-} else {
-  initRRIT();
-}
 // ... all your functions and module code above ...
 
-// Initialization (runs after DOM is parsed because the script is loaded with `defer`)
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    await loadQuestions();
-    renderQuestions();
-    applyLangToSpans();
-  } catch (e) {
-    console.error("[RRIT] Initialization failed:", e);
+
+// Single bootstrap: load questions, then init once.
+(function () {
+  const start = async () => {
+    try {
+      await loadQuestions();  // ensure QUESTIONS is populated
+      initRRIT();             // wires Generate Summary click handler and renders
+    } catch (e) {
+      console.error("[RRIT] Initialization failed:", e);
+    }
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start);
+  } else {
+    start();
   }
-});
+})();
