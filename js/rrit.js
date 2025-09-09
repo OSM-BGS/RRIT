@@ -13,6 +13,21 @@
 ------------------------- */
 const STORAGE_KEY = "rrit_savedScenario_v2";
 
+// Add this near the top (before initialization), if it's missing:
+async function loadQuestions() {
+  if (QUESTIONS.length) return QUESTIONS;
+  try {
+    const res = await fetch("data/rrit_questions_bilingual.json", { cache: "no-store" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    QUESTIONS = Array.isArray(data) ? data : (data.questions || []);
+  } catch (e) {
+    console.error("[RRIT] Failed to load questions:", e);
+    QUESTIONS = [];
+  }
+  return QUESTIONS;
+}
+
 // QUESTIONS must be an array of:
 // { id, text:{en,fr}, why:{en,fr}, risk_statement:{en,fr}, mitigations:{en:[],fr:[]} }
 let QUESTIONS = Array.isArray(window.RRIT_QUESTIONS) ? window.RRIT_QUESTIONS : [];
