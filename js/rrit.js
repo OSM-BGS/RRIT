@@ -382,6 +382,8 @@ function generateSummary(skipGuard = false) {
   // Toggle visibility
   if (questionsSectionPrimary) questionsSectionPrimary.classList.add("hidden");
   summaryPanel.classList.remove("hidden");
+  // Important for CSS that relies on a state class to reveal summary
+  document.body.classList.add("summary-ready");
 
   // Ensure language visibility is correct
   applyLangToSpans();
@@ -393,6 +395,7 @@ function generateSummary(skipGuard = false) {
     editAnswersBtn.onclick = () => {
       summaryPanel.classList.add("hidden");
       if (questionsSectionPrimary) questionsSectionPrimary.classList.remove("hidden");
+      document.body.classList.remove("summary-ready");
       applyLangToSpans();
       updateQuestionAriaLabelsForLang();
     };
@@ -414,6 +417,7 @@ function generateSummary(skipGuard = false) {
       try { localStorage.removeItem(STORAGE_KEY); } catch {}
       // Back to questions
       summaryPanel.classList.add("hidden");
+      document.body.classList.remove("summary-ready");
       const { questionsSectionPrimary: qsp } = getIds();
       if (qsp) qsp.classList.remove("hidden");
       renderQuestions();
