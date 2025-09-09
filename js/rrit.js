@@ -94,16 +94,23 @@ function updateQuestionAriaLabelsForLang() {
     if (label) labelEl.setAttribute("aria-label", label);
   });
 }
+// Replace the existing toggleLanguage with this version
 function toggleLanguage(lang) {
   currentLang = (lang === "fr") ? "fr" : "en";
   try { localStorage.setItem("rrit_lang", currentLang); } catch {}
+
+  // Only switch visible text and update a11y labels; do not re-render questions
   applyLangToSpans();
-  renderQuestions();            // re-render Q&A in selected language
-  renderSummaryIfVisible();     // if summary is visible, refresh content
+  updateQuestionAriaLabelsForLang();
+
+  // If the summary is visible, refresh its content in the new language
+  renderSummaryIfVisible();
+
+  // Update button label if present
   const g1 = qs("#btnGenerateSummary");
   if (g1) setText(g1, currentLang === "fr" ? "Générer le résumé" : "Generate Summary");
 }
-window.toggleLanguage = toggleLanguage; // preserve inline onclick usage
+window.toggleLanguage = toggleLanguage;
 
 /* -------------------------
    Robust element lookup
