@@ -355,9 +355,9 @@ function generateSummary(skipGuard = false) {
     return `
       <li class="risk-item">
         <h3 class="risk-q">
-          <span class="badge">${ansLabel(answer)}</span>
           <span data-lang="en">${qTextEn}</span>
           <span data-lang="fr">${qTextFr}</span>
+          <span class="badge">${ansLabel(answer)}</span>
         </h3>
         <p class="risk-statement">
           <strong data-lang="en">Risk:</strong>
