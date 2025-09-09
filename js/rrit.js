@@ -34,7 +34,7 @@ async function loadQuestions() {
 let currentLang = (() => {
   try {
     const saved = localStorage.getItem("rrit_lang");
-    if (saved === "fr" || saved === "en") return saved;
+    if (saved === "fr" || "en") return saved;
   } catch {}
   const sys = (navigator.languages?.[0] || navigator.language || "en").toLowerCase();
   return sys.startsWith("fr") ? "fr" : "en";
@@ -46,6 +46,49 @@ let currentLang = (() => {
 const qs  = (sel, root) => { try { return (root || document).querySelector(sel); } catch { return null; } };
 const qsa = (sel, root) => { try { return Array.from((root || document).querySelectorAll(sel)); } catch { return []; } };
 const setText = (el, txt) => { if (el) el.textContent = txt; };
+
+/* ---- Print helpers (inserted just after DOM helpers) ---- */
+// Escape helper to keep print HTML safe
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, m => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[m]));
+}
+// Read current Project Information fields (live DOM values)
+function getProjectMetaLive() {
+  return {
+    name: qs("#projectName")?.value || "",
+    desc: qs("#projectDesc")?.value || "",
+    date: qs("#assessmentDate")?.value || "",
+    completedBy: qs("#completedBy")?.value || ""
+  };
+}
+// Build a bilingual Project Info section to inject into the summary for printing
+function buildProjectInfoPrintSection(meta) {
+  return `
+    <section id="printProjectInfo" class="panel panel-default mrgn-bttm-md">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          <span data-lang="en">Project Information</span>
+          <span data-lang="fr">Information sur le projet</span>
+        </h3>
+      </div>
+      <div class="panel-body">
+        <dl class="dl-horizontal">
+          <dt><span data-lang="en">Project Name</span><span data-lang="fr">Nom du projet</span></dt>
+          <dd>${esc(meta.name)}</dd>
+
+          <dt><span data-lang="en">Project Description</span><span data-lang="fr">Description du projet</span></dt>
+          <dd>${esc(meta.desc).replace(/\n/g, "<br>")}</dd>
+
+          <dt><span data-lang="en">Assessment Date</span><span data-lang="fr">Date de l’évaluation</span></dt>
+          <dd>${esc(meta.date)}</dd>
+
+          <dt><span data-lang="en">Completed by</span><span data-lang="fr">Réalisé par</span></dt>
+          <dd>${esc(meta.completedBy).replace(/\n/g, "<br>")}</dd>
+        </dl>
+      </div>
+    </section>
+  `;
+}
 
 /* -------------------------
    i18n helpers
@@ -94,23 +137,16 @@ function updateQuestionAriaLabelsForLang() {
     if (label) labelEl.setAttribute("aria-label", label);
   });
 }
-// Replace the existing toggleLanguage with this version
 function toggleLanguage(lang) {
   currentLang = (lang === "fr") ? "fr" : "en";
   try { localStorage.setItem("rrit_lang", currentLang); } catch {}
-
-  // Only switch visible text and update a11y labels; do not re-render questions
   applyLangToSpans();
-  updateQuestionAriaLabelsForLang();
-
-  // If the summary is visible, refresh its content in the new language
-  renderSummaryIfVisible();
-
-  // Update button label if present
+  renderQuestions();            // re-render Q&A in selected language
+  renderSummaryIfVisible();     // if summary is visible, refresh content
   const g1 = qs("#btnGenerateSummary");
   if (g1) setText(g1, currentLang === "fr" ? "Générer le résumé" : "Generate Summary");
 }
-window.toggleLanguage = toggleLanguage;
+window.toggleLanguage = toggleLanguage; // preserve inline onclick usage
 
 /* -------------------------
    Robust element lookup
@@ -433,7 +469,37 @@ function generateSummary(skipGuard = false) {
   if (printSummaryBtn) {
     printSummaryBtn.classList.remove("hidden");
     printSummaryBtn.removeAttribute("aria-hidden");
-    printSummaryBtn.onclick = () => window.print();
+    // Updated print handler: inject Project Info into summary for print, set attributes, then clean up
+    printSummaryBtn.onclick = () => {
+      // Localize print attributes (used by CSS/title)
+      document.documentElement.setAttribute("data-print-lang", currentLang);
+      const now = new Date();
+      const dateStr = currentLang === "fr"
+        ? now.toLocaleDateString("fr-CA", { year: "numeric", month: "long", day: "numeric" })
+        : now.toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" });
+      document.documentElement.setAttribute("data-print-date", dateStr);
+
+      // Inject a temporary Project Info section at top of the summary
+      const host = summaryPanel?.querySelector(".panel-body") || summaryPanel || document.body;
+      const temp = document.createElement("div");
+      temp.innerHTML = buildProjectInfoPrintSection(getProjectMetaLive());
+      const block = temp.firstElementChild;
+      if (host && block) {
+        host.prepend(block);
+        // Ensure the right language is visible
+        applyLangToSpans();
+      }
+
+      // Print, then clean up injected markup and attributes
+      setTimeout(() => {
+        window.print();
+        setTimeout(() => {
+          document.documentElement.removeAttribute("data-print-lang");
+          document.documentElement.removeAttribute("data-print-date");
+          if (block && block.parentNode) block.parentNode.removeChild(block);
+        }, 200);
+      }, 50);
+    };
   }
   if (postResultActions) {
     postResultActions.classList.remove("hidden");
