@@ -473,3 +473,15 @@ if (document.readyState === "loading") {
 } else {
   initRRIT();
 }
+// ... all your functions and module code above ...
+
+// Initialization (runs after DOM is parsed because the script is loaded with `defer`)
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    await loadQuestions();
+    renderQuestions();
+    applyLangToSpans();
+  } catch (e) {
+    console.error("[RRIT] Initialization failed:", e);
+  }
+});
