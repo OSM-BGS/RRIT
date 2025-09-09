@@ -13,7 +13,7 @@
 ------------------------- */
 const STORAGE_KEY = "rrit_savedScenario_v2";
 
-// Add this near the top (before initialization), if it's missing:
+// Load questions from JSON (relative path so it works at /RRIT/)
 async function loadQuestions() {
   if (QUESTIONS.length) return QUESTIONS;
   try {
@@ -42,7 +42,7 @@ let currentLang = (() => {
 })();
 
 /* -------------------------
-   DOM helpers (now safe if root is null/undefined)
+   DOM helpers
 ------------------------- */
 const qs  = (sel, root) => {
   try { return (root || document).querySelector(sel); } catch { return null; }
@@ -126,20 +126,27 @@ function getIds() {
   const questionsList = qs("#questionsList", questionsSectionPrimary) || qs("#questionsList");
   const progressText = qs("#progressText") || qs('[data-role="progressText"]');
 
-  // Summary area (guard each query with safe qs)
-  const summaryPanel = qs("#summaryPanel") || qs('[data-role="summaryPanel"]');
+  // Summary area: support current markup (#rrit-summary) and legacy fallbacks
+  const summaryPanel =
+    qs("#rrit-summary") ||
+    qs("#summaryPanel") ||
+    qs("#summarySection") ||
+    qs('[data-role="summaryPanel"]');
+
+  // Optional dedicated header element (we avoid overwriting bilingual <h2> titles)
   const summaryHeader =
-    (summaryPanel && qs("#summaryHeader", summaryPanel)) ||
-    (summaryPanel && qs('[data-role="summaryHeader"]', summaryPanel)) ||
-    summaryPanel;
+    (summaryPanel && (qs("#summaryHeader", summaryPanel) || qs('[data-role="summaryHeader"]', summaryPanel))) || null;
+
+  // Prefer scoped lookups; fall back to global by id if needed
   const riskCountEl =
-    (summaryPanel && qs("#riskCount", summaryPanel)) ||
-    (summaryPanel && qs('[data-role="riskCount"]', summaryPanel)) ||
-    null;
+    (summaryPanel && (qs("#riskCount", summaryPanel) || qs('[data-role="riskCount"]', summaryPanel))) ||
+    qs("#riskCount") ||
+    qs('[data-role="riskCount"]');
+
   const riskList =
-    (summaryPanel && qs("#riskList", summaryPanel)) ||
-    (summaryPanel && qs('[data-role="riskList"]', summaryPanel)) ||
-    null;
+    (summaryPanel && (qs("#riskList", summaryPanel) || qs('[data-role="riskList"]', summaryPanel))) ||
+    qs("#riskList") ||
+    qs('[data-role="riskList"]');
 
   // Actions
   const btnGenerateSummary = qs("#btnGenerateSummary") || qs('[data-role="btnGenerateSummary"]');
@@ -323,11 +330,11 @@ function generateSummary(skipGuard = false) {
     .map(r => {
       const q = (QUESTIONS || []).find(x => x.id === r.qid);
       return { q, answer: r.answer };
-    }).filter(x => !!x.q);
+    }).filter(x => !!x && !!x.q);
 
   if (!summaryPanel || !riskList) return;
 
-  // Header
+  // Header (only if a dedicated header node exists)
   if (summaryHeader) {
     setText(summaryHeader, currentLang === "fr" ? "Résumé des risques" : "Risk Summary");
   }
@@ -481,9 +488,6 @@ function initRRIT() {
     });
   }
 }
-
-// ... all your functions and module code above ...
-
 
 // Single bootstrap: load questions, then init once.
 (function () {
