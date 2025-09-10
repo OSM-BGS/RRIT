@@ -1,5 +1,5 @@
 /* ==============================================================
-   RRIT PRINT STYLESHEET - CONSOLIDATED & CORRECTED
+   RRIT PRINT STYLESHEET - CONSOLIDATED & FINAL POLISH
    ============================================================== */
 
 @media print {
@@ -7,6 +7,7 @@
      1. GLOBAL HIDE/SHOW & LAYOUT
      ================================================== */
   
+  /* Hide navigation, buttons, and non-essential sections */
   #wb-bnr, #wb-tphp, #wb-lng, #rrit-intro, #step0,
   footer, nav, #lang-switch,
   #btnGenerateSummary, #generateSummaryBtn, #printSummaryBtn, #editAnswersBtn, #newScenarioBtn,
@@ -15,6 +16,12 @@
     display: none !important;
   }
 
+  /* --- NEW RULE: Hide specific instructional text and input labels --- */
+  #riskSummaryHelp, .form-group .control-label, .form-group small {
+    display: none !important;
+  }
+
+  /* Show only current language content */
   html[data-print-lang="en"] [data-lang="fr"],
   html[data-print-lang="en"] [lang="fr"],
   html[data-print-lang="fr"] [data-lang="en"],
@@ -29,6 +36,7 @@
     display: block !important;
   }
 
+  /* Force show essential summary elements */
   #rrit-summary, #summarySection, #projectInfo,
   #projectInfo.panel, #projectInfo .panel-heading,
   #projectInfo .panel-title, #projectInfo .panel-body,
@@ -37,6 +45,15 @@
     visibility: visible !important;
     height: auto !important;
     overflow: visible !important;
+  }
+
+  /* --- NEW RULE: Specifically hide the inactive language for the Project Info title --- */
+  #projectInfo .panel-title [data-lang] {
+    display: none !important;
+  }
+  html[data-print-lang="en"] #projectInfo .panel-title [data-lang="en"],
+  html[data-print-lang="fr"] #projectInfo .panel-title [data-lang="fr"] {
+    display: block !important;
   }
 
   /* ==================================================
@@ -101,7 +118,14 @@
   /* Project info section */
   #projectInfo { margin-bottom: 1rem; }
   #projectInfo fieldset { border: none !important; padding: 0 !important; margin: 0.2rem 0 !important; }
-  #projectInfo fieldset legend { font-size: 12pt !important; font-weight: bold !important; }
+  
+  /* --- UPDATED RULE: Add left padding for indentation --- */
+  #projectInfo fieldset legend {
+    font-size: 12pt !important;
+    font-weight: bold !important;
+    padding-left: 1rem !important;
+  }
+  
   #projectInfo input, #projectInfo textarea { display: none !important; }
   #projectInfo fieldset[data-content]::after {
     content: attr(data-content);
@@ -109,9 +133,10 @@
     font-size: 12pt !important;
     white-space: pre-wrap !important;
     word-wrap: break-word !important;
+    padding-left: 1rem !important; /* Also indent the content to match the legend */
   }
 
-  /* Unified Risk Item styling using the correct .risk-item selector */
+  /* Unified Risk Item styling */
   .risk-item {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
@@ -121,7 +146,7 @@
     background-color: #f9f9f9 !important;
   }
 
-  /* Style the question using the correct .risk-q selector */
+  /* Style the question */
   .risk-item .risk-q {
     font-size: 12pt !important;
     font-weight: bold !important;
@@ -129,14 +154,14 @@
     margin-top: 0 !important;
   }
 
-  /* Style the risk statement using the correct .risk-statement selector */
+  /* Style the risk statement */
   .risk-item .risk-statement {
     margin: 1rem 0 !important;
     padding-left: 0.75rem !important;
     border-left: 4px solid #d9534f !important; /* THE RED BORDER */
   }
 
-  /* Style the mitigations using the correct .risk-mitigations selector */
+  /* Style the mitigations */
   .risk-item .risk-mitigations {
     margin-top: 0.75rem !important;
     padding: 0.75rem !important;
