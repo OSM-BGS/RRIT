@@ -1,5 +1,5 @@
 /* ==============================================================
-   RRIT PRINT STYLESHEET - V4 (FINAL REVISIONS)
+   RRIT PRINT STYLESHEET - V6 (Verified)
    ============================================================== */
 
 @media print {
@@ -7,18 +7,13 @@
      1. GLOBAL HIDE/SHOW & LAYOUT
      ================================================== */
   
-  /* Hide navigation, buttons, and non-essential sections */
+  /* Hide any element with the .print-hide class, plus all standard UI chrome */
+  .print-hide,
   #wb-bnr, #wb-tphp, #wb-lng, #rrit-intro, #step0,
   footer, nav, #lang-switch,
   #btnGenerateSummary, #generateSummaryBtn, #printSummaryBtn, #editAnswersBtn, #newScenarioBtn,
   #questionsSection, #summaryActionRow, #postResultActions, #summaryControls,
   button, .btn, .no-print {
-    display: none !important;
-  }
-
-  /* --- REVISED RULE: Hide specific instructional text by ID --- */
-  /* These IDs are common in WET-BOEW templates */
-  #riskSummaryHelp, #projectInfo p, #projectInfo small, #projectInfo .help-block {
     display: none !important;
   }
 
@@ -40,8 +35,7 @@
   /* Force show essential summary elements */
   #rrit-summary, #summarySection, #projectInfo,
   #projectInfo.panel, #projectInfo .panel-heading,
-  #projectInfo .panel-title, #projectInfo .panel-body,
-  .panel-collapse, .collapse, .in {
+  #projectInfo .panel-title, #projectInfo .panel-body {
     display: block !important;
     visibility: visible !important;
     height: auto !important;
@@ -66,11 +60,13 @@
     color: #000;
   }
 
+  h1, h2, h3, h4, p, ul, ol, li {
+    font-size: 12pt !important;
+    line-height: 1.5 !important;
+  }
   h1 { font-size: 16pt !important; }
   h2 { font-size: 14pt !important; }
   h3 { font-size: 13pt !important; }
-  h4 { font-size: 12pt !important; }
-  p, ul, ol, li { font-size: 12pt !important; line-height: 1.5 !important; }
 
   /* Page title */
   html[data-print-lang="en"]:before {
@@ -93,21 +89,24 @@
   html[data-print-lang="fr"]:after { content: "Généré le : " attr(data-print-date); }
 
   /* ==================================================
-     3. PROJECT INFO & RISK ITEM STYLING (REVISED)
+     3. PROJECT INFO & RISK ITEM STYLING (VERIFIED)
      ================================================== */
 
   /* Project info section */
   #projectInfo { margin-bottom: 1rem; }
-  #projectInfo .panel-body { padding-left: 1rem !important; } /* Apply indent to the whole body */
+  #projectInfo fieldset {
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 0 1rem 0 !important; /* Remove left margin */
+  }
   
-  #projectInfo fieldset { border: none !important; padding: 0 !important; margin: 0.2rem 0 !important; }
-  
-  /* --- REVISED RULE: Target the legend and the data content more simply --- */
+  /* --- VERIFIED INDENTATION RULE --- */
+  /* Add a 1rem left padding to both the title (legend) and the content (::after) */
   #projectInfo fieldset legend {
     font-size: 12pt !important;
     font-weight: bold !important;
-    padding-left: 0 !important; /* Remove padding from legend itself */
     margin-bottom: 0.25rem !important;
+    padding-left: 1rem !important; /* The indent */
   }
   
   #projectInfo input, #projectInfo textarea { display: none !important; }
@@ -116,11 +115,10 @@
     content: attr(data-content);
     display: block !important;
     font-size: 12pt !important;
-    font-weight: normal !important; /* Ensure content text is not bold */
+    font-weight: normal !important;
     white-space: pre-wrap !important;
     word-wrap: break-word !important;
-    padding-left: 0 !important; /* Remove padding from content itself */
-    margin-bottom: 1rem !important; /* Add space between entries */
+    padding-left: 1rem !important; /* The indent */
   }
 
   /* Unified Risk Item styling */
@@ -144,7 +142,7 @@
   .risk-item .risk-statement {
     margin: 1rem 0 !important;
     padding-left: 0.75rem !important;
-    border-left: 4px solid #d9534f !important; /* THE RED BORDER */
+    border-left: 4px solid #d9534f !important;
   }
 
   /* Style the mitigations */
