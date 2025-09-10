@@ -486,9 +486,9 @@ function generateSummary(skipGuard = false) {
   if (printSummaryBtn) {
     printSummaryBtn.classList.remove("hidden");
     printSummaryBtn.removeAttribute("aria-hidden");
-    // Updated print handler: inject Project Info into summary for print, set attributes, then clean up
+       // CORRECTED print handler: Populates data-content attributes for CSS to use
     printSummaryBtn.onclick = () => {
-      // Localize print attributes (used by CSS/title)
+      // Set language and date attributes for the print stylesheet
       document.documentElement.setAttribute("data-print-lang", currentLang);
       const now = new Date();
       const dateStr = currentLang === "fr"
@@ -496,25 +496,26 @@ function generateSummary(skipGuard = false) {
         : now.toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" });
       document.documentElement.setAttribute("data-print-date", dateStr);
 
-      // Inject a temporary Project Info section at top of the summary
-      const host = summaryPanel?.querySelector(".panel-body") || summaryPanel || document.body;
-      const temp = document.createElement("div");
-      temp.innerHTML = buildProjectInfoPrintSection(getProjectMetaLive());
-      const block = temp.firstElementChild;
-      if (host && block) {
-        host.prepend(block);
-        // Ensure the right language is visible
-        applyLangToSpans();
-      }
+      // Find all project info inputs and copy their values to the parent fieldset's data-content attribute
+      qsa('#projectInfo input[type="text"], #projectInfo input[type="date"], #projectInfo textarea').forEach(input => {
+        const fieldset = input.closest('fieldset');
+        if (fieldset) {
+          // Use the input's value, or an empty string if it's blank
+          fieldset.setAttribute('data-content', input.value || '');
+        }
+      });
 
-      // Print, then clean up injected markup and attributes
+      // Print, then clean up the attributes afterwards
       setTimeout(() => {
         window.print();
         setTimeout(() => {
           document.documentElement.removeAttribute("data-print-lang");
           document.documentElement.removeAttribute("data-print-date");
-          if (block && block.parentNode) block.parentNode.removeChild(block);
-        }, 200);
+          // Remove the data-content attributes so they don't interfere with screen styles
+          qsa('#projectInfo fieldset[data-content]').forEach(fieldset => {
+            fieldset.removeAttribute('data-content');
+          });
+        }, 500); // A longer timeout to ensure cleanup happens after print dialog closes
       }, 50);
     };
   }
