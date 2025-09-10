@@ -155,6 +155,15 @@
     color: #264a88 !important;
   }
 
+   
+  /* --- ADD THIS NEW RULE --- */
+  .risk-card .risk-statement {
+    margin: 1rem 0 !important;
+    padding-left: 0.75rem !important; /* Add padding to the left of the text */
+    border-left: 4px solid #d9534f !important; /* The red left border */
+  }
+  /* --- END OF NEW RULE --- */
+   
   /* Risk Statement and Mitigations */
   .risk-card .risk-statement,
   .risk-card .mitigations {
