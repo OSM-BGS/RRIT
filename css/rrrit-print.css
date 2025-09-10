@@ -1,19 +1,64 @@
-/* Guarantee single-language print */
 @media print {
-  /* Honor JS visibility toggles */
-  .hidden,
-  [aria-hidden="true"] {
-    display: none !important;
-    visibility: hidden !important;
+  /* Increase base font sizes to better match web version */
+  html, body {
+    font: 11pt/1.4 "Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
   }
-
-  /* Redundant safety: hide all language variants by default,
-     then show only the current language based on data-print-lang */
-  [data-lang] {
-    display: none !important;
+  
+  h1 { font-size: 16pt; }
+  h2 { font-size: 14pt; }
+  h3 { font-size: 13pt; }
+  h4 { font-size: 12pt; }
+  
+  /* Enhance risk card styling to better match web */
+  .risk-card {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    display: block;
+    margin-bottom: 1.5rem;
+    border: 1px solid #ccc !important;
+    padding: 0.5rem !important;
+    background-color: #f9f9f9 !important;
   }
-  html[data-print-lang="en"] [data-lang="en"],
-  html[data-print-lang="fr"] [data-lang="fr"] {
-    display: unset !important; /* block for headings, inline for spans */
+  
+  .risk-card .panel-heading {
+    background-color: #f0f0f0 !important;
+    padding: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+    border-bottom: 1px solid #ddd !important;
+  }
+  
+  .risk-card .panel-title {
+    font-size: 12pt !important;
+    color: #264a88 !important;
+  }
+  
+  /* Force content to new page if it would otherwise split */
+  .risk-card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    display: block;
+    position: relative;
+  }
+  
+  /* Enhanced styling for mitigation lists */
+  .mitigations {
+    margin-top: 0.5rem !important;
+    padding: 0.5rem !important;
+    border-left: 4px solid #5bc0de !important;
+    background-color: #f8f8f8 !important;
+  }
+  
+  /* Ensure adequate spacing between elements */
+  p, ul, ol {
+    margin: 0.5rem 0;
+    line-height: 1.4;
+  }
+  
+  /* Force Mozilla/Chrome/Safari to respect page break rules */
+  @supports (-webkit-appearance:none) {
+    .risk-card {
+      break-inside: avoid-page;
+      page-break-inside: avoid;
+    }
   }
 }
