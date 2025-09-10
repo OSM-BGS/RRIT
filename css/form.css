@@ -157,7 +157,7 @@ legend{font-weight:700; border:none; border-bottom: none;}
   }
 }
 
-/* ---------- 3. PRINT ----------------------------------------- */
+/* ---------- 3. PRINT (HARMONIZED) ----------------------------------------- */
 @media print {
   /* Hide navigation, language switchers, buttons & intro */
   #wb-bnr,#wb-tphp,#wb-lng,#rrit-intro,#step0,
@@ -193,31 +193,31 @@ legend{font-weight:700; border:none; border-bottom: none;}
     visibility: visible !important;
   }
 
-  /* Page body */
+  /* Page body - UPDATED to 12pt */
   html,body{
     margin:0.5in;
-    font:9pt/1.3 "Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font:12pt/1.5 "Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif !important;
     background:#fff!important;
     color:#000;
     max-width:none;
     width:auto;
   }
 
-  /* Typography */
-  h1{font-size:12pt;margin:1rem 0 0.5rem;font-weight:bold;page-break-after:avoid;}
-  h2{font-size:11pt;margin:0.8rem 0 0.4rem;font-weight:bold;page-break-after:avoid;}
-  h3{font-size:10pt;margin:0.5rem 0 0.3rem;font-weight:bold;page-break-after:avoid;}
-  h4{font-size:9pt;margin:0.4rem 0 0.2rem;font-weight:bold;page-break-after:avoid;}
+  /* Typography - UPDATED to match 12pt base */
+  h1{font-size:16pt;margin:1rem 0 0.5rem;font-weight:bold;page-break-after:avoid;}
+  h2{font-size:14pt;margin:0.8rem 0 0.4rem;font-weight:bold;page-break-after:avoid;}
+  h3{font-size:13pt;margin:0.5rem 0 0.3rem;font-weight:bold;page-break-after:avoid;}
+  h4{font-size:12pt;margin:0.4rem 0 0.2rem;font-weight:bold;page-break-after:avoid;}
   
-  p{margin:0.3rem 0;line-height:1.3;}
+  p{margin:0.3rem 0;line-height:1.5;}
   ul,ol{margin:0.3rem 0;padding-left:1.2rem;}
-  li{margin:0.1rem 0;line-height:1.3;}
+  li{margin:0.1rem 0;line-height:1.5;}
 
-  /* Page title */
+  /* Page title - UPDATED */
   html[data-print-lang="en"]:before {
     content: "Risk Profile Summary";
     display: block;
-    font-size: 13pt;
+    font-size: 16pt;
     font-weight: bold;
     text-align: center;
     margin-bottom: 0.5rem;
@@ -228,7 +228,7 @@ legend{font-weight:700; border:none; border-bottom: none;}
   html[data-print-lang="fr"]:before {
     content: "Sommaire du profil de risque";
     display: block;
-    font-size: 13pt;
+    font-size: 16pt;
     font-weight: bold;
     text-align: center;
     margin-bottom: 0.5rem;
@@ -236,11 +236,11 @@ legend{font-weight:700; border:none; border-bottom: none;}
     padding-bottom: 0.5rem;
   }
 
-  /* Print date and project context */
+  /* Print date and project context - UPDATED */
   html[data-print-lang="en"]:after {
     content: "Generated: " attr(data-print-date);
     display: block;
-    font-size: 9pt;
+    font-size: 12pt;
     text-align: center;
     margin-bottom: 1rem;
     color: #666;
@@ -249,16 +249,16 @@ legend{font-weight:700; border:none; border-bottom: none;}
   html[data-print-lang="fr"]:after {
     content: "Généré le : " attr(data-print-date);
     display: block;
-    font-size: 9pt;
+    font-size: 12pt;
     text-align: center;
     margin-bottom: 1rem;
     color: #666;
   }
 
-  /* Project info - Clean layout with data-content display */
+  /* Project info - UPDATED */
   #projectInfo {
     margin-bottom: 1rem;
-    font-size: 8pt;
+    font-size: 12pt;
     overflow: visible !important;
     height: auto !important;
   }
@@ -272,7 +272,7 @@ legend{font-weight:700; border:none; border-bottom: none;}
   }
   
   #projectInfo fieldset legend {
-    font-size: 9pt;
+    font-size: 12pt;
     font-weight: bold;
     padding: 0 !important;
     margin: 0 0 0.1rem 0 !important;
@@ -281,7 +281,6 @@ legend{font-weight:700; border:none; border-bottom: none;}
     background: transparent !important;
   }
 
-  /* Hide form inputs and display content as text */
   #projectInfo input[type="text"],
   #projectInfo input[type="date"], 
   #projectInfo textarea {
@@ -292,20 +291,17 @@ legend{font-weight:700; border:none; border-bottom: none;}
     overflow: hidden !important;
   }
 
-  /* Show project field content as plain text */
   #projectInfo fieldset[data-content]::after {
     content: attr(data-content);
     display: block !important;
-    font-size: 8pt !important;
+    font-size: 12pt !important;
     color: #000 !important;
     white-space: pre-wrap !important;
     word-wrap: break-word !important;
-    line-height: 1.3 !important;
+    line-height: 1.5 !important;
     margin: 0 0 0.3rem 0 !important;
   }
 
-  
-  /* Category sections - Clean, borderless */
   .panel {
     border: none !important;
     margin-bottom: 1rem;
@@ -323,7 +319,7 @@ legend{font-weight:700; border:none; border-bottom: none;}
   .panel-title {
     background: transparent !important;
     color: #000 !important;
-    font-size: 11pt !important;
+    font-size: 13pt !important;
     font-weight: bold !important;
     border: none !important;
     padding: 0 !important;
@@ -335,7 +331,6 @@ legend{font-weight:700; border:none; border-bottom: none;}
     border: none !important;
   }
 
-  /* Accordion categories - Expanded and borderless */
   details.wb-accordion {
     display: block !important;
     margin-bottom: 0.5rem;
@@ -346,7 +341,7 @@ legend{font-weight:700; border:none; border-bottom: none;}
   details.wb-accordion summary {
     display: block !important;
     list-style: none !important;
-    font-size: 10pt;
+    font-size: 12pt;
     font-weight: bold;
     margin: 0.5rem 0 0.3rem 0;
     color: #000;
@@ -361,7 +356,6 @@ legend{font-weight:700; border:none; border-bottom: none;}
     display: none !important;
   }
 
-  /* Language-specific category titles */
   details.wb-accordion summary span[lang="en"],
   details.wb-accordion summary span[lang="fr"] {
     display: none !important;
@@ -369,14 +363,14 @@ legend{font-weight:700; border:none; border-bottom: none;}
   
   html[data-print-lang="en"] details.wb-accordion summary span[lang="en"] {
     display: block !important;
-    font-size: 10pt;
+    font-size: 12pt;
     font-weight: bold;
     color: #000;
   }
   
   html[data-print-lang="fr"] details.wb-accordion summary span[lang="fr"] {
     display: block !important;
-    font-size: 10pt;
+    font-size: 12pt;
     font-weight: bold;
     color: #000;
   }
@@ -389,7 +383,7 @@ legend{font-weight:700; border:none; border-bottom: none;}
     background: transparent !important;
   }
 
-  /* Question fieldsets - Keep borders for organization */
+  /* Question fieldsets - UPDATED */
   fieldset {
     border: none !important;
     padding: 0.4rem;
@@ -398,19 +392,19 @@ legend{font-weight:700; border:none; border-bottom: none;}
   }
   
   fieldset legend {
-    font-size: 9pt;
+    font-size: 12pt;
     font-weight: bold;
     padding: 0 0.3rem;
     margin-bottom: 0.2rem;
     color: #000;
   }
 
-  /* Radio button layout - Inline with proper alignment */
+  /* Radio button layout - UPDATED */
   .rrit-responses {
     display: block !important;
     margin: 0.3rem 0;
-    font-size: 8pt;
-    line-height: 1.4;
+    font-size: 12pt;
+    line-height: 1.5;
   }
   
   label.radio-spacing {
@@ -418,7 +412,7 @@ legend{font-weight:700; border:none; border-bottom: none;}
     align-items: center !important;
     margin-right: 1rem !important;
     margin-bottom: 0.2rem !important;
-    font-size: 8pt !important;
+    font-size: 12pt !important;
     white-space: nowrap !important;
     gap: 0.2rem !important;
   }
@@ -431,11 +425,10 @@ legend{font-weight:700; border:none; border-bottom: none;}
   label.radio-spacing span {
     margin: 0 !important;
     padding: 0 !important;
-    font-size: 8pt !important;
+    font-size: 12pt !important;
     flex-shrink: 0 !important;
   }
   
-  /* Language-specific radio button text */
   html[data-print-lang="en"] label.radio-spacing span[lang="fr"] {
     display: none !important;
   }
@@ -449,14 +442,12 @@ legend{font-weight:700; border:none; border-bottom: none;}
     page-break-inside: avoid;
   }
   
-  /* Risk cards - Allow page breaks but keep content together */
   .risk-card {
     page-break-inside: avoid;
     margin-bottom: 1rem;
     break-before: auto;
   }
   
-  /* Allow multiple risk cards per page */
   .risk-card + .risk-card {
     page-break-before: auto;
   }
@@ -465,12 +456,9 @@ legend{font-weight:700; border:none; border-bottom: none;}
     page-break-after: avoid;
   }
   
-  /* Keep headings with their content */
   .panel-title {
     page-break-after: avoid;
   }
-  
-
 }
 
 /* Language switcher styling */
@@ -610,33 +598,19 @@ body.summary-ready #summaryControls { display: none; }
   #wb-cont { max-width: 1170px; }
 }
 
-/* Optional: a bit more padding on very small screens */
-/*
-@media screen and (max-width: 767.98px) {
-  #wb-cont { padding-left: 20px; padding-right: 20px; }
-}
-*/
-
 /* ==============================================================
    Header alignment — match Canada.ca margins for logo + language
-   Constrain the header row to the same responsive max-widths as
-   #wb-cont and align both ends consistently.
    ============================================================== */
 
-/* Make the banner act like a container (provides the 15px edge padding) */
 #wb-bnr {
   padding-left: 15px;
   padding-right: 15px;
 }
 
-/* Center and constrain the inner .row like a container at breakpoints.
-   Keep Bootstrap's negative row margins so column gutters work normally.
-   Note: container widths are 750/970/1170; the row needs +30px to account
-   for its -15px margins on each side (so 780/1000/1200). */
 #wb-bnr > .row {
-  margin-left: -15px;  /* keep Bootstrap behavior */
-  margin-right: -15px; /* keep Bootstrap behavior */
-  margin-inline: auto; /* center the row */
+  margin-left: -15px;
+  margin-right: -15px;
+  margin-inline: auto;
   max-width: 100%;
 }
 
@@ -650,36 +624,31 @@ body.summary-ready #summaryControls { display: none; }
   #wb-bnr > .row { max-width: 1200px; }
 }
 
-/* Normalize the logo block: remove the inline left margin so edges align */
 #wb-bnr .rrit-logo {
   margin-left: 0 !important;
 }
 
-/* Optional: balance vertical rhythm in the banner */
 #wb-bnr .brand,
 #wb-bnr #wb-lng {
   padding-top: 8px;
   padding-bottom: 8px;
 }
 
-/* Keep the answer label on one line and right-aligned in risk card headers */
 .risk-card .panel-title {
-  display: flex;                 /* already set, reinforce here */
-  justify-content: flex-start;   /* use auto margin on the label to push it right */
+  display: flex;
+  justify-content: flex-start;
   align-items: center;
   gap: .5rem;
 }
-/* Remove bullets/markers and extra indent for the risk list */
 #riskList { list-style: none; padding-left: 0; margin-left: 0; }
 #riskList .risk-item { list-style: none; }
-#riskList .risk-item::marker { content: ""; }  /* neutralize custom markers if any */
-#riskList .risk-item::before { content: none !important; } /* in case a theme uses ::before */
+#riskList .risk-item::marker { content: ""; }
+#riskList .risk-item::before { content: none !important; }
 
 .risk-card .panel-title small {
-  margin-left: auto;     /* push the answer to the right edge */
-  white-space: nowrap;   /* prevent "(Unknown)" or "(No)" from breaking */
-  flex: 0 0 auto;        /* don’t let it shrink/wrap */
-  /* Optional badge styling */
+  margin-left: auto;
+  white-space: nowrap;
+  flex: 0 0 auto;
   padding: 2px 8px;
   border-radius: 12px;
   background:
@@ -687,78 +656,55 @@ body.summary-ready #summaryControls { display: none; }
   font-size: .85em;
 }
 
-/* On very narrow screens, allow the answer to drop below neatly */
 @media (max-width: 360px) {
   .risk-card .panel-title { flex-wrap: wrap; }
   .risk-card .panel-title small { margin-left: 0; margin-top: .25rem; }
 }
-/* ==============================================================
-   Header alignment to main content edges
-   ============================================================== */
-
-/* Give the banner the same side padding as #wb-cont */
 #wb-bnr {
   padding-left: 15px;
   padding-right: 15px;
 }
 
-/* Constrain and center the header row to match container widths.
-   Row needs +30px (15px gutters each side) vs. .container. */
 #wb-bnr > .row {
-  margin-left: -15px;   /* keep Bootstrap gutters */
+  margin-left: -15px;
   margin-right: -15px;
-  margin-inline: auto;  /* center the row */
+  margin-inline: auto;
   max-width: 100%;
 }
 
-@media (min-width: 768px)  { #wb-bnr > .row { max-width: 780px; } }  /* 750 + 30 */
-@media (min-width: 992px)  { #wb-bnr > .row { max-width: 1000px; } } /* 970 + 30 */
-@media (min-width: 1200px) { #wb-bnr > .row { max-width: 1200px; } } /* 1170 + 30 */
+@media (min-width: 768px)  { #wb-bnr > .row { max-width: 780px; } }
+@media (min-width: 992px)  { #wb-bnr > .row { max-width: 1000px; } }
+@media (min-width: 1200px) { #wb-bnr > .row { max-width: 1200px; } }
 
-/* Remove the inline left margin on the logo so it sits on the same left edge */
 #wb-bnr .rrit-logo {
   margin-left: 0 !important;
 }
 
-/* Ensure the language toggle aligns to the right container edge */
 #wb-lng {
   text-align: right;
 }
 #wb-lng .list-inline {
-  margin-right: 0;   /* prevent extra right offset */
+  margin-right: 0;
 }
 #wb-lng .list-inline > li {
-  padding-right: 0;  /* keep edge tight to the container padding */
+  padding-right: 0;
 }
 
-/* Mobile: keep header padding consistent with main content */
 @media (max-width: 767.98px) {
   #wb-bnr { padding-left: 15px; padding-right: 15px; }
   #wb-lng { padding-right: 15px; }
 }
-/* Header alignment: match #wb-cont container edges */
 #wb-bnr .rrit-logo { margin-left: 0 !important; }
 
-/* Keep comfortable vertical rhythm in the banner */
 #wb-bnr .brand,
 #wb-bnr #wb-lng {
   padding-top: 8px;
   padding-bottom: 8px;
 }
 
-/* Tighten the language toggle so it sits on the right container edge cleanly */
 #wb-lng .list-inline { margin-right: 0; }
 #wb-lng .list-inline > li { padding-right: 0; }
 
-/* Mobile: stack nicely */
 @media (max-width: 767.98px) {
   #wb-lng { margin-bottom: .5rem; }
 }
-
-
-
-
-
-
-
-
