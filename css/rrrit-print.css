@@ -1,14 +1,12 @@
 /* ==============================================================
-   RRIT PRINT STYLESHEET - CONSOLIDATED & HARMONIZED
+   RRIT PRINT STYLESHEET - CONSOLIDATED & CORRECTED
    ============================================================== */
 
 @media print {
   /* ==================================================
      1. GLOBAL HIDE/SHOW & LAYOUT
-     (Rules from form.css)
      ================================================== */
   
-  /* Hide navigation, buttons, and non-essential sections */
   #wb-bnr, #wb-tphp, #wb-lng, #rrit-intro, #step0,
   footer, nav, #lang-switch,
   #btnGenerateSummary, #generateSummaryBtn, #printSummaryBtn, #editAnswersBtn, #newScenarioBtn,
@@ -17,7 +15,6 @@
     display: none !important;
   }
 
-  /* Show only current language content */
   html[data-print-lang="en"] [data-lang="fr"],
   html[data-print-lang="en"] [lang="fr"],
   html[data-print-lang="fr"] [data-lang="en"],
@@ -32,7 +29,6 @@
     display: block !important;
   }
 
-  /* Force show essential summary elements */
   #rrit-summary, #summarySection, #projectInfo,
   #projectInfo.panel, #projectInfo .panel-heading,
   #projectInfo .panel-title, #projectInfo .panel-body,
@@ -45,7 +41,6 @@
 
   /* ==================================================
      2. BASE TYPOGRAPHY & PAGE SETUP
-     (Harmonized at 12pt)
      ================================================== */
 
   html, body {
@@ -53,8 +48,6 @@
     font: 12pt/1.5 "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     background: #fff !important;
     color: #000;
-    max-width: none;
-    width: auto;
   }
 
   h1 { font-size: 16pt !important; }
@@ -102,26 +95,14 @@
   html[data-print-lang="fr"]:after { content: "Généré le : " attr(data-print-date); }
 
   /* ==================================================
-     3. PROJECT INFO & RISK CARD STYLING
-     (Consolidated rules)
+     3. PROJECT INFO & RISK ITEM STYLING (CORRECTED)
      ================================================== */
 
   /* Project info section */
-  #projectInfo {
-    margin-bottom: 1rem;
-  }
-  #projectInfo fieldset {
-    border: none !important;
-    padding: 0 !important;
-    margin: 0.2rem 0 !important;
-  }
-  #projectInfo fieldset legend {
-    font-size: 12pt !important;
-    font-weight: bold !important;
-  }
-  #projectInfo input, #projectInfo textarea {
-    display: none !important;
-  }
+  #projectInfo { margin-bottom: 1rem; }
+  #projectInfo fieldset { border: none !important; padding: 0 !important; margin: 0.2rem 0 !important; }
+  #projectInfo fieldset legend { font-size: 12pt !important; font-weight: bold !important; }
+  #projectInfo input, #projectInfo textarea { display: none !important; }
   #projectInfo fieldset[data-content]::after {
     content: attr(data-content);
     display: block !important;
@@ -130,50 +111,36 @@
     word-wrap: break-word !important;
   }
 
-  /* Unified Risk Card styling */
-  .risk-card {
+  /* Unified Risk Item styling using the correct .risk-item selector */
+  .risk-item {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
     margin-bottom: 1.5rem !important;
     border: 1px solid #ccc !important;
-    padding: 0.75rem !important;
+    padding: 1rem !important;
     background-color: #f9f9f9 !important;
   }
 
-  /* Card Header, Title (Question), and Body */
-  .risk-card .panel-heading {
-    background-color: #f0f0f0 !important;
-    padding: 0.75rem !important;
-    margin-bottom: 0.75rem !important;
-    border-bottom: 1px solid #ddd !important;
-  }
-
-  /* THIS IS THE KEY FIX: Ensure the panel title (question) is bold and sized correctly */
-  .risk-card .panel-title {
+  /* Style the question using the correct .risk-q selector */
+  .risk-item .risk-q {
     font-size: 12pt !important;
     font-weight: bold !important;
     color: #264a88 !important;
+    margin-top: 0 !important;
   }
 
-   
-  /* --- ADD THIS NEW RULE --- */
-  .risk-card .risk-statement {
+  /* Style the risk statement using the correct .risk-statement selector */
+  .risk-item .risk-statement {
     margin: 1rem 0 !important;
-    padding-left: 0.75rem !important; /* Add padding to the left of the text */
-    border-left: 4px solid #d9534f !important; /* The red left border */
+    padding-left: 0.75rem !important;
+    border-left: 4px solid #d9534f !important; /* THE RED BORDER */
   }
-  /* --- END OF NEW RULE --- */
-   
-  /* Risk Statement and Mitigations */
-  .risk-card .risk-statement,
-  .risk-card .mitigations {
-    font-size: 12pt !important;
-  }
-  
-  .risk-card .mitigations {
+
+  /* Style the mitigations using the correct .risk-mitigations selector */
+  .risk-item .risk-mitigations {
     margin-top: 0.75rem !important;
     padding: 0.75rem !important;
     border-left: 4px solid #5bc0de !important;
-    background-color: #f8f8f8 !important;
+    background-color: #f0f8ff !important;
   }
 }
