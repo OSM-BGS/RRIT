@@ -1,64 +1,368 @@
+/* ==============================================================
+   RRIT - PRINT STYLES
+   Enhances print output to match web display and prevent card breaks
+   ============================================================== */
+
 @media print {
-  /* Increase base font sizes to better match web version */
-  html, body {
-    font: 11pt/1.4 "Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  /* Honor JS visibility toggles */
+  .hidden,
+  [aria-hidden="true"] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Language visibility control */
+  [data-lang] {
+    display: none !important;
   }
   
-  h1 { font-size: 16pt; }
-  h2 { font-size: 14pt; }
-  h3 { font-size: 13pt; }
-  h4 { font-size: 12pt; }
+  html[data-print-lang="en"] [data-lang="en"],
+  html[data-print-lang="fr"] [data-lang="fr"] {
+    display: block !important;
+  }
   
-  /* Enhance risk card styling to better match web */
+  html[data-print-lang="en"] span[data-lang="en"],
+  html[data-print-lang="fr"] span[data-lang="fr"] {
+    display: inline !important;
+  }
+
+  /* Hide navigation, controls, and non-essential elements */
+  #wb-bnr, #wb-tphp, #wb-lng, #rrit-intro, #step0,
+  footer, nav, #lang-switch,
+  #btnGenerateSummary, #generateSummaryBtn, #printSummaryBtn, #editAnswersBtn, #newScenarioBtn,
+  #questionsSection, #summaryActionRow, #postResultActions, #summaryControls,
+  button, .btn, .no-print {
+    display: none !important;
+  }
+
+  /* Ensure essential sections are visible */
+  #rrit-summary,
+  #summarySection,
+  #projectInfo,
+  #projectInfo.panel,
+  #projectInfo .panel-heading,
+  #projectInfo .panel-title,
+  #projectInfo .panel-body {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Page body - Increase base font sizes */
+  html, body {
+    margin: 0.5in;
+    font: 11pt/1.5 "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: #fff !important;
+    color: #000;
+    max-width: none;
+    width: auto;
+  }
+
+  /* Enhanced typography matching web sizes better */
+  h1 { font-size: 16pt; margin: 1.2rem 0 0.8rem; font-weight: bold; page-break-after: avoid; }
+  h2 { font-size: 14pt; margin: 1rem 0 0.6rem; font-weight: bold; page-break-after: avoid; }
+  h3 { font-size: 12pt; margin: 0.8rem 0 0.5rem; font-weight: bold; page-break-after: avoid; }
+  h4 { font-size: 11pt; margin: 0.6rem 0 0.4rem; font-weight: bold; page-break-after: avoid; }
+  
+  p { margin: 0.5rem 0; line-height: 1.5; }
+  ul, ol { margin: 0.5rem 0; padding-left: 1.5rem; }
+  li { margin: 0.3rem 0; line-height: 1.5; }
+
+  /* Page title */
+  html[data-print-lang="en"]:before {
+    content: "Risk Profile Summary";
+    display: block;
+    font-size: 18pt;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.8rem;
+    color: #264a88;
+  }
+  
+  html[data-print-lang="fr"]:before {
+    content: "Sommaire du profil de risque";
+    display: block;
+    font-size: 18pt;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #000;
+    padding-bottom: 0.8rem;
+    color: #264a88;
+  }
+
+  /* Print date and project context */
+  html[data-print-lang="en"]:after {
+    content: "Generated: " attr(data-print-date);
+    display: block;
+    font-size: 10pt;
+    text-align: right;
+    margin-top: 2rem;
+    color: #666;
+  }
+  
+  html[data-print-lang="fr"]:after {
+    content: "Généré le : " attr(data-print-date);
+    display: block;
+    font-size: 10pt;
+    text-align: right;
+    margin-top: 2rem;
+    color: #666;
+  }
+
+  /* Project info - Clean layout with data-content display */
+  #projectInfo {
+    margin-bottom: 1.5rem;
+    font-size: 11pt;
+    overflow: visible !important;
+    height: auto !important;
+    border: 1px solid #ddd !important;
+    padding: 1rem !important;
+    background-color: #f9f9f9 !important;
+  }
+  
+  #projectInfo fieldset {
+    border: none !important;
+    background: transparent !important;
+    padding: 0.3rem 0 !important;
+    margin: 0.5rem 0 !important;
+    position: relative;
+  }
+  
+  #projectInfo fieldset legend {
+    font-size: 13pt;
+    font-weight: bold;
+    padding: 0 !important;
+    margin: 0 0 0.4rem 0 !important;
+    border: none !important;
+    color: #264a88;
+    background: transparent !important;
+  }
+
+  /* Hide form inputs and display content as text */
+  #projectInfo input[type="text"],
+  #projectInfo input[type="date"], 
+  #projectInfo textarea {
+    position: absolute !important;
+    left: -9999px !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  /* Show project field content as plain text */
+  #projectInfo fieldset[data-content]::after {
+    content: attr(data-content);
+    display: block !important;
+    font-size: 11pt !important;
+    color: #000 !important;
+    white-space: pre-wrap !important;
+    word-wrap: break-word !important;
+    line-height: 1.5 !important;
+    margin: 0 0 0.5rem 0 !important;
+  }
+
+  /* Risk cards - Ensure they don't break across pages and match web styling */
   .risk-card {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
     display: block;
     margin-bottom: 1.5rem;
     border: 1px solid #ccc !important;
-    padding: 0.5rem !important;
+    padding: 0.8rem !important;
     background-color: #f9f9f9 !important;
+    border-radius: 4px !important;
   }
   
   .risk-card .panel-heading {
     background-color: #f0f0f0 !important;
-    padding: 0.5rem !important;
-    margin-bottom: 0.5rem !important;
+    padding: 0.8rem !important;
+    margin-bottom: 0.8rem !important;
     border-bottom: 1px solid #ddd !important;
+    border-radius: 3px !important;
   }
   
   .risk-card .panel-title {
-    font-size: 12pt !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    font-size: 13pt !important;
+    font-weight: bold !important;
+    color: #264a88 !important;
+    margin: 0 !important;
+  }
+  
+  /* Style for risk statement */
+  .risk-statement {
+    margin: 1rem 0 !important;
+    padding: 0.75rem !important;
+    background-color: #f8f8f8 !important;
+    border-left: 4px solid #d9534f !important;
+    font-size: 11pt !important;
+  }
+  
+  /* Style for mitigations */
+  .mitigations {
+    margin-top: 1rem !important;
+    padding: 0.75rem !important;
+    background-color: #f4f8ff !important;
+    border-left: 4px solid #5bc0de !important;
+  }
+  
+  .mitigations ul {
+    margin-bottom: 0 !important;
+    font-size: 11pt !important;
+  }
+  
+  .mitigations li {
+    margin-bottom: 0.4rem !important;
+  }
+  
+  /* Q-card specific styles to match web */
+  .q-card {
+    margin: 0 0 1rem !important;
+    padding: 1rem !important;
+    border: 1px solid #d9d9d9 !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    font-size: 11pt !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  
+  .q-head {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: space-between !important;
+    gap: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .q-title {
+    font-weight: 700 !important;
+    font-size: 14pt !important;
+    line-height: 1.45 !important;
     color: #264a88 !important;
   }
   
-  /* Force content to new page if it would otherwise split */
-  .risk-card {
-    break-inside: avoid !important;
-    page-break-inside: avoid !important;
-    display: block;
-    position: relative;
+  .q-meta {
+    font-size: 12pt !important;
+    line-height: 1.45 !important;
+    color: #555 !important;
   }
   
-  /* Enhanced styling for mitigation lists */
-  .mitigations {
-    margin-top: 0.5rem !important;
-    padding: 0.5rem !important;
-    border-left: 4px solid #5bc0de !important;
-    background-color: #f8f8f8 !important;
+  .q-sec {
+    font-size: 13pt !important;
+    line-height: 1.35 !important;
+    font-weight: 700 !important;
+    margin: 0.8rem 0 0.5rem !important;
+    color: #264a88 !important;
   }
   
-  /* Ensure adequate spacing between elements */
-  p, ul, ol {
-    margin: 0.5rem 0;
-    line-height: 1.4;
+  .q-body {
+    margin-top: 0.8rem !important;
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+  }
+  
+  .q-body p, 
+  .q-body li {
+    font-size: 11pt !important;
+    line-height: 1.5 !important;
+  }
+  
+  /* Badge styling */
+  .badge {
+    display: inline-block !important;
+    border: 1px solid #ccc !important;
+    border-radius: 999px !important;
+    padding: 2px 8px !important;
+    font-size: 10pt !important;
+    margin-left: 6px !important;
+    background-color: #f0f0f0 !important;
+    color: #333 !important;
   }
   
   /* Force Mozilla/Chrome/Safari to respect page break rules */
   @supports (-webkit-appearance:none) {
-    .risk-card {
+    .risk-card, .q-card {
       break-inside: avoid-page;
       page-break-inside: avoid;
     }
+  }
+  
+  /* Additional support for Firefox */
+  @-moz-document url-prefix() {
+    .risk-card, .q-card {
+      page-break-inside: avoid;
+    }
+  }
+
+  /* Category sections - Clean but visually distinct */
+  .panel {
+    border: none !important;
+    margin-bottom: 1.5rem !important;
+    page-break-inside: avoid !important;
+    background: transparent !important;
+  }
+  
+  .panel-heading {
+    background: #f5f5f5 !important;
+    border-bottom: 1px solid #ddd !important;
+    padding: 0.5rem 1rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+  
+  .panel-title {
+    background: transparent !important;
+    color: #264a88 !important;
+    font-size: 14pt !important;
+    font-weight: bold !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .panel-body {
+    padding: 0.5rem 1rem !important;
+    border: none !important;
+  }
+  
+  /* Risk list styling */
+  #riskList {
+    list-style: none !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+  }
+  
+  #riskList .risk-item {
+    list-style: none !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  #riskList .risk-item::marker { 
+    content: "" !important; 
+  }
+  
+  #riskList .risk-item::before { 
+    content: none !important; 
+  }
+  
+  /* Risk count styling */
+  #riskCount {
+    font-size: 14pt !important;
+    font-weight: bold !important;
+    color: #d9534f !important;
+  }
+  
+  /* Force specific page breaks where needed */
+  h1, h2, section {
+    page-break-after: auto;
+    page-break-before: auto;
+  }
+  
+  /* Start major sections on a new page if possible */
+  section + section {
+    page-break-before: always;
   }
 }
