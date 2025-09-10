@@ -1,5 +1,5 @@
 /* ==============================================================
-   RRIT PRINT STYLESHEET - CONSOLIDATED & FINAL POLISH
+   RRIT PRINT STYLESHEET - V4 (FINAL REVISIONS)
    ============================================================== */
 
 @media print {
@@ -16,8 +16,9 @@
     display: none !important;
   }
 
-  /* --- NEW RULE: Hide specific instructional text and input labels --- */
-  #riskSummaryHelp, .form-group .control-label, .form-group small {
+  /* --- REVISED RULE: Hide specific instructional text by ID --- */
+  /* These IDs are common in WET-BOEW templates */
+  #riskSummaryHelp, #projectInfo p, #projectInfo small, #projectInfo .help-block {
     display: none !important;
   }
 
@@ -47,10 +48,8 @@
     overflow: visible !important;
   }
 
-  /* --- NEW RULE: Specifically hide the inactive language for the Project Info title --- */
-  #projectInfo .panel-title [data-lang] {
-    display: none !important;
-  }
+  /* Specifically hide the inactive language for the Project Info title */
+  #projectInfo .panel-title [data-lang] { display: none !important; }
   html[data-print-lang="en"] #projectInfo .panel-title [data-lang="en"],
   html[data-print-lang="fr"] #projectInfo .panel-title [data-lang="fr"] {
     display: block !important;
@@ -71,75 +70,62 @@
   h2 { font-size: 14pt !important; }
   h3 { font-size: 13pt !important; }
   h4 { font-size: 12pt !important; }
-
-  p, ul, ol, li {
-    font-size: 12pt !important;
-    line-height: 1.5 !important;
-  }
+  p, ul, ol, li { font-size: 12pt !important; line-height: 1.5 !important; }
 
   /* Page title */
   html[data-print-lang="en"]:before {
     content: "Risk Profile Summary";
-    font-size: 16pt;
-    font-weight: bold;
-    text-align: center;
-    display: block;
-    margin-bottom: 0.5rem;
-    border-bottom: 2px solid #000;
-    padding-bottom: 0.5rem;
+    font-size: 16pt; font-weight: bold; text-align: center; display: block;
+    margin-bottom: 0.5rem; border-bottom: 2px solid #000; padding-bottom: 0.5rem;
   }
-  
   html[data-print-lang="fr"]:before {
     content: "Sommaire du profil de risque";
-    font-size: 16pt;
-    font-weight: bold;
-    text-align: center;
-    display: block;
-    margin-bottom: 0.5rem;
-    border-bottom: 2px solid #000;
-    padding-bottom: 0.5rem;
+    font-size: 16pt; font-weight: bold; text-align: center; display: block;
+    margin-bottom: 0.5rem; border-bottom: 2px solid #000; padding-bottom: 0.5rem;
   }
 
   /* Print date */
   html:after {
-    display: block;
-    font-size: 12pt;
-    text-align: center;
-    margin-bottom: 1rem;
-    color: #666;
+    display: block; font-size: 12pt; text-align: center;
+    margin-bottom: 1rem; color: #666;
   }
   html[data-print-lang="en"]:after { content: "Generated: " attr(data-print-date); }
   html[data-print-lang="fr"]:after { content: "Généré le : " attr(data-print-date); }
 
   /* ==================================================
-     3. PROJECT INFO & RISK ITEM STYLING (CORRECTED)
+     3. PROJECT INFO & RISK ITEM STYLING (REVISED)
      ================================================== */
 
   /* Project info section */
   #projectInfo { margin-bottom: 1rem; }
+  #projectInfo .panel-body { padding-left: 1rem !important; } /* Apply indent to the whole body */
+  
   #projectInfo fieldset { border: none !important; padding: 0 !important; margin: 0.2rem 0 !important; }
   
-  /* --- UPDATED RULE: Add left padding for indentation --- */
+  /* --- REVISED RULE: Target the legend and the data content more simply --- */
   #projectInfo fieldset legend {
     font-size: 12pt !important;
     font-weight: bold !important;
-    padding-left: 1rem !important;
+    padding-left: 0 !important; /* Remove padding from legend itself */
+    margin-bottom: 0.25rem !important;
   }
   
   #projectInfo input, #projectInfo textarea { display: none !important; }
+  
   #projectInfo fieldset[data-content]::after {
     content: attr(data-content);
     display: block !important;
     font-size: 12pt !important;
+    font-weight: normal !important; /* Ensure content text is not bold */
     white-space: pre-wrap !important;
     word-wrap: break-word !important;
-    padding-left: 1rem !important; /* Also indent the content to match the legend */
+    padding-left: 0 !important; /* Remove padding from content itself */
+    margin-bottom: 1rem !important; /* Add space between entries */
   }
 
   /* Unified Risk Item styling */
   .risk-item {
     page-break-inside: avoid !important;
-    break-inside: avoid !important;
     margin-bottom: 1.5rem !important;
     border: 1px solid #ccc !important;
     padding: 1rem !important;
