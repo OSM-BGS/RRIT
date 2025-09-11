@@ -1,12 +1,17 @@
 /* ==============================================================
-   RRIT PRINT STYLESHEET - V12 (Class-based Page Break)
+   RRIT PRINT STYLESHEET - V13.1 (Panel Title Language Fix + Cleanup)
+   Changes vs earlier versions:
+   - Removed html:before / html:after pseudo heading & date stamp to avoid duplicate titles.
+   - Added modern break-before: page plus legacy page-break-before.
+   - Narrowed language hide rules to prevent unintended overrides.
+   - Supports both heading patterns (two separate elements OR one heading with spans).
    ============================================================== */
 
 @media print {
-  /* ==================================================
-     1. GLOBAL HIDE/SHOW & LAYOUT
-     ================================================== */
-  
+
+  /* --------------------------------------------------------------
+     1. Remove interactive / non-print UI
+     -------------------------------------------------------------- */
   .print-hide,
   #wb-bnr, #wb-tphp, #wb-lng, #rrit-intro, #step0,
   footer, nav, #lang-switch,
@@ -16,90 +21,99 @@
     display: none !important;
   }
 
-  /* Language visibility rules */
-  #projectInfo .panel-title [data-lang],
-  #summarySection .panel-title [data-lang] {
-    display: none !important;
+  /* --------------------------------------------------------------
+     2. Base typography & page box
+     -------------------------------------------------------------- */
+  html, body {
+    margin: 0.5in;
+    font: 12pt/1.5 "Noto Sans","Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    background: #fff !important;
+    color: #000;
   }
-  
-  html[data-print-lang="en"] #projectInfo .panel-title [data-lang="en"],
-  html[data-print-lang="en"] #summarySection .panel-title [data-lang="en"],
-  html[data-print-lang="fr"] #projectInfo .panel-title [data-lang="fr"],
-  html[data-print-lang="fr"] #summarySection .panel-title [data-lang="fr"] {
-    display: inline !important;
+  h1 { font-size: 16pt !important; }
+  h2 { font-size: 14pt !important; }
+  h3 { font-size: 13pt !important; }
+
+  /* --------------------------------------------------------------
+     3. Utility classes
+     -------------------------------------------------------------- */
+  .page-break-before {
+    break-before: page !important;        /* Modern */
+    page-break-before: always !important;  /* Legacy */
   }
 
-  html[data-print-lang="en"] [data-lang="fr"]:not(.panel-title [data-lang]),
-  html[data-print-lang="en"] [lang="fr"]:not(.panel-title [data-lang]),
-  html[data-print-lang="fr"] [data-lang="en"]:not(.panel-title [data-lang]),
-  html[data-print-lang="fr"] [lang="en"]:not(.panel-title [data-lang]) {
-    display: none !important;
-  }
-  
-  html[data-print-lang="en"] [data-lang="en"],
-  html[data-print-lang="en"] [lang="en"],
-  html[data-print-lang="fr"] [data-lang="fr"],
-  html[data-print-lang="fr"] [lang="fr"] {
-    display: block !important;
-  }
-
-  #rrit-summary, #riskProfileSummarySection, #projectInfo,
-  #projectInfo.panel, #projectInfo .panel-heading,
-  #projectInfo .panel-title, #projectInfo .panel-body {
+  /* --------------------------------------------------------------
+     4. Core sections forced visible
+     -------------------------------------------------------------- */
+  #riskProfileSummarySection,
+  #rrit-summary,
+  #projectInfo,
+  #projectInfo.panel,
+  #projectInfo .panel-heading,
+  #projectInfo .panel-title,
+  #projectInfo .panel-body {
     display: block !important;
     visibility: visible !important;
     height: auto !important;
     overflow: visible !important;
   }
 
-  /* ==================================================
-     2. UTILITY CLASSES & PAGE SETUP
-     ================================================== */
-  
-  /* --- NEW: Utility class to force an element to start on a new page --- */
-  .page-break-before {
-    page-break-before: always !important;
+  /* --------------------------------------------------------------
+     5. LANGUAGE HANDLING
+       Patterns supported:
+       Pattern A: One heading, spans inside: <h3 class="panel-title"><span data-lang="en">…</span><span data-lang="fr">…</span></h3>
+       Pattern B: Two sibling headings: <h2 class="panel-title" data-lang="en">…</h2><h2 class="panel-title" data-lang="fr">…</h2>
+     -------------------------------------------------------------- */
+
+  /* Generic: hide opposite language (excluding .panel-title so we can treat headings separately) */
+  html[data-print-lang="en"] [data-lang="fr"]:not(.panel-title),
+  html[data-print-lang="en"] [lang="fr"]:not(.panel-title),
+  html[data-print-lang="fr"] [data-lang="en"]:not(.panel-title),
+  html[data-print-lang="fr"] [lang="en"]:not(.panel-title) {
+    display: none !important;
   }
 
-  html, body {
-    margin: 0.5in;
-    font: 12pt/1.5 "Noto Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    background: #fff !important;
-    color: #000;
+  /* Pattern B (two heading elements) */
+  html[data-print-lang="en"] .panel-title[data-lang="fr"],
+  html[data-print-lang="fr"] .panel-title[data-lang="en"] {
+    display: none !important;
+  }
+  html[data-print-lang="en"] .panel-title[data-lang="en"],
+  html[data-print-lang="fr"] .panel-title[data-lang="fr"] {
+    display: block !important;
   }
 
-  h1, h2, h3, h4, p, ul, ol, li {
-    font-size: 12pt !important;
-    line-height: 1.5 !important;
+  /* Pattern A (spans inside one heading) */
+  html[data-print-lang="en"] .panel-title [data-lang="fr"],
+  html[data-print-lang="fr"] .panel-title [data-lang="en"] {
+    display: none !important;
   }
-  h1 { font-size: 16pt !important; }
-  h2 { font-size: 14pt !important; }
-  h3 { font-size: 13pt !important; }
-
-  html[data-print-lang="en"]:before {
-    content: "Risk Profile Summary";
-    font-size: 16pt; font-weight: bold; text-align: center; display: block;
-    margin-bottom: 0.5rem; border-bottom: 2px solid #000; padding-bottom: 0.5rem;
-  }
-  html[data-print-lang="fr"]:before {
-    content: "Sommaire du profil de risque";
-    font-size: 16pt; font-weight: bold; text-align: center; display: block;
-    margin-bottom: 0.5rem; border-bottom: 2px solid #000; padding-bottom: 0.5rem;
+  html[data-print-lang="en"] .panel-title [data-lang="en"],
+  html[data-print-lang="fr"] .panel-title [data-lang="fr"] {
+    display: inline !important;
   }
 
-  html:after {
-    display: block; font-size: 12pt; text-align: center;
-    margin-bottom: 1rem; color: #666;
+  /* Neutralize .hidden if present on the active language heading or its inner span */
+  html[data-print-lang="en"] .panel-title[data-lang="en"].hidden,
+  html[data-print-lang="fr"] .panel-title[data-lang="fr"].hidden,
+  html[data-print-lang="en"] .panel-title [data-lang="en"].hidden,
+  html[data-print-lang="fr"] .panel-title [data-lang="fr"].hidden {
+    display: inline-block !important;
   }
-  html[data-print-lang="en"]:after { content: "Generated: " attr(data-print-date); }
-  html[data-print-lang="fr"]:after { content: "Généré le : " attr(data-print-date); }
 
-  /* ==================================================
-     3. PROJECT INFO & RISK ITEM STYLING
-     ================================================== */
+  /* Optional (comment out if not needed):
+     Promote summary panel title to visually act like an H1 in print
+  #riskProfileSummarySection .panel-title[data-lang="en"],
+  #riskProfileSummarySection .panel-title[data-lang="fr"] {
+    font-size: 16pt !important;
+  }
+  */
 
+  /* --------------------------------------------------------------
+     6. Panel heading styling
+     -------------------------------------------------------------- */
   #projectInfo > .panel-heading,
-  #summarySection > .panel-heading {
+  #riskProfileSummarySection .panel-heading {
     background: none !important;
     border: none !important;
     padding: 0 0 0.5rem 0 !important;
@@ -107,64 +121,67 @@
     border-bottom: 1px solid #ccc !important;
   }
   #projectInfo .panel-title,
-  #summarySection .panel-title {
+  #riskProfileSummarySection .panel-title {
     font-size: 13pt !important;
     font-weight: bold !important;
     color: #000 !important;
     padding: 0 !important;
+    margin: 0 !important;
   }
 
+  /* --------------------------------------------------------------
+     7. Project Information formatting
+     -------------------------------------------------------------- */
   #projectInfo { margin-bottom: 1rem; }
   #projectInfo fieldset {
     border: none !important;
     padding: 0 !important;
     margin: 0 0 1rem 0 !important;
   }
-  
   #projectInfo fieldset legend {
     font-size: 12pt !important;
     font-weight: bold !important;
     margin-bottom: 0.25rem !important;
     padding-left: 1rem !important;
   }
-  
-  #projectInfo input, #projectInfo textarea { display: none !important; }
-  
+  #projectInfo input,
+  #projectInfo textarea {
+    display: none !important;
+  }
   #projectInfo fieldset[data-content]::after {
     content: attr(data-content);
     display: block !important;
     font-size: 12pt !important;
-    font-weight: normal !important;
     white-space: pre-wrap !important;
-    word-wrap: break-word !important;
     padding-left: 1rem !important;
   }
 
+  /* --------------------------------------------------------------
+     8. Risk items
+     -------------------------------------------------------------- */
   .risk-item {
     page-break-inside: avoid !important;
     margin-bottom: 1.5rem !important;
     border: 1px solid #ccc !important;
     padding: 1rem !important;
-    background-color: #f9f9f9 !important;
+    background: #f9f9f9 !important;
   }
-
   .risk-item .risk-q {
     font-size: 12pt !important;
     font-weight: bold !important;
     color: #264a88 !important;
     margin-top: 0 !important;
   }
-
   .risk-item .risk-statement {
     margin: 1rem 0 !important;
     padding-left: 0.75rem !important;
     border-left: 4px solid #d9534f !important;
   }
-
-  .risk-item .mitigations {
+  .risk-item .mitigations,
+  .risk-item .risk-mitigations {
     margin-top: 0.75rem !important;
     padding: 0.75rem !important;
     border-left: 4px solid #5bc0de !important;
-    background-color: #f0f8ff !important;
+    background: #f0f8ff !important;
   }
 }
