@@ -1,5 +1,5 @@
 /* ==============================================================
-   RRIT PRINT STYLESHEET - V10 (Definitive Page Break Fix)
+   RRIT PRINT STYLESHEET - V11 (Force Page Break)
    ============================================================== */
 
 @media print {
@@ -93,10 +93,9 @@
      3. PROJECT INFO & RISK ITEM STYLING
      ================================================== */
 
-  /* --- DEFINITIVE PAGE BREAK FIX --- */
-  /* Keep the entire summary section (title, count, and risks) together */
+  /* --- NEW RULE: Force the summary section to start on a new page --- */
   #summarySection {
-    page-break-inside: avoid !important;
+    page-break-before: always !important;
   }
 
   #projectInfo > .panel-heading,
@@ -113,11 +112,6 @@
     font-weight: bold !important;
     color: #000 !important;
     padding: 0 !important;
-  }
-
-  /* This rule is now redundant because of the #summarySection rule, but is kept for clarity */
-  #riskList {
-    page-break-before: avoid !important;
   }
 
   #projectInfo { margin-bottom: 1rem; }
@@ -169,8 +163,4 @@
 
   .risk-item .mitigations {
     margin-top: 0.75rem !important;
-    padding: 0.75rem !important;
-    border-left: 4px solid #5bc0de !important;
-    background-color: #f0f8ff !important;
-  }
-}
+    padding: 0.75rem !import
