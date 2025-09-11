@@ -1,5 +1,5 @@
 /* ==============================================================
-   RRIT PRINT STYLESHEET - V11 (Force Page Break)
+   RRIT PRINT STYLESHEET - V12 (Class-based Page Break)
    ============================================================== */
 
 @media print {
@@ -43,7 +43,7 @@
     display: block !important;
   }
 
-  #rrit-summary, #summarySection, #projectInfo,
+  #rrit-summary, #riskProfileSummarySection, #projectInfo,
   #projectInfo.panel, #projectInfo .panel-heading,
   #projectInfo .panel-title, #projectInfo .panel-body {
     display: block !important;
@@ -53,8 +53,13 @@
   }
 
   /* ==================================================
-     2. BASE TYPOGRAPHY & PAGE SETUP
+     2. UTILITY CLASSES & PAGE SETUP
      ================================================== */
+  
+  /* --- NEW: Utility class to force an element to start on a new page --- */
+  .page-break-before {
+    page-break-before: always !important;
+  }
 
   html, body {
     margin: 0.5in;
@@ -92,11 +97,6 @@
   /* ==================================================
      3. PROJECT INFO & RISK ITEM STYLING
      ================================================== */
-
-  /* --- NEW RULE: Force the summary section to start on a new page --- */
-  #summarySection {
-    page-break-before: always !important;
-  }
 
   #projectInfo > .panel-heading,
   #summarySection > .panel-heading {
@@ -163,4 +163,8 @@
 
   .risk-item .mitigations {
     margin-top: 0.75rem !important;
-    padding: 0.75rem !import
+    padding: 0.75rem !important;
+    border-left: 4px solid #5bc0de !important;
+    background-color: #f0f8ff !important;
+  }
+}
