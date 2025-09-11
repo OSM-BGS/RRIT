@@ -406,4 +406,12 @@ body.summary-ready #summaryControls { display: none; }
 @media (max-width: 767.98px) {
   #wb-lng { margin-bottom: .5rem; }
 }
+/* ==============================================================
+   VISIBILITY RULES FOR SUMMARY VIEW
+   ============================================================== */
+
+/* Hide instructional text elements when the summary is generated */
+body.summary-ready .hide-on-summary {
+  display: none !important;
+}
 
