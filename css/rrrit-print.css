@@ -1,5 +1,5 @@
 /* ==============================================================
-   RRIT PRINT STYLESHEET - V8 (High Specificity)
+   RRIT PRINT STYLESHEET - V10 (Definitive Page Break Fix)
    ============================================================== */
 
 @media print {
@@ -16,10 +16,23 @@
     display: none !important;
   }
 
-  html[data-print-lang="en"] [data-lang="fr"],
-  html[data-print-lang="en"] [lang="fr"],
-  html[data-print-lang="fr"] [data-lang="en"],
-  html[data-print-lang="fr"] [lang="en"] {
+  /* Language visibility rules */
+  #projectInfo .panel-title [data-lang],
+  #summarySection .panel-title [data-lang] {
+    display: none !important;
+  }
+  
+  html[data-print-lang="en"] #projectInfo .panel-title [data-lang="en"],
+  html[data-print-lang="en"] #summarySection .panel-title [data-lang="en"],
+  html[data-print-lang="fr"] #projectInfo .panel-title [data-lang="fr"],
+  html[data-print-lang="fr"] #summarySection .panel-title [data-lang="fr"] {
+    display: inline !important;
+  }
+
+  html[data-print-lang="en"] [data-lang="fr"]:not(.panel-title [data-lang]),
+  html[data-print-lang="en"] [lang="fr"]:not(.panel-title [data-lang]),
+  html[data-print-lang="fr"] [data-lang="en"]:not(.panel-title [data-lang]),
+  html[data-print-lang="fr"] [lang="en"]:not(.panel-title [data-lang]) {
     display: none !important;
   }
   
@@ -77,10 +90,15 @@
   html[data-print-lang="fr"]:after { content: "Généré le : " attr(data-print-date); }
 
   /* ==================================================
-     3. PROJECT INFO & RISK ITEM STYLING (HIGH SPECIFICITY)
+     3. PROJECT INFO & RISK ITEM STYLING
      ================================================== */
 
-  /* --- NEW, MORE SPECIFIC RULES: Target titles via section IDs --- */
+  /* --- DEFINITIVE PAGE BREAK FIX --- */
+  /* Keep the entire summary section (title, count, and risks) together */
+  #summarySection {
+    page-break-inside: avoid !important;
+  }
+
   #projectInfo > .panel-heading,
   #summarySection > .panel-heading {
     background: none !important;
@@ -96,21 +114,12 @@
     color: #000 !important;
     padding: 0 !important;
   }
-  /* More specific language rule */
-  .panel-title [data-lang] { display: none !important; }
-  html[data-print-lang="en"] #projectInfo .panel-title [data-lang="en"],
-  html[data-print-lang="en"] #summarySection .panel-title [data-lang="en"],
-  html[data-print-lang="fr"] #projectInfo .panel-title [data-lang="fr"],
-  html[data-print-lang="fr"] #summarySection .panel-title [data-lang="fr"] {
-    display: inline !important;
-  }
 
-  /* Prevent awkward page break before the risk list */
+  /* This rule is now redundant because of the #summarySection rule, but is kept for clarity */
   #riskList {
     page-break-before: avoid !important;
   }
 
-  /* Project info section */
   #projectInfo { margin-bottom: 1rem; }
   #projectInfo fieldset {
     border: none !important;
@@ -137,7 +146,6 @@
     padding-left: 1rem !important;
   }
 
-  /* Unified Risk Item styling */
   .risk-item {
     page-break-inside: avoid !important;
     margin-bottom: 1.5rem !important;
@@ -159,7 +167,7 @@
     border-left: 4px solid #d9534f !important;
   }
 
-  .risk-item .risk-mitigations {
+  .risk-item .mitigations {
     margin-top: 0.75rem !important;
     padding: 0.75rem !important;
     border-left: 4px solid #5bc0de !important;
