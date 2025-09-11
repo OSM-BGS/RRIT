@@ -1,5 +1,5 @@
 /* ==============================================================
-   RRIT PRINT STYLESHEET - V7 (Targeted Fixes)
+   RRIT PRINT STYLESHEET - V8 (High Specificity)
    ============================================================== */
 
 @media print {
@@ -7,7 +7,6 @@
      1. GLOBAL HIDE/SHOW & LAYOUT
      ================================================== */
   
-  /* Hide any element with the .print-hide class, plus all standard UI chrome */
   .print-hide,
   #wb-bnr, #wb-tphp, #wb-lng, #rrit-intro, #step0,
   footer, nav, #lang-switch,
@@ -17,7 +16,6 @@
     display: none !important;
   }
 
-  /* Show only current language content */
   html[data-print-lang="en"] [data-lang="fr"],
   html[data-print-lang="en"] [lang="fr"],
   html[data-print-lang="fr"] [data-lang="en"],
@@ -32,7 +30,6 @@
     display: block !important;
   }
 
-  /* Force show essential summary elements */
   #rrit-summary, #summarySection, #projectInfo,
   #projectInfo.panel, #projectInfo .panel-heading,
   #projectInfo .panel-title, #projectInfo .panel-body {
@@ -61,7 +58,6 @@
   h2 { font-size: 14pt !important; }
   h3 { font-size: 13pt !important; }
 
-  /* Page title */
   html[data-print-lang="en"]:before {
     content: "Risk Profile Summary";
     font-size: 16pt; font-weight: bold; text-align: center; display: block;
@@ -73,7 +69,6 @@
     margin-bottom: 0.5rem; border-bottom: 2px solid #000; padding-bottom: 0.5rem;
   }
 
-  /* Print date */
   html:after {
     display: block; font-size: 12pt; text-align: center;
     margin-bottom: 1rem; color: #666;
@@ -82,30 +77,35 @@
   html[data-print-lang="fr"]:after { content: "Généré le : " attr(data-print-date); }
 
   /* ==================================================
-     3. PROJECT INFO & RISK ITEM STYLING (VERIFIED)
+     3. PROJECT INFO & RISK ITEM STYLING (HIGH SPECIFICITY)
      ================================================== */
 
-  /* --- NEW RULES: Fix Section Title styling and language --- */
-  .panel-heading {
+  /* --- NEW, MORE SPECIFIC RULES: Target titles via section IDs --- */
+  #projectInfo > .panel-heading,
+  #summarySection > .panel-heading {
     background: none !important;
     border: none !important;
     padding: 0 0 0.5rem 0 !important;
     margin: 1.5rem 0 0.5rem 0 !important;
     border-bottom: 1px solid #ccc !important;
   }
-  .panel-title {
+  #projectInfo .panel-title,
+  #summarySection .panel-title {
     font-size: 13pt !important;
     font-weight: bold !important;
     color: #000 !important;
     padding: 0 !important;
   }
+  /* More specific language rule */
   .panel-title [data-lang] { display: none !important; }
-  html[data-print-lang="en"] .panel-title [data-lang="en"],
-  html[data-print-lang="fr"] .panel-title [data-lang="fr"] {
-    display: inline !important; /* Use inline to prevent extra line breaks */
+  html[data-print-lang="en"] #projectInfo .panel-title [data-lang="en"],
+  html[data-print-lang="en"] #summarySection .panel-title [data-lang="en"],
+  html[data-print-lang="fr"] #projectInfo .panel-title [data-lang="fr"],
+  html[data-print-lang="fr"] #summarySection .panel-title [data-lang="fr"] {
+    display: inline !important;
   }
 
-  /* --- NEW RULE: Prevent awkward page break before the risk list --- */
+  /* Prevent awkward page break before the risk list */
   #riskList {
     page-break-before: avoid !important;
   }
@@ -115,15 +115,14 @@
   #projectInfo fieldset {
     border: none !important;
     padding: 0 !important;
-    margin: 0 0 1rem 0 !important; /* Remove left margin */
+    margin: 0 0 1rem 0 !important;
   }
   
-  /* VERIFIED INDENTATION RULE */
   #projectInfo fieldset legend {
     font-size: 12pt !important;
     font-weight: bold !important;
     margin-bottom: 0.25rem !important;
-    padding-left: 1rem !important; /* The indent */
+    padding-left: 1rem !important;
   }
   
   #projectInfo input, #projectInfo textarea { display: none !important; }
@@ -135,7 +134,7 @@
     font-weight: normal !important;
     white-space: pre-wrap !important;
     word-wrap: break-word !important;
-    padding-left: 1rem !important; /* The indent */
+    padding-left: 1rem !important;
   }
 
   /* Unified Risk Item styling */
@@ -147,7 +146,6 @@
     background-color: #f9f9f9 !important;
   }
 
-  /* Style the question */
   .risk-item .risk-q {
     font-size: 12pt !important;
     font-weight: bold !important;
@@ -155,14 +153,12 @@
     margin-top: 0 !important;
   }
 
-  /* Style the risk statement */
   .risk-item .risk-statement {
     margin: 1rem 0 !important;
     padding-left: 0.75rem !important;
     border-left: 4px solid #d9534f !important;
   }
 
-  /* Style the mitigations */
   .risk-item .risk-mitigations {
     margin-top: 0.75rem !important;
     padding: 0.75rem !important;
