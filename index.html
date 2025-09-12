@@ -69,26 +69,52 @@ Top of file through section/category selection
   </header>
   <div class="panel-body">
     <div data-lang="en">
-      <p><strong>The RRIT is a first-pass screen to spot risks in proposed HR investments, initiatives, projects and digital solutions.</strong> It helps ensure your proposal aligns with regulatory, operational and strategic goals while mitigating potential issues early.</p>
-      <details class="wb-accordion"><summary><strong>Purpose – Early-warning system</strong></summary>
-        <p>The tool systematically flags risks in areas such as regulatory compliance, workforce planning and technology adoption <em>before</em> you commit significant resources. Use it alongside your existing enterprise risk-management (ERM) processes for identification, assessment, response, communication and monitoring.</p>
-      </details>
-      <details class="wb-accordion"><summary><strong>Usage – Four simple steps</strong></summary>
-        <ol class="lst-num">
-          <li><strong>Review</strong> each relevant category.</li>
-          <li><strong>Answer</strong> every question (<em>Yes / No / Unknown / N A</em>).</li>
-          <li><strong>Analyse</strong> the outcome to locate high-risk areas.</li>
-          <li><strong>Decide</strong> next steps or mitigations.</li>
-        </ol>
-      </details>
-      <details class="wb-accordion"><summary><strong>Implications of each response</strong></summary>
-        <ul>
-          <li><strong>Yes</strong> – no present risk or not applicable.</li>
-          <li><strong>No</strong> – potential risk; investigate / act.</li>
-          <li><strong>Unknown</strong> – information missing; clarify.</li>
-          <li><strong>N/A</strong> – not relevant to this initiative.</li>
-        </ul>
-      </details>
+       <p class="lead" data-i18n="lead-en">
+    The RRIT is a first‑pass screen that surfaces risks in proposed HR initiatives before significant resources are committed. Use it alongside enterprise risk‑management practices to check alignment with legislation, privacy obligations, and organizational policy. The summary highlights areas of risk and suggests mitigation actions.
+  </p>
+  <p class="lead" data-i18n="lead-fr" hidden>
+    Le RRIT est un dépistage initial qui signale les risques liés aux initiatives RH avant d’y investir des ressources importantes. Utilisez‑le en complément des pratiques de GRE pour vérifier l’alignement avec les lois, les exigences de confidentialité et les politiques de l’organisation. Le résumé met en évidence les risques et propose des mesures d’atténuation.
+  </p>
+
+  <!-- Side-by-side intro grid -->
+  <div class="intro-grid">
+    <div class="section">
+      <h2 data-i18n="ww-h-en">Who it’s for & when to use</h2>
+      <h2 data-i18n="ww-h-fr" hidden>Pour qui et à quel moment</h2>
+      <ul data-i18n="ww-en">
+        <li>For Government of Canada leads and managers overseeing HR initiatives, investments, or projects.</li>
+        <li>Use at idea intake, business case drafting, or before governance review to spot early warnings.</li>
+      </ul>
+      <ul data-i18n="ww-fr" hidden>
+        <li>Pour les responsables et gestionnaires du gouvernement du Canada qui dirigent des initiatives, des investissements ou des projets en RH.</li>
+        <li>À utiliser dès l’idéation, lors de la rédaction du dossier d’affaires ou avant une instance de gouvernance.</li>
+      </ul>
+      <p class="hint"><span data-i18n="time-en">Estimated time: 5–10 minutes. No sensitive personal data required.</span><span data-i18n="time-fr" hidden>Durée estimée : 5 à 10 minutes. Aucun renseignement personnel sensible requis.</span></p>
+    </div>
+
+    <div class="section">
+      <h2 data-i18n="how-en">How it works</h2>
+      <h2 data-i18n="how-fr" hidden>Fonctionnement</h2>
+      <p data-i18n="stepA-en">Answer the 24 required questions (Yes / No / Unknown / N/A). All must be answered before you can generate a summary.</p>
+      <p data-i18n="stepA-fr" hidden>Répondez aux 24 questions obligatoires (Oui / Non / Inconnu / S.O.). Toutes doivent être répondues avant de générer un résumé.</p>
+    </div>
+  </div>
+</header>
+
+<main property="mainContentOfPage" class="container" role="main">
+  <!-- Helper text + counter -->
+  <p class="hint" id="form-hint" data-i18n="helper-top-en">Answer all 24 questions to generate your summary. <span class="counter" id="ansCount">0/24</span></p>
+  <p class="hint" id="form-hint-fr" data-i18n="helper-top-fr" hidden>Répondez aux 24 questions pour générer votre résumé. <span class="counter" id="ansCountFr">0/24</span></p>
+
+  <!-- Error summary -->
+  <section id="errors" class="error-summary" role="alert" aria-live="polite" hidden>
+    <h2 data-i18n="errsum-h-en">Some questions are unanswered</h2>
+    <h2 data-i18n="errsum-h-fr" hidden>Certaines questions n’ont pas été répondues</h2>
+    <p data-i18n="errsum-p-en">Complete all 24 questions to generate your summary.</p>
+    <p data-i18n="errsum-p-fr" hidden>Répondez aux 24 questions pour générer votre résumé.</p>
+    <ul id="error-list"></ul>
+  </section>
+
       <details class="wb-accordion"><summary><strong>Structure – 11 HR-specific categories</strong></summary>
         <p>Categories A and B are mandatory; select any of C–K that apply.</p>
         <ul class="lst-spcd">
