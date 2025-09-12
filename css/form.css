@@ -29,7 +29,13 @@ legend{font-weight:700; border:none; border-bottom: none;}
   .radio-spacing{display:inline-block;margin:0 1.5rem 0.5rem 0;}
   .rrit-responses{margin-bottom:1.5rem;}
   .rrit-status{margin-top:1rem;font-weight:700;}
-  
+
+/* Description text area */
+   #projectDesc {
+  width: 100%;        /* already true via .form-control, but explicit is fine */
+  max-width: 100%;     /* prevents Bootstrap or other styles from capping it */
+}
+   
   /* Question styling for new 24-question format */
   .question-fieldset {
     margin-bottom: 2rem;
@@ -414,4 +420,5 @@ body.summary-ready #summaryControls { display: none; }
 body.summary-ready .hide-on-summary {
   display: none !important;
 }
+
 
