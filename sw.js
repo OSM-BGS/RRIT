@@ -1,5 +1,5 @@
 // sw.js — RRIT network-first for app assets
-const CACHE_VERSION = 'rrit-v1';
+const CACHE_VERSION = 'rrit-v2';
 const ASSET_CACHE = `${CACHE_VERSION}-assets`;
 
 self.addEventListener('install', event => {
