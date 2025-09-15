@@ -34,7 +34,7 @@ async function loadQuestions() {
 let currentLang = (() => {
   try {
     const saved = localStorage.getItem("rrit_lang");
-    if (saved === "fr" || "en") return saved;
+    if (saved === "fr" || saved === "en") return saved;
   } catch {}
   const sys = (navigator.languages?.[0] || navigator.language || "en").toLowerCase();
   return sys.startsWith("fr") ? "fr" : "en";
@@ -489,7 +489,8 @@ function generateSummary(skipGuard = false) {
        // CORRECTED print handler: Populates data-content attributes for CSS to use
     printSummaryBtn.onclick = () => {
       // Set language and date attributes for the print stylesheet
-      document.documentElement.setAttribute("data-print-lang", currentLang);
+       const lang = (currentLang === "fr") ? "fr" : "en";
+      document.documentElement.setAttribute("data-print-lang", lang);
       const now = new Date();
       const dateStr = currentLang === "fr"
         ? now.toLocaleDateString("fr-CA", { year: "numeric", month: "long", day: "numeric" })
