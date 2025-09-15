@@ -483,41 +483,63 @@ function generateSummary(skipGuard = false) {
       renderQuestions();
     };
   }
-  if (printSummaryBtn) {
+if (printSummaryBtn) {
     printSummaryBtn.classList.remove("hidden");
     printSummaryBtn.removeAttribute("aria-hidden");
-       // CORRECTED print handler: Populates data-content attributes for CSS to use
+
+    // Robust print handler using matchMedia to prevent race conditions
     printSummaryBtn.onclick = () => {
-      // Set language and date attributes for the print stylesheet
-       const lang = (currentLang === "fr") ? "fr" : "en";
+      // 1. Set all attributes needed for the print stylesheet.
+      // Ensure language is always valid.
+      const lang = (currentLang === "fr") ? "fr" : "en";
       document.documentElement.setAttribute("data-print-lang", lang);
+
+      // Add a formatted date for the print header.
       const now = new Date();
-      const dateStr = currentLang === "fr"
+      const dateStr = lang === "fr"
         ? now.toLocaleDateString("fr-CA", { year: "numeric", month: "long", day: "numeric" })
         : now.toLocaleDateString("en-CA", { year: "numeric", month: "long", day: "numeric" });
       document.documentElement.setAttribute("data-print-date", dateStr);
 
-      // Find all project info inputs and copy their values to the parent fieldset's data-content attribute
+      // Copy project info field values into data-content attributes for the print CSS to use.
       qsa('#projectInfo input[type="text"], #projectInfo input[type="date"], #projectInfo textarea').forEach(input => {
         const fieldset = input.closest('fieldset');
         if (fieldset) {
-          // Use the input's value, or an empty string if it's blank
           fieldset.setAttribute('data-content', input.value || '');
         }
       });
 
-      // Print, then clean up the attributes afterwards
-      setTimeout(() => {
-        window.print();
-        setTimeout(() => {
-          document.documentElement.removeAttribute("data-print-lang");
-          document.documentElement.removeAttribute("data-print-date");
-          // Remove the data-content attributes so they don't interfere with screen styles
-          qsa('#projectInfo fieldset[data-content]').forEach(fieldset => {
-            fieldset.removeAttribute('data-content');
-          });
-        }, 500); // A longer timeout to ensure cleanup happens after print dialog closes
-      }, 50);
+      // 2. Define a robust cleanup function.
+      const mql = window.matchMedia('print');
+      let hasPrinted = false;
+
+      const cleanup = () => {
+        // Prevent this from running more than once
+        if (hasPrinted) return;
+
+        document.documentElement.removeAttribute('data-print-lang');
+        document.documentElement.removeAttribute('data-print-date');
+        qsa('#projectInfo fieldset[data-content]').forEach(fs => fs.removeAttribute('data-content'));
+
+        // Remove the listener to avoid memory leaks
+        mql.removeEventListener('change', onChange);
+        hasPrinted = true;
+      };
+
+      const onChange = (e) => {
+        // When the media query no longer matches (print dialog is closed), run cleanup.
+        if (!e.matches) {
+          cleanup();
+        }
+      };
+
+      // 3. Add the listener and trigger the print dialog.
+      mql.addEventListener('change', onChange);
+      window.print();
+
+      // 4. Fallback for older browsers or edge cases.
+      // If the 'change' event doesn't fire, this ensures cleanup still happens.
+      setTimeout(cleanup, 2000);
     };
   }
   if (postResultActions) {
