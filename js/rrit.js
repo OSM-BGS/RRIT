@@ -43,24 +43,40 @@ const urlLang = (() => {
 })();
 
 
+// Track explicit user choice (so system language only wins until the user chooses)
+const LANG_KEY = "rrit_lang";
+const LANG_EXPLICIT_KEY = "rrit_lang_explicit";
 
 let currentLang = (() => {
-  // 1) Query-string override wins (and is remembered)
+  // 0) If inline script in index.html set an initial hint, note it
+  const hinted = (window.rrit_initialLang === "fr" || window.rrit_initialLang === "en")
+    ? window.rrit_initialLang
+    : "";
+
+  // 1) Query-string override wins (and is remembered as explicit)
   if (urlLang) {
-    try { localStorage.setItem("rrit_lang", urlLang); } catch {}
+    try {
+      localStorage.setItem(LANG_KEY, urlLang);
+      localStorage.setItem(LANG_EXPLICIT_KEY, "1");
+    } catch {}
     return urlLang;
   }
 
-  // 2) Otherwise, use saved choice
+  // 2) Respect an explicit prior user choice
   try {
-    const saved = localStorage.getItem("rrit_lang");
-    if (saved === "fr" || saved === "en") return saved;
+    const explicit = localStorage.getItem(LANG_EXPLICIT_KEY) === "1";
+    const saved = localStorage.getItem(LANG_KEY);
+    if (explicit && (saved === "fr" || saved === "en")) return saved;
   } catch {}
 
-  // 3) Finally, fall back to browser preference
+  // 3) Otherwise use the inline hint (from system) if present…
+  if (hinted) return hinted;
+
+  // 4) …or fall back to browser detection
   const sys = (navigator.languages?.[0] || navigator.language || "en").toLowerCase();
   return sys.startsWith("fr") ? "fr" : "en";
 })();
+
 
 
 /* -------------------------
@@ -162,7 +178,10 @@ function updateQuestionAriaLabelsForLang() {
 }
 function toggleLanguage(lang) {
   currentLang = (lang === "fr") ? "fr" : "en";
-  try { localStorage.setItem("rrit_lang", currentLang); } catch {}
+  try {
+    localStorage.setItem("rrit_lang", currentLang);
+    localStorage.setItem("rrit_lang_explicit", "1"); // mark user’s choice as explicit
+  } catch {}
 
   // Do NOT re-render questions; keep existing selections
   applyLangToSpans();
