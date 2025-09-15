@@ -31,14 +31,37 @@ async function loadQuestions() {
   return QUESTIONS;
 }
 
+// Optional URL override, e.g., ?lang=fr or ?lang=en
+const urlLang = (() => {
+  try {
+    const p = new URL(window.location.href).searchParams.get("lang");
+    const v = (p || "").toLowerCase();
+    return (v === "fr" || v === "en") ? v : "";
+  } catch {
+    return "";
+  }
+})();
+
+
+
 let currentLang = (() => {
+  // 1) Query-string override wins (and is remembered)
+  if (urlLang) {
+    try { localStorage.setItem("rrit_lang", urlLang); } catch {}
+    return urlLang;
+  }
+
+  // 2) Otherwise, use saved choice
   try {
     const saved = localStorage.getItem("rrit_lang");
     if (saved === "fr" || saved === "en") return saved;
   } catch {}
+
+  // 3) Finally, fall back to browser preference
   const sys = (navigator.languages?.[0] || navigator.language || "en").toLowerCase();
   return sys.startsWith("fr") ? "fr" : "en";
 })();
+
 
 /* -------------------------
    DOM helpers
