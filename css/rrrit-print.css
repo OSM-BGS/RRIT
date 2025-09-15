@@ -34,6 +34,25 @@
   h2 { font-size: 14pt !important; }
   h3 { font-size: 13pt !important; }
 
+   /* --- Force a sane base in the main content area --- */
+main#wb-cont { 
+  font-size: 12pt !important;      /* 12pt ≈ 16px in print previews */
+  line-height: 1.5 !important;
+}
+
+/* --- Tight, readable scale for the risk summary --- */
+#riskProfileSummarySection .panel-title { font-size: 13pt !important; }
+
+#riskList { font-size: 11pt !important; }            /* default body for risks */
+.risk-item .risk-q { font-size: 12pt !important; }    /* question line */
+.risk-item .risk-statement { font-size: 11pt !important; }
+.risk-item .risk-mitigations,
+.risk-item .risk-mitigations li { font-size: 10.5pt !important; }
+
+/* Optional: if you see any stubborn inheritance, clamp everything under #riskList */
+#riskList, #riskList * { line-height: 1.5 !important; }
+
+   
   /* --------------------------------------------------------------
      3. Utility classes
      -------------------------------------------------------------- */
