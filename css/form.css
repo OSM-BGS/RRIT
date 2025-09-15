@@ -163,6 +163,10 @@ legend{font-weight:700; border:none; border-bottom: none;}
   }
 }
 
+/* Hide Library Bar from Print */
+@media print {
+  #rrit-returnbar { display: none !important; }
+}
 
 
 /* Language switcher styling */
@@ -420,5 +424,6 @@ body.summary-ready #summaryControls { display: none; }
 body.summary-ready .hide-on-summary {
   display: none !important;
 }
+
 
 
